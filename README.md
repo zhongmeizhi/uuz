@@ -1,16 +1,19 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# 简介
 
-## Available Scripts
+由于本人主要使用Vue框架，对于React使用的较少，所以选择了React来写一个UI库。
 
-In the project directory, you can run:
+写UI库的原因：
+1. 加强对组件化的理解
+2. 对一些框架的源码做一些实践，比如 iscroll、tween之类的
+3. 方便自己写项目的时候 copy `:)`
+
+
+脚手架使用： [Create React App](https://github.com/facebook/create-react-app).
+
 
 ### `npm start`
 
-Runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
 
 ### `npm test`
 
@@ -18,12 +21,6 @@ Launches the test runner in the interactive watch mode.<br>
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 ### `npm run build`
-
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
