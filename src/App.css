@@ -6,4 +6,6 @@
 .test-content {
     background: linear-gradient(45deg, blue, red);
     height: 100%;
+    text-align: center;
+    padding: 20px;
 }
