@@ -6,56 +6,54 @@ class ReFresh extends React.Component {
   constructor(props) {
     super(props);
 
-    this.isFresh = false;
-    this.isTouch = false;
+    this.isNeedFresh = false; // 是否需要刷新
     this.startPageY = null;
-    this.curPageY = null;
 
     this.state = {
       transform: '',
       transition: '',
-      tip: ''
+      refreshTip: '',
+      loadTip: '上拉加载'
     }
   }
 
   touchStartHandler = (val) => {
-    this.isTouch = true;
+    // 记住手的位置
     this.startPageY = val.touches[0].pageY;
-
-    this.setState({
-      transition: '',
-    })
+    // 不能有动画效果
+    this.setState({transition: ''})
   }
 
   touchMoveHandler = (val) => {
-    if (this.isTouch) {
-      this.curPageY = val.touches[0].pageY;
+    // 计算位置
+    const curPageY = val.touches[0].pageY;
+    const distanceY = (curPageY - this.startPageY) / 2;
 
-      const distanceY = (this.curPageY - this.startPageY) / 2;
-
-      let freshParms = {
-        transform: `translate(0, ${distanceY}px)`,
-      }
-
-      if (distanceY > 90) {
-        this.isFresh = true;
-        freshParms.tip = '松开刷新';
-      } else {
-        this.isFresh = false;
-        freshParms.tip = '下拉刷新';
-      }
-
-      this.setState(freshParms)
+    let freshParms = {
+      transform: `translate(0, ${distanceY}px)`,
     }
+
+    const DISTANSE = 90;
+
+    if (distanceY > DISTANSE) {
+      this.isNeedFresh = true;
+      freshParms.refreshTip = '松开刷新';
+    } else {
+      this.isNeedFresh = false;
+      freshParms.refreshTip = '下拉刷新';
+    }
+
+    this.setState(freshParms)
   }
 
   touchEndHandler = (val) => {
-    this.isTouch = false;
     this.setState({
       transform: `translate(0, 0)`,
       transition: 'transform 0.6s'
     })
-    if (this.isFresh && typeof this.props.freshHandler === 'function') {
+    
+    // 需要刷新的时候执行 传入的刷新方法
+    if (this.isNeedFresh && typeof this.props.freshHandler === 'function') {
       this.props.freshHandler();
     }
   }
@@ -75,9 +73,13 @@ class ReFresh extends React.Component {
           onTouchEnd={this.touchEndHandler}
         >
           {/* 刷新tip */}
-          <div className="reFresh-tip">{this.state.tip}</div>
-          {/*  */}
+          <div className="tip reFresh-tip">{this.state.refreshTip}</div>
+
+          {/* 真正的内容 */}
           {this.props.children}
+
+          {/* 加载tip */}
+          <div className="tip load-tip">{this.state.loadTip}</div>
         </div>
       </div>
     )

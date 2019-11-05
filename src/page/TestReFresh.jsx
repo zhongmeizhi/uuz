@@ -13,9 +13,7 @@ class TestReFresh extends React.Component {
   }
 
   freshHandler = () => {
-    console.log('刷新一下');
     this.setState((preState) => {
-      console.log(preState, 'preState')
       return {
         txt: '下拉刷新执行完成',
         idx: preState.idx + 1
