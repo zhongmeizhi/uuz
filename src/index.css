@@ -104,12 +104,21 @@ a:hover, a:active {
 }
 
 /* 
-    scroll css
+    reFresh css
 */
-.scroll-box {
-    background: linear-gradient(45deg, blue, red);
+.reFresh-box {
+    overflow: hidden;
+    height: 100%;
+    background: #999;
+}
+.reFresh-area {
+    position: relative;
     height: 100%;
 }
-.scroll {
-    
+.reFresh-tip {
+    position: absolute;
+    top: -33px;
+    left: 0;
+    width: 100%;
+    text-align: center;
 }

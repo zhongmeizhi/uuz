@@ -1,12 +1,12 @@
 import React from 'react';
 import './App.css';
 
-import TestScroll from '@/page/test_scroll.jsx'
+import TestReFresh from '@/page/TestReFresh.jsx'
 
 function App() {
   return (
     <div className="App">
-      <TestScroll></TestScroll>
+      <TestReFresh></TestReFresh>
     </div>
   );
 }

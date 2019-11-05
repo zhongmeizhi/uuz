@@ -4,13 +4,18 @@
 
 写UI库的原因：
 1. 加强对组件化的理解
-2. 对一些框架的源码做一些实践，比如 iscroll、tween之类的
+2. 对一些框架的源码做一些实践，比如 ireFresh、tween之类的
 3. 方便自己写项目的时候 copy `:)`
 
 定位：
 * 使用px作为css单位
 * 没有发布到npm的打算
 * 可能做一个UI界面
+
+进度：
+* [x] 下拉刷新
+* [ ] 上拉加载
+* [ ] Picker
 
 
 使用的脚手架：[Create React App](https://github.com/facebook/create-react-app).
