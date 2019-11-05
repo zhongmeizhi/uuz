@@ -21,13 +21,19 @@ class TestReFresh extends React.Component {
     })
   }
 
+  loadHandler = () => {
+    console.log('上拉加载 。')
+  }
+
   render() {
     const testTxt = `${this.state.txt}刷新次数${this.state.idx}`;
 
     return <div className="test-reFresh">
-      <ReFresh freshHandler={this.freshHandler}>
+      <ReFresh
+        freshHandler={this.freshHandler}
+        loadHandler={this.loadHandler}>
         {
-          Array(100).fill(0).map((val, idx) => {
+          Array(55).fill(0).map((val, idx) => {
             return <div className="test-content" key={idx}>{idx} - {testTxt}</div>
           })
         }

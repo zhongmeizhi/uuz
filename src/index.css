@@ -111,21 +111,25 @@ a:hover, a:active {
     overflow: hidden;
     height: 100%;
     background: #999;
+    position: relative;
 }
 .reFresh-area {
     position: relative;
     height: 100%;
     overflow-y: auto;
+    z-index: 2;
 }
 .tip {
+    text-align: center;
+    color: white;
     position: absolute;
     left: 0;
     width: 100%;
-    text-align: center;
+    z-index: 1;
 }
 .reFresh-tip {
-    top: -33px;
+    top: 50px;
 }
 .load-tip {
-    bottom: -33px;
+    bottom: 50px;
 }
