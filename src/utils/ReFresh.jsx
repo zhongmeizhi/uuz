@@ -35,12 +35,16 @@ class ReFresh extends React.Component {
 
     const DISTANSE = 90;
 
-    if (distanceY > DISTANSE) {
-      this.isNeedFresh = true;
-      freshParms.refreshTip = '松开刷新';
-    } else {
-      this.isNeedFresh = false;
-      freshParms.refreshTip = '下拉刷新';
+    console.log([this.refs.refreshDom], 'this.$refs.refreshArea')
+    console.log(this.refs.refreshDom.offsetTop, 'this.$refs.refreshArea')
+    if (this.$refs) {
+      if (distanceY > DISTANSE) {
+        this.isNeedFresh = true;
+        freshParms.refreshTip = '松开刷新';
+      } else {
+        this.isNeedFresh = false;
+        freshParms.refreshTip = '下拉刷新';
+      }
     }
 
     this.setState(freshParms)
@@ -76,7 +80,9 @@ class ReFresh extends React.Component {
           <div className="tip reFresh-tip">{this.state.refreshTip}</div>
 
           {/* 真正的内容 */}
-          {this.props.children}
+          <div ref="refreshDom">
+            {this.props.children}
+          </div>
 
           {/* 加载tip */}
           <div className="tip load-tip">{this.state.loadTip}</div>

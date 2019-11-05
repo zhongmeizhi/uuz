@@ -26,7 +26,11 @@ class TestReFresh extends React.Component {
 
     return <div className="test-reFresh">
       <ReFresh freshHandler={this.freshHandler}>
-        <div className="test-content">{testTxt}</div>
+        {
+          Array(100).fill(0).map((val, idx) => {
+            return <div className="test-content" key={idx}>{idx} - {testTxt}</div>
+          })
+        }
       </ReFresh>
     </div>
   }

@@ -115,6 +115,7 @@ a:hover, a:active {
 .reFresh-area {
     position: relative;
     height: 100%;
+    overflow-y: auto;
 }
 .tip {
     position: absolute;
