@@ -115,6 +115,7 @@ a:hover, a:active {
 }
 .reFresh-area {
     position: relative;
+    background: #c3c3c3;
     height: 100%;
     overflow-y: auto;
     z-index: 2;

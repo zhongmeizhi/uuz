@@ -7,34 +7,33 @@ class TestReFresh extends React.Component {
   constructor() {
     super();
     this.state = {
-      txt: '下拉刷新',
-      idx: 0
+      num: 30
     }
   }
 
   freshHandler = () => {
-    this.setState((preState) => {
-      return {
-        txt: '下拉刷新执行完成',
-        idx: preState.idx + 1
-      }
+    this.setState({
+      num: 50
     })
   }
 
   loadHandler = () => {
-    console.log('上拉加载 。')
+    this.setState((preState) => {
+      return {
+        num: preState.num + 30
+      }
+    })
   }
 
   render() {
-    const testTxt = `${this.state.txt}刷新次数${this.state.idx}`;
 
     return <div className="test-reFresh">
       <ReFresh
         freshHandler={this.freshHandler}
         loadHandler={this.loadHandler}>
         {
-          Array(55).fill(0).map((val, idx) => {
-            return <div className="test-content" key={idx}>{idx} - {testTxt}</div>
+          Array(this.state.num).fill(0).map((val, idx) => {
+            return <div className="test-content" key={idx}>{idx}</div>
           })
         }
       </ReFresh>
