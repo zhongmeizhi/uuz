@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 class ReFresh extends React.Component {
 
   constructor(props) {

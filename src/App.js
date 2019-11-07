@@ -1,12 +1,14 @@
 import React from 'react';
 import './App.css';
 
-import TestReFresh from '@/page/TestReFresh.jsx'
+import TestPicker from '@/page/TestPicker.jsx'
+// import TestReFresh from '@/page/TestReFresh.jsx'
 
 function App() {
   return (
     <div className="App">
-      <TestReFresh></TestReFresh>
+      <TestPicker></TestPicker>
+      {/* <TestReFresh></TestReFresh> */}
     </div>
   );
 }
