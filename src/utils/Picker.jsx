@@ -10,7 +10,7 @@ class Picker extends React.Component {
 
     render() {
         return <Sheet>
-            
+            <div>Sheet</div>
         </Sheet>
     }
 }
