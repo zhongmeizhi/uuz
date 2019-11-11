@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Sheet from '@/utils/Sheet.jsx'
+import Sheet from '@/views/Sheet.jsx'
 
 class Picker extends React.Component {
 

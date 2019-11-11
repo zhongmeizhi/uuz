@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ReFresh from '@/utils/ReFresh.jsx'
+import ReFresh from '@/views/ReFresh.jsx'
 
 class TestReFresh extends React.Component {
 
@@ -13,7 +13,7 @@ class TestReFresh extends React.Component {
 
   freshHandler = () => {
     this.setState({
-      num: 50
+      num: 30
     })
   }
 
@@ -27,17 +27,16 @@ class TestReFresh extends React.Component {
 
   render() {
 
-    return <div className="test-reFresh">
-      <ReFresh
-        freshHandler={this.freshHandler}
-        loadHandler={this.loadHandler}>
-        {
-          Array(this.state.num).fill(0).map((val, idx) => {
-            return <div className="test-content" key={idx}>{idx}</div>
-          })
-        }
-      </ReFresh>
-    </div>
+    return <ReFresh
+      height={'100vh'}
+      freshHandler={this.freshHandler}
+      loadHandler={this.loadHandler}>
+      {
+        Array(this.state.num).fill(0).map((val, idx) => {
+          return <div className="test-content" key={idx}>第{idx + 1}个</div>
+        })
+      }
+    </ReFresh>
   }
 }
 

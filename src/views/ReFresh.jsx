@@ -1,21 +1,26 @@
 import React from 'react';
 
 class ReFresh extends React.Component {
-
   constructor(props) {
     super(props);
 
+    this.height = props.height || '100%';
+    
+    // 下拉刷新相关
     this.isNeedFresh = false; // 是否需要刷新
-    this.isNeedLoad = false; // 是否需要加载
     this.startPageY = null;
     this.freshAble = false;
-    this.loadAble = false;
+    this.freshDistance = props.freshDistance || 90;
 
+    // 上拉加载相关
+    this.loadDistance = props.loadDistance || 30;
+    this.isNeedLoad = false;
+    
+    // 需要绑定的状态
     this.state = {
       transform: '',
       transition: '',
       refreshTip: '',
-      loadTip: ''
     }
   }
 
@@ -25,38 +30,29 @@ class ReFresh extends React.Component {
 
     // 重置
     this.isNeedFresh = false;
-    this.isNeedLoad = false;
 
     // 是否 可刷新
+    // 只有当页面在最顶部的时候 再次下拉就会触发是否刷新选项
     const scrollTop = this.refs.refreshArea.scrollTop;
     this.freshAble = (scrollTop === 0);
 
-    // 是否可加载
-    const areaHeight = this.refs.refreshArea.offsetHeight;
-    const domHeight = this.refs.refreshDom.offsetHeight;
-    this.loadAble = (areaHeight + scrollTop >= domHeight);
-
-    // 不能有动画效果
+    // 关闭有动画效果
     this.setState({transition: ''})
   }
 
   touchMoveHandler = (val) => {
-
-    if (this.freshAble || this.loadAble) {
-
+    if (this.freshAble) {
       // 计算位置
       const curPageY = val.touches[0].pageY;
       const distanceY = (curPageY - this.startPageY) / 2;
       
       let freshParms = {
-        transform: `translate(0, ${distanceY}px)`,
+        transform: `translate(0, ${distanceY - 50}px)`,
       }
-  
-      const DISTANSE = 90;
 
-      // 下拉
+      // 下拉动画
       if (this.freshAble && distanceY > 0) {
-        if (distanceY > DISTANSE) {
+        if (distanceY > this.freshDistance) {
           this.isNeedFresh = true;
           freshParms.refreshTip = '松开刷新';
         } else {
@@ -66,44 +62,43 @@ class ReFresh extends React.Component {
         this.setState(freshParms);
         return;
       }
-      
-      // 上拉
-      if (this.loadAble && distanceY < 0) {
-        if (-distanceY > DISTANSE) {
-          this.isNeedLoad = true;
-          freshParms.loadTip = '松开加载';
-        } else {
-          this.isNeedLoad = false;
-          freshParms.loadTip = '上拉加载';
-        }
-        this.setState(freshParms);
-        return;
-      }
-
     }
   }
 
   touchEndHandler = () => {
-
     this.freshAble = false;
     this.loadAble = false;
-
-    this.setState({
-      transform: `translate(0, 0)`,
-      transition: 'transform 0.6s',
-      refreshTip: '开始刷新',
-      loadTip: '开始加载',
-    })
     
     // 需要刷新的时候执行 传入的刷新方法
     if (this.isNeedFresh && typeof this.props.freshHandler === 'function') {
+      this.setState({
+        refreshTip: '刷新中 >>>',
+        transform: `translate(0, 0)`,
+        transition: 'transform 3s',
+      })
+
+      // 执行刷新方法
       this.props.freshHandler();
+
+      setTimeout(() => {
+        this.setState({
+          transform: `translate(0, -50px)`,
+          transition: 'transform 0.6s',
+        })
+      }, 300);
       return;
     }
 
-    // 增加上拉加载
-    if (this.isNeedLoad && typeof this.props.loadHandler === 'function') {
-      this.props.loadHandler();
+    // 上拉加载
+    if (typeof this.props.loadHandler === 'function') {
+      // 是否可加载
+      const scrollTop = this.refs.refreshArea.scrollTop;
+      const areaHeight = this.refs.refreshArea.offsetHeight;
+      const domHeight = this.refs.refreshDom.offsetHeight;
+      this.isNeedLoad = (domHeight <= this.loadDistance + areaHeight + scrollTop );
+
+      // 加载操作
+      this.isNeedLoad && this.props.loadHandler();
       return;
     }
   }
@@ -111,14 +106,12 @@ class ReFresh extends React.Component {
   render() {
     return (
       <div className="reFresh-box">
-        {/* 刷新tip */}
-        <div className="tip reFresh-tip">{this.state.refreshTip}</div>
-
         {/* 滚动区域 */}
         <div
           ref="refreshArea"
           className="reFresh-area"
           style={{
+            height: this.height,
             transform: this.state.transform,
             transition: this.state.transition
           }}
@@ -126,17 +119,14 @@ class ReFresh extends React.Component {
           onTouchMove={this.touchMoveHandler}
           onTouchEnd={this.touchEndHandler}
         >
+          {/* 刷新tip */}
+          <div className="tip reFresh-tip">{this.state.refreshTip}</div>
+
           {/* 真正的内容 */}
-          <div
-            ref="refreshDom"
-            className="refresh"
-            >
+          <div ref="refreshDom" className="refresh">
             {this.props.children}
           </div>
         </div>
-
-        {/* 加载tip */}
-        <div className="tip load-tip">{this.state.loadTip}</div>
       </div>
     )
   }
