@@ -1,5 +1,7 @@
 import React from 'react';
 
+import styles from '../styles/index.module.scss';
+
 class Sheet extends React.Component {
 
     constructor(props) {
@@ -8,7 +10,7 @@ class Sheet extends React.Component {
         this.isShow = props.isShow;
 
         this.state = {
-            classOfSheetShow: 'hide'
+            classOfSheetShow: styles.hide
         }
     }
 
@@ -16,7 +18,7 @@ class Sheet extends React.Component {
 
     openSheet = () => this.setSheetClassName('')
 
-    closeSheet = () => this.setSheetClassName('hide')
+    closeSheet = () => this.setSheetClassName(styles.hide)
 
     clickHandler = (e) => {
         e.cancelBubble = true; // 阻止冒泡
@@ -24,14 +26,16 @@ class Sheet extends React.Component {
     }
 
     render() {
+        const sheetStyle = styles.sheetMask + ' ' + this.state.classOfSheetShow;
+
         return <>
             <div onClick={this.openSheet}>{this.props.button}</div>
             <div
-                className={'sheet-mask ' + this.state.classOfSheetShow}
+                className={sheetStyle}
                 onClick={this.closeSheet}>
-                <div className="sheet-box" onClick={this.clickHandler}>
+                <div className={styles.sheetBox} onClick={this.clickHandler}>
                     {/* 头部信息 */}
-                    <div className="sheet-header">
+                    <div className={styles.sheetHeader}>
                         <div onClick={this.closeSheet}>取消</div>
                         <div>标题</div>
                         <div>确定</div>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Sheet from '@/views/Sheet';
+import Sheet from '../views/Sheet';
 
 class SheetButton extends React.PureComponent {
     render() {

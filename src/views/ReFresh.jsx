@@ -1,5 +1,7 @@
 import React from 'react';
 
+import styles from '../styles/index.module.scss';
+
 class ReFresh extends React.Component {
   constructor(props) {
     super(props);
@@ -105,11 +107,11 @@ class ReFresh extends React.Component {
 
   render() {
     return (
-      <div className="reFresh-box">
+      <div className={styles.reFreshBox}>
         {/* 滚动区域 */}
         <div
           ref="refreshArea"
-          className="reFresh-area"
+          className={styles.reFreshArea}
           style={{
             height: this.height,
             transform: this.state.transform,
@@ -120,10 +122,10 @@ class ReFresh extends React.Component {
           onTouchEnd={this.touchEndHandler}
         >
           {/* 刷新tip */}
-          <div className="tip reFresh-tip">{this.state.refreshTip}</div>
+          <div className={styles.reFreshTip}>{this.state.refreshTip}</div>
 
           {/* 真正的内容 */}
-          <div ref="refreshDom" className="refresh">
+          <div ref="refreshDom" className={styles.refresh}>
             {this.props.children}
           </div>
         </div>
