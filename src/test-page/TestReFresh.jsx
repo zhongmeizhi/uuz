@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ReFresh from '../views/ReFresh.jsx'
+import ReFresh from '../views/ReFresh'
 
 class TestReFresh extends React.Component {
 

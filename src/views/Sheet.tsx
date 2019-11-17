@@ -1,27 +1,34 @@
-import React from 'react';
+import React, { Component, ReactNode, MouseEvent } from 'react';
 
 import styles from '../styles/index.module.scss';
 
-class Sheet extends React.Component {
+interface SheetProps {
+    children: ReactNode,
+    button: ReactNode
+}
 
-    constructor(props) {
+interface SheetState {
+    classOfSheetShow: String
+}
+
+class Sheet extends Component<SheetProps, SheetState> {
+
+    constructor(props: SheetProps) {
         super(props);
-
-        this.isShow = props.isShow;
 
         this.state = {
             classOfSheetShow: styles.hide
         }
     }
 
-    setSheetClassName = (className) => this.setState({classOfSheetShow: className});
+    setSheetClassName = (className: String) => this.setState({classOfSheetShow: className});
 
-    openSheet = () => this.setSheetClassName('')
+    openSheet = ():void => this.setSheetClassName('')
 
-    closeSheet = () => this.setSheetClassName(styles.hide)
+    closeSheet = ():void => this.setSheetClassName(styles.hide)
 
-    clickHandler = (e) => {
-        e.cancelBubble = true; // 阻止冒泡
+    clickHandler = (e: MouseEvent<HTMLElement>): void => {
+        // e.cancelBubble = true; // 阻止冒泡
         e.stopPropagation(); // 阻止冒泡
     }
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Picker from '../views/Picker.jsx';
+import Picker from '../views/Picker';
 
 class TestPicker extends React.Component {
 
