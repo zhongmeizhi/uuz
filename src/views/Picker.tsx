@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Sheet from '@/views/Sheet.jsx'
+import Sheet from './Sheet';
 
 class Picker extends React.Component {
 
@@ -9,7 +9,9 @@ class Picker extends React.Component {
     // }
 
     render() {
-        return <Sheet>
+        return <Sheet
+            canModalClose={false}
+            button={<button>弹出Picker</button>}>
             <div>Sheet</div>
         </Sheet>
     }

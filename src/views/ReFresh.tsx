@@ -17,7 +17,6 @@ interface ReFreshState {
 }
 
 interface GlobalAttr {
-  height: String,
   isNeedFresh: Boolean,
   startPageY?: Number,
   distanceY?: Number,
@@ -28,7 +27,6 @@ interface GlobalAttr {
 }
 
 let _attr: GlobalAttr = {
-  height: '100%',
   isNeedFresh: false,
   startPageY: undefined, // 记录开始手指位置
   distanceY: undefined, // 记录距离
@@ -148,8 +146,8 @@ class ReFresh extends React.Component<ReFreshProps, ReFreshState> {
   }
 
   render() {
+
     const freshAreaStyle: Object = {
-      height: _attr.height,
       transform: this.state.transform,
       transition: this.state.transition
     }

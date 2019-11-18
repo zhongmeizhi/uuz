@@ -1,20 +1,5 @@
 
 /*公共类*/
-.fl {
-    float: left
-}
-.fr {
-    float: right
-}
-.al {
-    text-align: left
-}
-.ac {
-    text-align: center
-}
-.ar {
-    text-align: right
-}
 .hide {
     display: none
 }
@@ -23,59 +8,9 @@
     下拉刷新 + 上拉加载 CSS样式
     ===============
 */ 
-.reFreshBox {
-    overflow: hidden;
-    background: #2294f0; /* 标准蓝色 */
-    position: relative;
-    .reFreshArea {
-        position: relative;
-        background: #c3c3c3;
-        height: 100%;
-        overflow-y: auto;
-        /* 
-            扩宽空间
-         */
-        transform: translate(0, -50px); 
-        padding-bottom: 50px;
-        margin-bottom: -50px;
-    }
-    .reFreshTip {
-        height: 50px;
-        line-height: 50px;
-        background: #2294f0; /* 标准蓝色 */
-        text-align: center;
-        color: white;
-    }
-    .loadTip {
-        background: #c3c3c3;
-        bottom: 30px;
-        text-align: center;
-        color: white;
-    }
-}
+@import './refresh.scss';
 /*  ===============
     sheet 底框 css样式
     ===============
 */
-.sheetMask {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    z-index: 11;
-    .sheetBox {
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        height: 40vh;
-        background: white;
-    }
-    .sheetHeader {
-        line-height: 30px;
-        display: flex;
-        justify-content: space-between;
-        padding: 0 16px;
-    }
-}
+@import './sheet.scss';
