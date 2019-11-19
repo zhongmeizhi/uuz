@@ -1,31 +1,22 @@
 
-.reFreshBox {
+.zui-refresh-box {
     overflow: hidden;
     background: #2294f0; /* 标准蓝色 */
     position: relative;
-    height: 100%;
-    .reFreshArea {
+    .zui-refresh-area {
         position: relative;
         background: #c3c3c3;
         height: 100%;
         overflow-y: auto;
-        /* 
-            扩宽空间
-         */
+        /*  扩宽空间 */
         transform: translate(0, -50px); 
         padding-bottom: 50px;
         margin-bottom: -50px;
     }
-    .reFreshTip {
+    .zui-refresh-tip {
         height: 50px;
         line-height: 50px;
         background: #2294f0; /* 标准蓝色 */
-        text-align: center;
-        color: white;
-    }
-    .loadTip {
-        background: #c3c3c3;
-        bottom: 30px;
         text-align: center;
         color: white;
     }

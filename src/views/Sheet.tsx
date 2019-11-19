@@ -1,39 +1,38 @@
-import React, { Component, ReactNode, MouseEvent } from 'react';
+import React, { PureComponent, ReactNode, MouseEvent } from 'react';
 
 import {getDefaultVal} from '../utils/base';
-import styles from '../styles/index.module.scss';
 
 interface SheetProps {
     children: ReactNode,
     button: ReactNode, // 触发Sheet的按钮
-    titleTxt?: String,
-    canModalClose?: Boolean
+    titleTxt?: string,
+    canModalClose?: boolean
 }
 
 interface SheetState {
-    classOfSheetShow: String,
+    classOfSheetShow: string,
 }
 
-class Sheet extends Component<SheetProps, SheetState> {
+class Sheet extends PureComponent<SheetProps, SheetState> {
 
-    canModalClose: Boolean;
+    canModalClose: boolean;
 
     constructor(props: SheetProps) {
         super(props);
 
         // 是否可以通过点击 遮罩层来关闭 Sheet
-        this.canModalClose = getDefaultVal<Boolean>(props.canModalClose, true)
+        this.canModalClose = getDefaultVal<boolean>(props.canModalClose, true)
 
         this.state = {
-            classOfSheetShow: styles.hide,
+            classOfSheetShow: 'hide',
         }
     }
 
-    setSheetClassName = (className: String) => this.setState({classOfSheetShow: className});
+    setSheetClassName = (className: string) => this.setState({classOfSheetShow: className});
 
     openSheet = ():void => this.setSheetClassName('')
 
-    closeSheet = ():void => this.setSheetClassName(styles.hide)
+    closeSheet = ():void => this.setSheetClassName('hide')
 
     modalHandler = (): void => {
         this.canModalClose && this.closeSheet()
@@ -46,16 +45,16 @@ class Sheet extends Component<SheetProps, SheetState> {
     }
 
     render() {
-        const sheetStyle = styles.sheetMask + ' ' + this.state.classOfSheetShow;
+        const sheetStyle: string = `zui-sheet-mask ${this.state.classOfSheetShow}`;
 
         return <>
             <div onClick={this.openSheet}>{this.props.button}</div>
             <div
                 className={sheetStyle}
                 onClick={this.modalHandler}>
-                <div className={styles.sheetBox}>
+                <div className="zui-sheet-box">
                     {/* 头部信息 */}
-                    <div className={styles.sheetHeader}>
+                    <div className="zui-sheet-header">
                         <div onClick={this.closeSheet}>取消</div>
                         <div>{this.props.titleTxt}</div>
                         <div onClick={this.clickHandler}>确定</div>

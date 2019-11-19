@@ -1,8 +1,9 @@
 import React from 'react';
 
 import Sheet from './Sheet';
+import Button from './Button';
 
-class Picker extends React.Component {
+class Picker extends React.PureComponent {
 
     // constructor() {
     //     super();
@@ -11,7 +12,7 @@ class Picker extends React.Component {
     render() {
         return <Sheet
             canModalClose={false}
-            button={<button>弹出Picker</button>}>
+            button={<Button>弹出Picker</Button>}>
             <div>Sheet</div>
         </Sheet>
     }

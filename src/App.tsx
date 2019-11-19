@@ -1,16 +1,18 @@
 import React from 'react';
 import './styles/test.scss';
 
-import TestSheet from './test-page/TestSheet.jsx';
-import TestPicker from './test-page/TestPicker'
 import TestReFresh from './test-page/TestReFresh'
+import TestSheet from './test-page/TestSheet';
+import TestPicker from './test-page/TestPicker'
+
+import './styles/index.scss'
 
 function App() {
   return (
     <div className="App">
+      <TestReFresh></TestReFresh>
       <TestSheet></TestSheet>
       <TestPicker></TestPicker>
-      <TestReFresh></TestReFresh>
     </div>
   );
 }

@@ -1,42 +1,41 @@
 import React from 'react';
 
-import styles from '../styles/index.module.scss';
-
 interface ReFreshProps {
-  freshDistance: Number,
-  loadDistance: Number,
-  height: String,
-  freshHandler: Function | undefined,
-  loadHandler: Function | undefined
+  className?: String, // 刷新组件的 支持添加className
+  freshDistance?: number, // 触发刷新需要的：下拉距离
+  loadDistance?: number, // 触发加载需要的：距离最底部距离
+  freshHandler: Function | undefined, // 刷新执行的函数
+  loadHandler: Function | undefined // 加载执行的函数
 }
 
 interface ReFreshState {
-  transform: String,
-  transition: String,
-  refreshTip: String
+  transform: string, // css
+  transition: string, // css
+  refreshTip: string // 刷新提示文案
 }
 
+// 全局属性
 interface GlobalAttr {
-  isNeedFresh: Boolean,
-  startPageY?: Number,
-  distanceY?: Number,
-  freshAble: Boolean,
-  freshDistance: Number
-  loadDistance: Number,
-  isNeedLoad: Boolean
+  isNeedFresh: boolean, // 是否到了需要执行刷新方法的时候，（超过特定距离）
+  startPageY?: number, // 手指开始位置
+  distanceY?: number, // 手指滑动距离
+  freshAble: boolean, // 是否可以刷新：只想让页面到达最顶部后再触发
+  freshDistance: number // 触发刷新需要的：下拉距离，可以被props覆盖
+  loadDistance: number, // 触发加载需要的：距离最底部距离，可以被props覆盖
+  isNeedLoad: boolean // 是否需要刷新
 }
 
 let _attr: GlobalAttr = {
   isNeedFresh: false,
-  startPageY: undefined, // 记录开始手指位置
-  distanceY: undefined, // 记录距离
+  startPageY: undefined,
+  distanceY: undefined,
   freshAble: false,
-  freshDistance: 90,
+  freshDistance: 90, // 
   loadDistance: 30,
   isNeedLoad: false
 };
 
-class ReFresh extends React.Component<ReFreshProps, ReFreshState> {
+class ReFresh extends React.PureComponent<ReFreshProps, ReFreshState> {
 
   refFreshArea: any;
   refFreshDom: any;
@@ -147,27 +146,29 @@ class ReFresh extends React.Component<ReFreshProps, ReFreshState> {
 
   render() {
 
+    const freshBoxClassName: string = `zui-refresh-box ${this.props.className || ''}`;
+
     const freshAreaStyle: Object = {
       transform: this.state.transform,
       transition: this.state.transition
     }
 
     return (
-      <div className={styles.reFreshBox}>
+      <div className={freshBoxClassName}>
         {/* 滚动区域 */}
         <div
           ref={ele => this.refFreshArea = ele}
-          className={styles.reFreshArea}
+          className="zui-refresh-area"
           style={freshAreaStyle}
           onTouchStart={this.touchStartHandler}
           onTouchMove={this.touchMoveHandler}
           onTouchEnd={this.touchEndHandler}
         >
           {/* 刷新tip */}
-          <div className={styles.reFreshTip}>{this.state.refreshTip}</div>
+          <div className="zui-refresh-tip">{this.state.refreshTip}</div>
 
           {/* 真正的内容 */}
-          <div ref={ele => this.refFreshDom = ele} className={styles.refresh}>
+          <div ref={ele => this.refFreshDom = ele} className="refresh">
             {this.props.children}
           </div>
         </div>

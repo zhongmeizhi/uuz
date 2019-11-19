@@ -1,0 +1,14 @@
+.zui-button {
+    &.zui-primary {
+        color: white;
+        line-height: 47px;
+        background-color: #108ee9;
+        border: 1px solid #108ee9;
+        border-radius: 5px;
+        text-align: center;
+        &:active {
+            color: hsla(0,0%,100%,.3);
+            background-color: #0e80d2;
+        }
+    }
+}

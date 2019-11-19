@@ -1,3 +1,5 @@
+// 初始化的css样式
+@import './base.scss';
 
 /*公共类*/
 .hide {
@@ -14,3 +16,9 @@
     ===============
 */
 @import './sheet.scss';
+/*  ===============
+    按钮 css样式
+    ===============
+*/
+@import './button.scss';
+

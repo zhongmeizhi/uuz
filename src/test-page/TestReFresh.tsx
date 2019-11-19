@@ -2,10 +2,17 @@ import React from 'react';
 
 import ReFresh from '../views/ReFresh'
 
-class TestReFresh extends React.Component {
+interface TestFreshProps {
+}
 
-  constructor() {
-    super();
+interface TestFreshState {
+  num: number
+}
+
+class TestReFresh extends React.Component<TestFreshProps, TestFreshState> {
+
+  constructor(props: TestFreshProps) {
+    super(props);
     this.state = {
       num: 30
     }
@@ -28,7 +35,7 @@ class TestReFresh extends React.Component {
   render() {
 
     return <ReFresh
-      height={'100vh'}
+      className="test-fresh"
       freshHandler={this.freshHandler}
       loadHandler={this.loadHandler}>
       {
