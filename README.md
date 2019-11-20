@@ -12,14 +12,14 @@
 * 使用 `px` 为单位
 * 使用 `sass` 作为 `css` 扩展
 * 不应该使用 `cssModule`
-* 非测试模块 使用 `Ts` 和 `TSX`
+* 使用 `Ts` 和 `TSX`
 * 没有发布到npm的打算
 * 可能做一个预览页
 
 进度：
 * [x] Button
 * [x] 下拉刷新 & 上拉加载
-* [ ] Sheet
+* [x] Sheet
 * [ ] Picker
 * [ ] Tabs
 

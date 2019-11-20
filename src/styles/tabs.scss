@@ -1,0 +1,40 @@
+.zui-tabs-container {
+    display: flex;
+    flex-direction: column;
+    .zui-tabs-bar-box {
+        width: 100%;
+        overflow: auto hidden;
+        position: relative;
+        .zui-tabs-bar {
+            display: inline-block;
+            line-height: 38px;
+            text-align: center;
+            // width: 33%;
+            &.active {
+                color: $primaryColor;
+            }
+        }
+        .zui-tabs-bar-underline {
+            transition: all 0.3s;
+            position: absolute;
+            // width: 33%;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            border-radius: 5px;
+            background: $primaryColor;
+        }
+    }
+    .zui-tabs-area-box {
+        width: 100%;
+        overflow: hidden;
+        flex: 1;
+        .zui-tabs-area {
+            display: flex;
+            transition: all 0.3s;
+            >div {
+                width: 100%;
+            }
+        }
+    }
+}

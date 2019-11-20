@@ -17,7 +17,7 @@ const throttle = function(func, wait, options) {
   var later = function() {
 
     // 如果设置了 leading（忽略开始函数），就将 previous 设为 0
-    previous = options.leading === false ? 0 : _.now();
+    previous = options.leading === false ? 0 : Date.now();
 
     // 置空一是为了防止内存泄漏，二是为了下面的定时器判断
     timeout = null;
@@ -29,7 +29,7 @@ const throttle = function(func, wait, options) {
   return function() {
 
     // 获得当前时间戳
-    var now = _.now();
+    var now = Date.now();
 
     // 首次进入：因为previous=0，所以，如果不设置忽略开始函数
     // 那么 previous = now

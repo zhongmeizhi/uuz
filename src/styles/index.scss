@@ -25,20 +25,26 @@ $thinGrey: #f7f7f7;
 .zui-hide {
     display: none
 }
-
-/*  ===============
-    下拉刷新 + 上拉加载 CSS样式
-    ===============
-*/ 
-@import './refresh.scss';
-/*  ===============
-    sheet 底框 css样式
-    ===============
-*/
-@import './sheet.scss';
 /*  ===============
     按钮 css样式
     ===============
 */
 @import './button.scss';
 
+/*  ===============
+    下拉刷新 + 上拉加载 CSS样式
+    ===============
+*/ 
+@import './refresh.scss';
+
+/*  ===============
+    sheet 底框 css样式
+    ===============
+*/
+@import './sheet.scss';
+
+/*  ===============
+    Tabs css样式
+    ===============
+*/
+@import './tabs.scss';
