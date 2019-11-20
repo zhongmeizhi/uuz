@@ -2,13 +2,13 @@
     &.zui-primary {
         color: white;
         line-height: 47px;
-        background-color: #108ee9;
-        border: 1px solid #108ee9;
+        background-color: $primaryColor;
+        border: 1px solid $primaryColor;
         border-radius: 5px;
         text-align: center;
         &:active {
-            color: hsla(0,0%,100%,.3);
-            background-color: #0e80d2;
+            color: rgba(255, 255, 255, 0.3);
+            background-color: #1d82cc;
         }
     }
 }

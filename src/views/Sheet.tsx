@@ -10,7 +10,8 @@ interface SheetProps {
 }
 
 interface SheetState {
-    classOfSheetShow: string,
+    isShow: boolean,
+    anmClassName: string
 }
 
 class Sheet extends PureComponent<SheetProps, SheetState> {
@@ -24,15 +25,29 @@ class Sheet extends PureComponent<SheetProps, SheetState> {
         this.canModalClose = getDefaultVal<boolean>(props.canModalClose, true)
 
         this.state = {
-            classOfSheetShow: 'hide',
+            isShow: false,
+            anmClassName: ''
         }
     }
 
-    setSheetClassName = (className: string) => this.setState({classOfSheetShow: className});
+    openSheet = ():void => {
+        this.setState({
+            isShow: true
+        })
+    }
 
-    openSheet = ():void => this.setSheetClassName('')
+    closeSheet = ():void => {
+        this.setState({
+            anmClassName: 'quit'
+        })
+    }
 
-    closeSheet = ():void => this.setSheetClassName('hide')
+    transitionEndHandler = () => {
+        this.setState({
+            isShow: false,
+            anmClassName: ''
+        })
+    }
 
     modalHandler = (): void => {
         this.canModalClose && this.closeSheet()
@@ -45,24 +60,34 @@ class Sheet extends PureComponent<SheetProps, SheetState> {
     }
 
     render() {
-        const sheetStyle: string = `zui-sheet-mask ${this.state.classOfSheetShow}`;
+
+        const sheetClassName = `zui-sheet-box ${this.state.anmClassName}`
 
         return <>
             <div onClick={this.openSheet}>{this.props.button}</div>
-            <div
-                className={sheetStyle}
-                onClick={this.modalHandler}>
-                <div className="zui-sheet-box">
-                    {/* 头部信息 */}
-                    <div className="zui-sheet-header">
-                        <div onClick={this.closeSheet}>取消</div>
-                        <div>{this.props.titleTxt}</div>
-                        <div onClick={this.clickHandler}>确定</div>
+            {   
+                this.state.isShow ?
+                    <div className={sheetClassName}>
+                        {/* sheet遮罩层 */}
+                        <div
+                            className='zui-sheet-mask'
+                            onTransitionEnd={this.transitionEndHandler}
+                            onClick={this.modalHandler}>
+                        </div>
+                        {/* sheet主体 */}
+                        <div className="zui-sheet-area">
+                            {/* 头部信息 */}
+                            <div className="zui-sheet-header">
+                                <div onClick={this.closeSheet}>取消</div>
+                                <div>{this.props.titleTxt || ''}</div>
+                                <div onClick={this.clickHandler}>确定</div>
+                            </div>
+                            {/* 内容部分 */}
+                            <div>{this.props.children}</div>
+                        </div>
                     </div>
-                    {/* 内容部分 */}
-                    <div>{this.props.children}</div>
-                </div>
-            </div>
+                    : null
+            }
         </>
     }
 }

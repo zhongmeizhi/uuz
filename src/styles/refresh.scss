@@ -1,11 +1,11 @@
 
 .zui-refresh-box {
     overflow: hidden;
-    background: #2294f0; /* 标准蓝色 */
+    background: $primaryColor; /* 标准蓝色 */
     position: relative;
     .zui-refresh-area {
         position: relative;
-        background: #c3c3c3;
+        background: white;
         height: 100%;
         overflow-y: auto;
         /*  扩宽空间 */
@@ -16,7 +16,7 @@
     .zui-refresh-tip {
         height: 50px;
         line-height: 50px;
-        background: #2294f0; /* 标准蓝色 */
+        background: $primaryColor; /* 标准蓝色 */
         text-align: center;
         color: white;
     }

@@ -1,8 +1,28 @@
 // 初始化的css样式
 @import './base.scss';
 
+// 统一颜色
+$primaryColor: #108ee9;
+$grey: #d6d6d6;
+$thinGrey: #f7f7f7;
+
+// 底部0.5px的线
+@mixin line-bottom {
+    position: relative;
+    &::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        background: $grey;
+        transform: scaleY(0.5);
+        bottom: 0;
+        left: 0;
+    }
+}
+
 /*公共类*/
-.hide {
+.zui-hide {
     display: none
 }
 
