@@ -14,39 +14,39 @@ interface ReFreshState {
   refreshTip: string // 刷新提示文案
 }
 
+// 刷新距离状态 的枚举值
+enum DistanceStatus {
+  'EMPTY',
+  'HALF',
+  'DONE'
+}
+
 // 全局属性
 interface GlobalAttr {
-  isNeedFresh: boolean, // 是否到了需要执行刷新方法的时候，（超过特定距离）
   startPageY?: number, // 手指开始位置
-  distanceY?: number, // 手指滑动距离
+  distanceStatus: DistanceStatus, // 是否到了需要执行刷新方法的时候，
   freshAble: boolean, // 是否可以刷新：只想让页面到达最顶部后再触发
   freshDistance: number // 触发刷新需要的：下拉距离，可以被props覆盖
   loadDistance: number, // 触发加载需要的：距离最底部距离，可以被props覆盖
-  isNeedLoad: boolean // 是否需要刷新
 }
 
 let _attr: GlobalAttr = {
-  isNeedFresh: false,
   startPageY: undefined,
-  distanceY: undefined,
+  distanceStatus: DistanceStatus.DONE,
   freshAble: false,
   freshDistance: 90, // 
   loadDistance: 60,
-  isNeedLoad: false
 };
 
 class ReFresh extends React.PureComponent<ReFreshProps, ReFreshState> {
 
-  refFreshArea: any;
-  refFreshDom: any;
+  refFreshArea: HTMLDivElement | any;
+  refFreshDom: HTMLDivElement | any;
 
   constructor(props: ReFreshProps) {
     super(props);
-
     // this.refFreshArea;
     // this.refFreshDom;
-    
-    // 需要绑定的状态
     this.state = {
       transform: '',
       transition: '',
@@ -54,100 +54,99 @@ class ReFresh extends React.PureComponent<ReFreshProps, ReFreshState> {
     }
   }
 
+  // 计算是否需要加载
+  getHasNeedLoad = (): boolean => {
+    // 是否可加载
+    const scrollTop = this.refFreshArea.scrollTop;
+    const areaHeight = this.refFreshArea.offsetHeight;
+    const domHeight = this.refFreshDom.offsetHeight;
+    const isNeedLoad = (domHeight <= _attr.loadDistance + areaHeight + scrollTop);
+    return isNeedLoad;
+  }
+
+  // 计算刷新状态变化
+  computedRefreshSatus(event: React.TouchEvent<HTMLDivElement>): void {
+    // 计算位置
+    const curPageY = event.touches[0].pageY;
+    const startPageY = _attr.startPageY as number; // 小写
+    const distanceY = (curPageY - startPageY) / 2;
+
+    // 下拉动画
+    if (distanceY > 0) {
+      let freshParms = {
+        transform: `translate(0, ${distanceY as number - 50}px)`,
+        refreshTip: ''
+      }
+      if (distanceY > _attr.freshDistance) {
+        _attr.distanceStatus = DistanceStatus.DONE;
+        freshParms.refreshTip = '松开刷新';
+      } else {
+        _attr.distanceStatus = DistanceStatus.HALF;
+        freshParms.refreshTip = '下拉刷新';
+      }
+      this.setState(freshParms);
+    }
+  }
+
   // tip 隐藏（恢复原状）
-  hideFreshTip = () => {
-    _attr.distanceY = undefined;
+  hideFreshTip = (): void => {
+    _attr.distanceStatus = DistanceStatus.DONE;
     this.setState({
       transform: `translate(0, -50px)`,
       transition: 'transform 0.6s',
     })
   }
 
-  touchStartHandler = (val: any): void => {
+  // 开始时，执行一些重置操作
+  touchStartHandler = (val: React.TouchEvent<HTMLDivElement>): void => {
+    _attr.distanceStatus = DistanceStatus.EMPTY;
     // 记住手的位置
     _attr.startPageY = val.touches[0].pageY;
-
-    // 重置
-    _attr.isNeedFresh = false;
-
-    // 是否 可刷新
     // 只有当页面在最顶部的时候 再次下拉就会触发是否刷新选项
-    const scrollTop = this.refFreshArea.scrollTop;
-    _attr.freshAble = (scrollTop === 0);
-
+    _attr.freshAble = (this.refFreshArea.scrollTop === 0);
     // 关闭有动画效果
     this.setState({transition: ''})
   }
 
-  touchMoveHandler = (val: any): void => {
+  // 手指移动时，计算刷新的状态变化
+  touchMoveHandler = (event: React.TouchEvent<HTMLDivElement>): void => {
     if (_attr.freshAble) {
-      // 计算位置
-      const curPageY = val.touches[0].pageY;
-      const startPageY = _attr.startPageY as number; // 小写
-      const distanceY = _attr.distanceY = (curPageY - startPageY) / 2;
-
-      // 下拉动画
-      if (_attr.freshAble && distanceY > 0) {
-        let freshParms = {
-          transform: `translate(0, ${distanceY as number - 50}px)`,
-          refreshTip: ''
-        }
-        if (distanceY > _attr.freshDistance) {
-          _attr.isNeedFresh = true;
-          freshParms.refreshTip = '松开刷新';
-        } else {
-          _attr.isNeedFresh = false;
-          freshParms.refreshTip = '下拉刷新';
-        }
-        this.setState(freshParms);
-        return;
-      }
+      this.computedRefreshSatus(event);
     }
   }
 
-  touchEndHandler = () => {
-    _attr.freshAble = false;
-    
+  touchEndHandler = (): void => {
     // 需要刷新的时候执行 传入的刷新方法
-    if (_attr.isNeedFresh &&
-      typeof this.props.freshHandler === 'function') {
+    if (_attr.distanceStatus === DistanceStatus.DONE &&
+        typeof this.props.freshHandler === 'function') {
       this.setState({
         refreshTip: '刷新中 >>>',
         transform: `translate(0, 0)`,
         transition: 'transform 3s',
       })
-
       // 执行刷新方法
       this.props.freshHandler();
-
-      setTimeout(() => {
-        // 恢复原状
-        this.hideFreshTip();
-      }, 300);
+      // 恢复原状
+      setTimeout(() => this.hideFreshTip(), 300);
       return;
     }
     
     // 不需要刷新但是有拉出tip的情况，需要恢复原状
-    if (_attr.distanceY) this.hideFreshTip();
+    if(_attr.distanceStatus === DistanceStatus.HALF) {
+      this.hideFreshTip()
+      return;
+    };
 
     // 上拉加载
     if (typeof this.props.loadHandler === 'function') {
-      // 是否可加载
-      const scrollTop = this.refFreshArea.scrollTop;
-      const areaHeight = this.refFreshArea.offsetHeight;
-      const domHeight = this.refFreshDom.offsetHeight;
-      _attr.isNeedLoad = (domHeight <= _attr.loadDistance + areaHeight + scrollTop );
-
-      // 加载操作
-      _attr.isNeedLoad && this.props.loadHandler();
+      // 计算是否需要加载，然后执行加载操作
+      this.getHasNeedLoad() && this.props.loadHandler();
       return;
     }
   }
 
   render() {
-
     const freshBoxClassName: string = `zui-refresh-box ${this.props.className || ''}`;
-
     const freshAreaStyle: Object = {
       transform: this.state.transform,
       transition: this.state.transition
@@ -166,9 +165,8 @@ class ReFresh extends React.PureComponent<ReFreshProps, ReFreshState> {
         >
           {/* 刷新tip */}
           <div className="zui-refresh-tip">{this.state.refreshTip}</div>
-
           {/* 真正的内容 */}
-          <div ref={ele => this.refFreshDom = ele} className="refresh">
+          <div ref={ele => this.refFreshDom = ele} className="zui-refresh">
             {this.props.children}
           </div>
         </div>

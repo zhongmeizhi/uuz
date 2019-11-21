@@ -50,11 +50,17 @@
 
 
 进度：
-* [x] Button
-* [x] 下拉刷新 & 上拉加载
-* [x] Sheet
-* [x] Tabs
+* [x] Button // 激活动画 + disable
+* [x] Refresh // 下拉刷新 & 上拉加载
+* [x] Sheet 
+* [x] Tabs // 支持左右滑动
 * [ ] Picker
+* [ ] List
+* [ ] Dialog
+* [ ] Toast
+* [ ] Switch
+* [ ] Progress
+* [ ] Carousel
 
 
 使用的脚手架：[Create React App](https://github.com/facebook/create-react-app).
