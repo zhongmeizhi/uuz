@@ -21,7 +21,7 @@
 
 |Tabs|Sheet|Fresh|
 |--|--|--|
-|![Tabs](/previews/Tabs.gif)|![Sheet](/previews/Sheet.gif)|![Fresh](/previews/Fresh.gif)
+|![Tabs](https://zhongmeizhi.github.io/static/z-ui/Tabs.gif)|![Sheet](https://zhongmeizhi.github.io/static/z-ui/Sheet.gif)|![Fresh](https://zhongmeizhi.github.io/static/z-ui/Fresh.gif)
 |--|--|--|
 
 ### 示例代码
