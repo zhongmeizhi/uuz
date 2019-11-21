@@ -31,7 +31,7 @@ let _attr: GlobalAttr = {
   distanceY: undefined,
   freshAble: false,
   freshDistance: 90, // 
-  loadDistance: 30,
+  loadDistance: 60,
   isNeedLoad: false
 };
 

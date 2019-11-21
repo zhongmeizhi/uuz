@@ -14,13 +14,13 @@ class TestReFresh extends React.Component<TestFreshProps, TestFreshState> {
   constructor(props: TestFreshProps) {
     super(props);
     this.state = {
-      num: 30
+      num: 50
     }
   }
 
   freshHandler = () => {
     this.setState({
-      num: 30
+      num: 50
     })
   }
 
