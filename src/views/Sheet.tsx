@@ -6,7 +6,8 @@ interface SheetProps {
     children: ReactNode,
     button: ReactNode, // 触发Sheet的按钮
     titleTxt?: string,
-    canModalClose?: boolean
+    canModalClose?: boolean,
+    ensureHandler?: Function
 }
 
 interface SheetState {
@@ -56,6 +57,9 @@ class Sheet extends PureComponent<SheetProps, SheetState> {
     clickHandler = (e: MouseEvent<HTMLElement>): void => {
         // e.cancelBubble = true; // 阻止冒泡
         e.stopPropagation(); // 阻止冒泡
+        if (typeof this.props.ensureHandler === 'function') {
+            this.props.ensureHandler();
+        }
         this.closeSheet();
     }
 

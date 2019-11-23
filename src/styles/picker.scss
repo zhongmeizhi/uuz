@@ -1,0 +1,28 @@
+$itemLineHeight: 20px;
+$indicatorBorder: 1px solid #d6d6d6;
+.zui-picker {
+    box-shadow: 0 0 40px 40px $thinGrey inset;
+    padding: 10px;
+    height: 166px;
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    .zui-picker-col {
+        padding: 0 16px;
+        .zui-picker-item {
+            line-height: $itemLineHeight;
+        }
+    }
+    // .zui-picker-indicator
+    &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        width: 100%;
+        height: $itemLineHeight;
+        border-top: $indicatorBorder;
+        border-bottom: $indicatorBorder;
+    }
+}
