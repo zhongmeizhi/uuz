@@ -4,8 +4,11 @@ import Picker from '../views/Picker';
 
 class TestPicker extends React.Component {
 
-    render() {
+    changeHandler = (values: Array<string>, indexes: Array<number>) => {
+        console.log(values, indexes)
+    }
 
+    render() {
         const data = [
             [
                 {
@@ -25,9 +28,12 @@ class TestPicker extends React.Component {
                 },
             ]
         ]
-
         return <div>
-            <Picker data={data}></Picker>
+            <Picker
+                data={data}
+                values={['1', '222']}
+                onChange={this.changeHandler}>
+            </Picker>
         </div>
     }
 }

@@ -1,16 +1,22 @@
 $itemLineHeight: 20px;
 $indicatorBorder: 1px solid #d6d6d6;
+$pickerHeight: 180px;
+$colPadding: $pickerHeight/2 - 10;
+
 .zui-picker {
     box-shadow: 0 0 40px 40px $thinGrey inset;
-    padding: 10px;
-    height: 166px;
+    height: $pickerHeight;
     position: relative;
     display: flex;
     justify-content: space-around;
+    overflow: hidden;
     .zui-picker-col {
-        padding: 0 16px;
+        padding: $colPadding 16px;
+        flex: 1;
+        text-align: center;
         .zui-picker-item {
             line-height: $itemLineHeight;
+            height: $itemLineHeight;
         }
     }
     // .zui-picker-indicator
