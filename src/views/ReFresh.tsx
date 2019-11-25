@@ -23,7 +23,7 @@ enum DistanceStatus {
 
 // 全局属性
 interface GlobalAttr {
-  startPageY?: number, // 手指开始位置
+  startPageY: number, // 手指开始位置
   distanceStatus: DistanceStatus, // 是否到了需要执行刷新方法的时候，
   freshAble: boolean, // 是否可以刷新：只想让页面到达最顶部后再触发
   freshDistance: number // 触发刷新需要的：下拉距离，可以被props覆盖
@@ -31,7 +31,7 @@ interface GlobalAttr {
 }
 
 let _attr: GlobalAttr = {
-  startPageY: undefined,
+  startPageY: 0,
   distanceStatus: DistanceStatus.DONE,
   freshAble: false,
   freshDistance: 90, // 
@@ -56,7 +56,6 @@ class ReFresh extends React.PureComponent<ReFreshProps, ReFreshState> {
 
   // 计算是否需要加载
   getHasNeedLoad = (): boolean => {
-    // 是否可加载
     const scrollTop = this.refFreshArea.scrollTop;
     const areaHeight = this.refFreshArea.offsetHeight;
     const domHeight = this.refFreshDom.offsetHeight;
@@ -66,15 +65,14 @@ class ReFresh extends React.PureComponent<ReFreshProps, ReFreshState> {
 
   // 计算刷新状态变化
   computedRefreshSatus(event: React.TouchEvent<HTMLDivElement>): void {
-    // 计算位置
     const curPageY = event.touches[0].pageY;
-    const startPageY = _attr.startPageY as number; // 小写
+    const startPageY = _attr.startPageY; // 小写
     const distanceY = (curPageY - startPageY) / 2;
 
     // 下拉动画
     if (distanceY > 0) {
       let freshParms = {
-        transform: `translate(0, ${distanceY as number - 50}px)`,
+        transform: `translate(0, ${distanceY - 50}px)`,
         refreshTip: ''
       }
       if (distanceY > _attr.freshDistance) {

@@ -10,38 +10,41 @@ interface PickerState {
     colStyleList: Array<any>,
 }
 
-interface GlobalAttr {
-    curTouchY: number,
-    translateList: Array<number>,
-    pickIdxList: Array<number>,
-    setCurTouchY: Function,
-    initPickIndexList: Function,
-    getTranslateY: Function,
-    LINE_HEIGHT: 20
-}
+class GlobalAttr {
 
-const _attr: GlobalAttr = {
-    curTouchY: 0,
-    translateList: [],
-    pickIdxList: [],
+    curTouchY: number;
+    translateList: Array<number>;
+    pickIdxList: Array<number>;
+    LINE_HEIGHT: 20;
+
+    constructor() {
+        this.curTouchY = 0;
+        this.translateList = [];
+        this.pickIdxList = [];
+        this.LINE_HEIGHT = 20;
+    }
+
     setCurTouchY(e: TouchEvent<HTMLDivElement>) {
         this.curTouchY = e.touches[0].pageY;
-    },
+    }
+
     initPickIndexList(props: PickerProps) {
         this.pickIdxList = props.values.map((val, idx) => {
             let pickIdx = props.data[idx].findIndex(sub => sub.value === val);
             return pickIdx === -1 ? 0 : pickIdx;
         });
-    },
+    }
+
     getTranslateY(index: number) {
         let curTranslateY = 0;
         if (this.pickIdxList[index]) {
             curTranslateY = -this.pickIdxList[index] * this.LINE_HEIGHT;
         }
         return curTranslateY;
-    },
-    LINE_HEIGHT: 20
+    }
 }
+
+const _attr = new GlobalAttr();
 
 class Picker extends Component<PickerProps, PickerState> {
 
@@ -57,8 +60,8 @@ class Picker extends Component<PickerProps, PickerState> {
 
     // 获取初始化的 translateList 和 colStyleList
     getInitList = (): {[key: string]: Array<any>} => {
-        let colStyleList: Array<any> = []
-        let translateList: Array<number> = []
+        let colStyleList: Array<any> = [];
+        let translateList: Array<number> = [];
         this.props.data.forEach((col, idx) => {
             let curTranslateY = _attr.getTranslateY(idx);
             translateList.push(curTranslateY);
@@ -67,10 +70,8 @@ class Picker extends Component<PickerProps, PickerState> {
                 transform: `translateY(${curTranslateY}px)`
             })
         })
-        return {
-            translateList,
-            colStyleList
-        }
+
+        return { translateList, colStyleList }
     }
 
     // 根据 index 修改列的style
@@ -82,8 +83,7 @@ class Picker extends Component<PickerProps, PickerState> {
 
     // 获取 调整后的最终 translate 和 当前的选择的 index
     getFinallyTranslate = (idx: number) => {
-        let adjustTranslate;
-        let pickIdx;
+        let adjustTranslate, pickIdx;
         const maxIdx = this.props.data[idx].length - 1;
         const curTransLate = _attr.translateList[idx];
         const maxTranslate = - maxIdx * _attr.LINE_HEIGHT;
@@ -100,10 +100,7 @@ class Picker extends Component<PickerProps, PickerState> {
             pickIdx = curPickIdx;
         }
 
-        return {
-            pickIdx,
-            adjustTranslate
-        };
+        return { pickIdx, adjustTranslate };
     }
 
     // 手指触摸picker列开始
