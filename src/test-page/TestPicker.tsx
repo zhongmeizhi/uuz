@@ -83,13 +83,13 @@ class TestPicker extends React.Component<TestPickerProps, TestPickerState> {
             </Picker>
             <p>{'Picker values：' + this.state.values1.join(',')}</p>
             <br></br>
-            {/* <p>{'PickerView values：' + this.state.values2.join(',')}</p>
+            <p>{'PickerView values：' + this.state.values2.join(',')}</p>
             <br></br>
             <PickerView
                 data={data}
                 values={this.state.values2}
                 onEnsure={this.ensureHandler}>
-            </PickerView> */}
+            </PickerView>
         </div>
     }
 }

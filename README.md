@@ -48,6 +48,13 @@
       loadHandler={this.loadHandler}>
       <div>内容部分</div>
     </ReFresh>
+
+    // Picker 和 PickerView 使用
+    <Picker
+        data={[ [{value: '1', label: 'test1'}], [{value: '11', label: '测试1'}] ]}
+        values={['1', '11']}
+        onChange={this.changeHandler}>
+    </Picker>
 ```
 
 
@@ -58,9 +65,12 @@
 * [x] Tabs // 支持左右滑动
 * [x] Picker
 * [x] PickerView
-* [ ] List
-* [ ] Dialog
 * [ ] Toast
+* [ ] Dialog
+* [ ] Alert
+* [ ] Comfirm
+* [ ] Loading
+* [ ] List
 * [ ] Switch
 * [ ] Progress
 * [ ] Carousel
