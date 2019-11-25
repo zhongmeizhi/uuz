@@ -5,7 +5,7 @@ import Button from './Button';
 import Picker from './Picker'
 
 interface PickerViewProps {
-    data: Array<Array<Object>>,
+    data: Array<Array<{[key: string]: string}>>,
     values: Array<string | number>,
     onChange?: Function,
     onEnsure?: Function
@@ -23,17 +23,13 @@ let _attr:GlobalAttr = {
 
 class PickerView extends React.Component<PickerViewProps> {
 
-    constructor(props: PickerViewProps) {
-        super(props);
-    }
-
     ensureHandler = () => {
         if (typeof this.props.onEnsure === 'function') {
             this.props.onEnsure(_attr.values, _attr.indexes)
         }
     }
 
-    onChangeHandler = (values: Array<string>, indexes: Array<number>) => {
+    changeHandler = (values: Array<string>, indexes: Array<number>) => {
         _attr = { values, indexes }
         if (typeof this.props.onChange === 'function') {
             this.props.onChange(values, indexes)
@@ -47,7 +43,7 @@ class PickerView extends React.Component<PickerViewProps> {
             <Picker
                 data={this.props.data}
                 values={this.props.values}
-                onChange={this.onChangeHandler}>
+                onChange={this.changeHandler}>
             </Picker>
         </Sheet>
     }

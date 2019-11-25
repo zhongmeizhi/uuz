@@ -61,8 +61,6 @@ class TestPicker extends React.Component<TestPickerProps, TestPickerState> {
     }
 
     changeHandler = (values: Array<string>, indexes: Array<number>) => {
-        console.log(values, 'values')
-        console.log(values.join('.'), 'values')
         this.setState({
             values1: values
         })
