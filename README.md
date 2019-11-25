@@ -54,7 +54,8 @@
 * [x] Refresh // 下拉刷新 & 上拉加载
 * [x] Sheet 
 * [x] Tabs // 支持左右滑动
-* [ ] Picker
+* [x] Picker
+* [x] PickerView
 * [ ] List
 * [ ] Dialog
 * [ ] Toast

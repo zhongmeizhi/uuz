@@ -146,17 +146,22 @@ class Picker extends Component<PickerProps, PickerState> {
     render() {
         return <div className="zui-picker">
             {
-                this.props.data.map((list, idx) => <div
-                    style={this.state.colStyleList[idx]}
-                    className="zui-picker-col"
-                    onTouchStart={this.colTouchStartHandler(idx)}
-                    onTouchMove={this.colTouchMoveHandler(idx)}
-                    onTouchEnd={this.colTouchEndHandler(idx)}
-                    key={idx}>
-                    {
-                        list.map(item=> <div className="zui-picker-item"
-                            key={item.value}>{item.label}</div>)
-                    }
+                this.props.data.map((list, idx) => <div key={idx} 
+                className="zui-picker-col">
+                    <div
+                        className="zui-picker-col-mask"
+                        onTouchStart={this.colTouchStartHandler(idx)}
+                        onTouchMove={this.colTouchMoveHandler(idx)}
+                        onTouchEnd={this.colTouchEndHandler(idx)}>
+                    </div>
+                    <div
+                        className="zui-picker-col-area"
+                        style={this.state.colStyleList[idx]}>
+                        {
+                            list.map(item=> <div className="zui-picker-item"
+                                key={item.value}>{item.label}</div>)
+                        }
+                    </div>
                 </div>)
             }
         </div>
