@@ -21,8 +21,10 @@
 
 |Tabs|Sheet|Fresh|
 |--|--|--|
-|![Tabs](https://zhongmeizhi.github.io/static/z-ui/Tabs.gif)|![Sheet](https://zhongmeizhi.github.io/static/z-ui/Sheet.gif)|![Fresh](https://zhongmeizhi.github.io/static/z-ui/Fresh.gif)
-|--|--|--|
+|![Tabs](https://zhongmeizhi.github.io/static/z-ui/Tabs.gif)|![Sheet](https://zhongmeizhi.github.io/static/z-ui/Sheet.gif)|![Fresh](https://zhongmeizhi.github.io/static/z-ui/Fresh.gif)|
+|Picker|PickerView|--|
+|![Picker](https://zhongmeizhi.github.io/static/z-ui/Picker.gif)|![PickerView](https://zhongmeizhi.github.io/static/z-ui/PickerView.gif)|--|
+
 
 ### 示例代码
 ```

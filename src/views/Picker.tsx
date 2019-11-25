@@ -89,7 +89,7 @@ class Picker extends Component<PickerProps, PickerState> {
         let pickIdx;
         const maxIdx = this.props.data[idx].length - 1;
         const curTransLate = _attr.translateList[idx];
-        const maxTranslate = -maxIdx * _attr._LINE_HEIGHT;
+        const maxTranslate = - maxIdx * _attr._LINE_HEIGHT;
 
         if (curTransLate > 0) {
             adjustTranslate = 0;
@@ -98,8 +98,8 @@ class Picker extends Component<PickerProps, PickerState> {
             adjustTranslate = maxTranslate;
             pickIdx = maxIdx;
         } else {
-            const curPickIdx = Math.round(curTransLate / _attr._LINE_HEIGHT);
-            adjustTranslate = curPickIdx * _attr._LINE_HEIGHT;
+            const curPickIdx = Math.abs(Math.round(curTransLate / _attr._LINE_HEIGHT));
+            adjustTranslate = - curPickIdx * _attr._LINE_HEIGHT;
             pickIdx = curPickIdx;
         }
 
@@ -131,13 +131,9 @@ class Picker extends Component<PickerProps, PickerState> {
 
         _attr.pickIdxList[idx] = pickIdx;
         _attr.translateList[idx] = adjustTranslate;
-
         const values = this.props.data.map((val, i) => val[_attr.pickIdxList[i]].value)
         if (typeof this.props.onChange === 'function') {
-            this.props.onChange({
-                values: values,
-                indexes: _attr.pickIdxList
-            })
+            this.props.onChange(values, _attr.pickIdxList)
         }
 
         this.setColStyleListByIndex(idx, 'all 0.3s', `translateY(${adjustTranslate}px)`);

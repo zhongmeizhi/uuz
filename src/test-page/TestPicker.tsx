@@ -41,28 +41,55 @@ const data = [
     ]
 ]
 
-class TestPicker extends React.Component {
+interface TestPickerProps {
+}
+
+interface TestPickerState {
+    values1: Array<string>,
+    values2: Array<string>,
+}
+
+class TestPicker extends React.Component<TestPickerProps, TestPickerState> {
+
+    constructor(prop: TestPickerProps) {
+        super(prop);
+        
+        this.state = {
+            values1: ['2', '44'],
+            values2: ['1', '11']
+        }
+    }
 
     changeHandler = (values: Array<string>, indexes: Array<number>) => {
-        console.log(values, indexes)
+        console.log(values, 'values')
+        console.log(values.join('.'), 'values')
+        this.setState({
+            values1: values
+        })
     }
 
     ensureHandler = (values: Array<string>, indexes: Array<number>) => {
-        console.log(values, indexes)
+        this.setState({
+            values2: values
+        })
     }
 
     render() {
         return <div>
             <Picker
                 data={data}
-                values={['2', '44']}
+                values={this.state.values1}
                 onChange={this.changeHandler}>
             </Picker>
+            <p>{'Picker values：' + this.state.values1.join(',')}</p>
+            <br></br>
+            {/* <p>{'PickerView values：' + this.state.values2.join(',')}</p>
+            <br></br>
             <PickerView
                 data={data}
-                values={['3', '22']}
+                values={this.state.values2}
                 onEnsure={this.ensureHandler}>
-            </PickerView>
+            </PickerView> */}
         </div>
     }
 }
