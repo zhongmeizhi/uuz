@@ -1,6 +1,5 @@
-import React, { PureComponent, ReactNode, MouseEvent } from 'react';
-
-import {getDefaultVal} from '../utils/base';
+import React, { useState, ReactNode, MouseEvent } from 'react';
+import Mask from './Mask';
 
 interface SheetProps {
     children: ReactNode,
@@ -10,90 +9,55 @@ interface SheetProps {
     ensureHandler?: Function
 }
 
-interface SheetState {
-    isShow: boolean,
-    anmClassName: string
-}
+export default  function Sheet(props: SheetProps) {
+    const [isShow, setIsShow] = useState(false);
+    const [isQuitting, setIsQuitting] = useState(false);
+    const [sheetClassName, setSheetClassName] = useState('zui-sheet-box');
 
-class Sheet extends PureComponent<SheetProps, SheetState> {
-
-    canModalClose: boolean;
-
-    constructor(props: SheetProps) {
-        super(props);
-
-        // 是否可以通过点击 遮罩层来关闭 Sheet
-        this.canModalClose = getDefaultVal<boolean>(props.canModalClose, true)
-
-        this.state = {
-            isShow: false,
-            anmClassName: ''
-        }
+    const modalHandler = () => {
+        props.canModalClose && closeSheet()
     }
 
-    openSheet = ():void => {
-        this.setState({
-            isShow: true
-        })
+    const closeSheet = () => {
+        setIsQuitting(true);
+        setSheetClassName('zui-sheet-box zui-quit')
     }
 
-    closeSheet = ():void => {
-        this.setState({
-            anmClassName: 'quit'
-        })
+    const transitionEndHandler = () => {
+        setIsShow(false);
+        setIsQuitting(false);
+        setSheetClassName('zui-sheet-box')
     }
 
-    transitionEndHandler = () => {
-        this.setState({
-            isShow: false,
-            anmClassName: ''
-        })
-    }
-
-    modalHandler = (): void => {
-        this.canModalClose && this.closeSheet()
-    }
-
-    clickHandler = (e: MouseEvent<HTMLElement>): void => {
+    const clickHandler = (e: MouseEvent<HTMLElement>): void => {
         // e.cancelBubble = true; // 阻止冒泡
         e.stopPropagation(); // 阻止冒泡
-        if (typeof this.props.ensureHandler === 'function') {
-            this.props.ensureHandler();
+        if (typeof props.ensureHandler === 'function') {
+            props.ensureHandler();
         }
-        this.closeSheet();
+        closeSheet();
     }
 
-    render() {
-
-        const sheetClassName = `zui-sheet-box ${this.state.anmClassName}`
-
-        return <>
-            <div onClick={this.openSheet}>{this.props.button}</div>
-            {   
-                this.state.isShow ?
-                    <div className={sheetClassName}>
-                        {/* sheet遮罩层 */}
-                        <div
-                            className='zui-sheet-mask'
-                            onTransitionEnd={this.transitionEndHandler}
-                            onClick={this.modalHandler}>
+    return <>
+        <div onClick={() => setIsShow(true)}>{props.button}</div>
+        {   
+            isShow ?
+                <div className={sheetClassName}>
+                    <Mask quitting={isQuitting} modalHandler={modalHandler}></Mask>
+                    {/* sheet主体 */}
+                    <div className="zui-sheet-area"
+                        onTransitionEnd={transitionEndHandler}>
+                        {/* 头部信息 */}
+                        <div className="zui-sheet-header">
+                            <div onClick={closeSheet}>取消</div>
+                            <div>{props.titleTxt || ''}</div>
+                            <div onClick={clickHandler}>确定</div>
                         </div>
-                        {/* sheet主体 */}
-                        <div className="zui-sheet-area">
-                            {/* 头部信息 */}
-                            <div className="zui-sheet-header">
-                                <div onClick={this.closeSheet}>取消</div>
-                                <div>{this.props.titleTxt || ''}</div>
-                                <div onClick={this.clickHandler}>确定</div>
-                            </div>
-                            {/* 内容部分 */}
-                            <div>{this.props.children}</div>
-                        </div>
+                        {/* 内容部分 */}
+                        <div>{props.children}</div>
                     </div>
-                    : null
-            }
-        </>
-    }
+                </div>
+                : null
+        }
+    </>
 }
-
-export default Sheet;

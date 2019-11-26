@@ -1,0 +1,21 @@
+.zui-mask {
+    background: rgba(0, 0, 0, 0.4);
+    height: 100%;
+    /* 
+        入场动画
+     */
+    opacity: 1;
+    animation: sheetMaskAnm 0.3s;
+    @keyframes sheetMaskAnm {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+    &.zui-mask-quit {
+        opacity: 0;
+        transition: all 0.3s;
+    }
+}

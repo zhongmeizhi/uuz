@@ -8,6 +8,7 @@ class TestSheet extends React.Component {
     render() {
         return <Sheet
             titleTxt='sheet的标题'
+            canModalClose
             button={<Button>点击弹出Sheet</Button>}>
             <div>内容部分1</div>
             <div>内容部分2</div>

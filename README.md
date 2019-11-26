@@ -9,10 +9,11 @@
 
 定位：
 * 使用 `Create React App` 作为脚手架
-* 使用 `px` 为单位
-* 使用 `sass` 作为 `css` 扩展
-* 不应该使用 `cssModule`
+* 部分使用 `React Hook`
 * 使用 `Ts` 和 `TSX`
+* 使用 `sass` 作为 `css` 扩展
+* 使用 `px` 为单位
+* 不应该使用 `cssModule`
 * 内含`hammer`手势（将会重写一遍）
 * 目前不会发布上npm
 * 可能做一个预览页

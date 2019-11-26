@@ -6,23 +6,6 @@
     width: 100vw;
     height: 100vh;
     z-index: 6;
-    .zui-sheet-mask {
-        background: rgba(0, 0, 0, 0.4);
-        height: 100%;
-        /* 
-            入场动画
-         */
-        opacity: 1;
-        animation: sheetMaskAnm 0.3s;
-        @keyframes sheetMaskAnm {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-    }
     .zui-sheet-area {
         position: absolute;
         bottom: 0;
@@ -53,11 +36,7 @@
         }
     }
     // 退出动画
-    &.quit {
-        .zui-sheet-mask {
-            opacity: 0;
-            transition: all 0.3s;
-        }
+    &.zui-quit {
         .zui-sheet-area {
             height: 0;
             transition: all 0.3s;

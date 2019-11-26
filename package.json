@@ -2,6 +2,8 @@
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
+  "main": "./lib/index",
+  "module": "./es/index",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
