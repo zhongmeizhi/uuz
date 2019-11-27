@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface ReFreshProps {
   className?: String, // 刷新组件的 支持添加className
@@ -22,6 +22,7 @@ const _attr = {
   freshAble: false,
   freshDistance: 90, // 
   loadDistance: 60,
+  domHeight: 0
 }
 
 export default function ReFresh(props: ReFreshProps) {
@@ -33,11 +34,15 @@ export default function ReFresh(props: ReFreshProps) {
 
   let freshBoxClassName = `zui-refresh-box ${props.className || ''}`;
   
+  // 副作用处理
+  useEffect(() => {
+    _attr.domHeight = refFreshDom.offsetHeight;
+  })
+
   const getHasNeedLoad = (): boolean => {
-    const scrollTop = refFreshArea.scrollTop;
     const areaHeight = refFreshArea.offsetHeight;
-    const domHeight = refFreshDom.offsetHeight;
-    const isNeedLoad = (domHeight <= _attr.loadDistance + areaHeight + scrollTop);
+    const scrollTop = refFreshArea.scrollTop;
+    const isNeedLoad = (_attr.domHeight <= _attr.loadDistance + areaHeight + scrollTop);
     return isNeedLoad;
   }
   
