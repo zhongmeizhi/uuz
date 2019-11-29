@@ -7,7 +7,10 @@ import dialog from '../views-show/dialog'
 class TestDialog extends PureComponent {
 
     openDialog = () => {
-        dialog.notice();
+        dialog.notice({
+            title: '标题',
+            content: '这里是内容'
+        });
     }
 
     closeDialog = () => {
