@@ -8,21 +8,30 @@ interface showDialogProps {
     content: string
 }
 
-const dialog: {[key: string]: any} = {
-    _$eleList: [],
-    notice(props: showDialogProps) {
-        const $ele = document.createElement('div');
-        this._$eleList.push($ele);
-        document.body.appendChild($ele);
-        ReactDOM.render(<Dialog title={props.title} content={props.content}></Dialog>, $ele);
-    },
-    destroy() {
-        if (this._$eleList.length)  {
-            const $ele = this._$eleList.pop();
-            document.body.removeChild($ele);
-            ReactDOM.unmountComponentAtNode($ele);
+
+class ShowSomething {
+
+    _$ele: HTMLDivElement | undefined;
+
+    notice = (props: showDialogProps) => {
+        this._$ele = document.createElement('div');
+        document.body.appendChild(this._$ele);
+        ReactDOM.render(<Dialog title={props.title} content={props.content} destroy={this.destroy}></Dialog>, this._$ele);
+    }
+
+    destroy = () => {
+        if (this._$ele)  {
+            document.body.removeChild(this._$ele);
+            ReactDOM.unmountComponentAtNode(this._$ele);
         }
     }
 }
+
+
+class ShowDialog extends ShowSomething{
+}
+
+
+const dialog = new ShowDialog();
 
 export default dialog;

@@ -1,5 +1,16 @@
 import React from 'react'
 
-export default function Close() {
-    return <div>x</div>
+interface ClickProps {
+    onClick: Function
+}
+
+export default function Close(props: ClickProps) {
+
+    const clickHandler = () => {
+        if (typeof props.onClick === 'function') {
+            props.onClick();
+        }
+    }
+    
+    return <div onClick={clickHandler}>x</div>
 }
