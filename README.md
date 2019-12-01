@@ -67,7 +67,7 @@
 * [x] Picker
 * [x] PickerView
 * [x] Dialog
-* [ ] Alert
+* [x] Alert
 * [ ] Comfirm
 * [ ] Transition
 * [ ] Toast

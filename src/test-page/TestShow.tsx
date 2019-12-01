@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { useState } from 'react'
 
 import Button from '../views/Button'
 import { dialog, alert } from '../views-show/dialog'
@@ -6,43 +6,38 @@ import { dialog, alert } from '../views-show/dialog'
 import testImg from '../static/test.jpg';
 
 function TestContent(props: any) {
-
-    const csl = () => {
-        console.log(props)
-    }
-
     return <div>
         <span>测试Dialog,测试Dialog,</span>
-        <img width="60px" src={testImg}/>
+        <img width="60px" src={testImg} alt="测试图片" />
     </div>
 }
 
-class TestDialog extends PureComponent {
+export default function TestDialog() {
 
-    openDialog = () => {
+    const [alertTxt, setAlertTxt] = useState('未执行Alert')
+
+    const openDialog = () => {
         dialog.notice(<TestContent></TestContent>);
     }
 
-    openAlert = () => {
+    const openAlert = () => {
+        setAlertTxt('打开 Alert');
         alert.notice({
             title: <div>这里是标题</div>,
             content: <TestContent></TestContent>,
             onClose: () => {
-                console.log('确定')
+                setAlertTxt('收到关闭 Alert 回调');
             }
         });
     }
 
-    render() {
-        return (
-            <div>
-                <Button onClick={this.openDialog}>打开Dialog</Button>
-                <br></br>
-                <Button onClick={this.openAlert}>打开Alert</Button>
-                <br></br>
-            </div>
-        )
-    }
+    return (
+        <div>
+            <Button onClick={openDialog}>打开Dialog</Button>
+            <br></br>
+            <Button onClick={openAlert}>打开Alert</Button>
+            { alertTxt }
+            <br></br>
+        </div>
+    )
 }
-
-export default TestDialog;

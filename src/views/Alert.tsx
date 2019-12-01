@@ -1,5 +1,5 @@
-import React from 'react';
-import Dialog from './Dialog';
+import React, { useContext } from 'react';
+import Dialog, { DialogContext } from './Dialog';
 import Button from './Button';
 
 interface Alertprops {
@@ -9,16 +9,15 @@ interface Alertprops {
 }
 
 export default function Alert(props: Alertprops) {
-    
-    const closeAlert = () => {
-        if (typeof props.destroy === 'function') {
-            props.destroy();
-        }
-    }
 
-    return <Dialog isBtnCloseOnly>
+    useContext(DialogContext);
+
+    return <Dialog isBtnCloseOnly destroy={props.destroy}>
         <div className="zui-alert-title">{props.title}</div>
         <div className="zui-alert-content">{props.content}</div>
-        <Button onClick={closeAlert}>知道了</Button>
+        {/* 利用 context 实现 slot 传参 */}
+        <DialogContext.Consumer>
+            {closeDialog => <Button onClick={closeDialog}>知道了</Button>}
+        </DialogContext.Consumer>
     </Dialog>
 }

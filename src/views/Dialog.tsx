@@ -8,8 +8,10 @@ interface DialogProps{
     destroy?: Function
 }
 
-function Dialog(props: DialogProps) {
+// conext
+export const DialogContext = React.createContext(() => {});
 
+export default function Dialog(props: DialogProps) {
     const [isShow, setShow] = useState(true);
     const [showState, setShowState] = useState({
         isQuitting: false,
@@ -24,9 +26,7 @@ function Dialog(props: DialogProps) {
     }
 
     const modalHandler = () => {
-        if (props.isBtnCloseOnly) {
-            return;
-        }
+        if (props.isBtnCloseOnly) return;
         closeDialog();
     }
 
@@ -39,26 +39,18 @@ function Dialog(props: DialogProps) {
     }
 
     return isShow ?
-        <div className="zui-dialog">
-            <Mask quitting={showState.isQuitting} modalHandler={modalHandler}></Mask>
-            <div className={showState.areaClassName} onTransitionEnd={dialogTransitionEndHandler}>
-                {
-                    props.isBtnCloseOnly ?
-                        null:
-                        <Close className="zui-dialog-close" onClick={closeDialog}></Close>
-                }
-                {/* { props.children } */}
-                {
-                    React.Children.map(props.children, (child: any) => {
-                        return React.cloneElement(child, {
-                        });
-                    })
-                   
-                }
+        <DialogContext.Provider value={closeDialog}> {/** context 注入 */}
+            <div className="zui-dialog">
+                <Mask quitting={showState.isQuitting} modalHandler={modalHandler}></Mask>
+                <div className={showState.areaClassName} onTransitionEnd={dialogTransitionEndHandler}>
+                    {
+                        props.isBtnCloseOnly ?
+                            null:
+                            <Close className="zui-dialog-close" onClick={closeDialog}></Close>
+                    }
+                    { props.children }
+                </div>
             </div>
-        </div>
+        </DialogContext.Provider>
         : null
 }
-
-
-export default Dialog;
