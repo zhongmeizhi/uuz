@@ -66,10 +66,11 @@
 * [x] Tabs // 支持左右滑动
 * [x] Picker
 * [x] PickerView
-* [ ] Toast
 * [x] Dialog
 * [ ] Alert
 * [ ] Comfirm
+* [ ] Transition
+* [ ] Toast
 * [ ] Loading
 * [ ] List
 * [ ] Switch

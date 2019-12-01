@@ -22,21 +22,16 @@ class ShowSomething {
     }
 }
 
-interface showDialogProps {
-    title?: string,
-    content: string
-}
-
 class ShowDialog {
 
     _showSomething: ShowSomething;
-    
+
     constructor () {
         this._showSomething = new ShowSomething();
     }
 
-    notice = (props: showDialogProps) => {
-        this._showSomething.renderElement(<Dialog {...props} destroy={this.destroy}></Dialog>)
+    notice = (children: React.ReactNode) => {
+        this._showSomething.renderElement(<Dialog destroy={this.destroy}>{children}</Dialog>)
     }
 
     destroy = () => {

@@ -7,7 +7,9 @@ class TestDialog extends PureComponent {
     render() {
         return (
             <div>
-                <Dialog></Dialog>
+                <Dialog>
+                    <div>111</div>
+                </Dialog>
             </div>
         )
     }

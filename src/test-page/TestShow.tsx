@@ -4,13 +4,24 @@ import Button from '../views/Button'
 
 import { dialog } from '../views-show/dialog'
 
+function TestContent() {
+
+    const csl = () => {
+    }
+
+    return <div>
+        测试Dialog内容111
+        <br></br>
+        测试Dialog内容2222
+        <br></br>
+        <Button onClick={csl}>取消</Button>
+    </div>
+}
+
 class TestDialog extends PureComponent {
 
     openDialog = () => {
-        dialog.notice({
-            title: '标题',
-            content: '这里是内容'
-        });
+        dialog.notice(<TestContent></TestContent>);
     }
 
     closeDialog = () => {
@@ -21,8 +32,6 @@ class TestDialog extends PureComponent {
         return (
             <div>
                 <Button onClick={this.openDialog}>打开dialog</Button>
-                <br></br>
-                <Button onClick={this.closeDialog}>关闭 dialog</Button>
             </div>
         )
     }

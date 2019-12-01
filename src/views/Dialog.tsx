@@ -3,8 +3,7 @@ import Mask from './Mask';
 import Close from './Close';
 
 interface DialogProps{
-    title?: string,
-    content?: string,
+    children: React.ReactNode,
     destroy?: Function
 }
 
@@ -36,9 +35,7 @@ function Dialog(props: DialogProps) {
             <Mask quitting={showState.isQuitting} modalHandler={closeDialog}></Mask>
             <div className={showState.areaClassName} onTransitionEnd={dialogTransitionEndHandler}>
                 <Close className="zui-dialog-close" onClick={closeDialog}></Close>
-                <div className="zui-dialog-title">{props.title}</div>
-                <div className="zui-dialog-content">{props.content}</div>
-                <div className="zui-dialog-button-box"></div>
+                {props.children}
             </div>
         </div>
         : null
