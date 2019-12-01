@@ -1,20 +1,19 @@
 import React, { PureComponent } from 'react'
 
 import Button from '../views/Button'
+import { dialog, alert } from '../views-show/dialog'
 
-import { dialog } from '../views-show/dialog'
+import testImg from '../static/test.jpg';
 
-function TestContent() {
+function TestContent(props: any) {
 
     const csl = () => {
+        console.log(props)
     }
 
     return <div>
-        测试Dialog内容111
-        <br></br>
-        测试Dialog内容2222
-        <br></br>
-        <Button onClick={csl}>取消</Button>
+        <span>测试Dialog,测试Dialog,</span>
+        <img width="60px" src={testImg}/>
     </div>
 }
 
@@ -24,14 +23,23 @@ class TestDialog extends PureComponent {
         dialog.notice(<TestContent></TestContent>);
     }
 
-    closeDialog = () => {
-        dialog.destroy();
+    openAlert = () => {
+        alert.notice({
+            title: <div>这里是标题</div>,
+            content: <TestContent></TestContent>,
+            onClose: () => {
+                console.log('确定')
+            }
+        });
     }
 
     render() {
         return (
             <div>
-                <Button onClick={this.openDialog}>打开dialog</Button>
+                <Button onClick={this.openDialog}>打开Dialog</Button>
+                <br></br>
+                <Button onClick={this.openAlert}>打开Alert</Button>
+                <br></br>
             </div>
         )
     }

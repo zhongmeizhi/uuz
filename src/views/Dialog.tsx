@@ -4,6 +4,7 @@ import Close from './Close';
 
 interface DialogProps{
     children: React.ReactNode,
+    isBtnCloseOnly?: boolean,
     destroy?: Function
 }
 
@@ -22,6 +23,13 @@ function Dialog(props: DialogProps) {
         });
     }
 
+    const modalHandler = () => {
+        if (props.isBtnCloseOnly) {
+            return;
+        }
+        closeDialog();
+    }
+
     const dialogTransitionEndHandler = () => {
         if (typeof props.destroy === 'function') {
             props.destroy();
@@ -32,10 +40,21 @@ function Dialog(props: DialogProps) {
 
     return isShow ?
         <div className="zui-dialog">
-            <Mask quitting={showState.isQuitting} modalHandler={closeDialog}></Mask>
+            <Mask quitting={showState.isQuitting} modalHandler={modalHandler}></Mask>
             <div className={showState.areaClassName} onTransitionEnd={dialogTransitionEndHandler}>
-                <Close className="zui-dialog-close" onClick={closeDialog}></Close>
-                {props.children}
+                {
+                    props.isBtnCloseOnly ?
+                        null:
+                        <Close className="zui-dialog-close" onClick={closeDialog}></Close>
+                }
+                {/* { props.children } */}
+                {
+                    React.Children.map(props.children, (child: any) => {
+                        return React.cloneElement(child, {
+                        });
+                    })
+                   
+                }
             </div>
         </div>
         : null

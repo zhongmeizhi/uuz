@@ -2,10 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import Dialog from '../views/Dialog'
-
+import Alert from '../views/Alert';
 
 class ShowSomething {
-
     _$ele: HTMLDivElement | undefined;
 
     renderElement = (Component: React.FunctionComponentElement<any>) => {
@@ -22,10 +21,11 @@ class ShowSomething {
     }
 }
 
+/* 
+    Dialog
+*/
 class ShowDialog {
-
     _showSomething: ShowSomething;
-
     constructor () {
         this._showSomething = new ShowSomething();
     }
@@ -34,10 +34,40 @@ class ShowDialog {
         this._showSomething.renderElement(<Dialog destroy={this.destroy}>{children}</Dialog>)
     }
 
-    destroy = () => {
-        this._showSomething.destroy();
-    }
+    destroy = () => this._showSomething.destroy();
 }
 
+/* 
+    Alert
+*/
+interface AlertProps {
+    onClose?: Function,
+    title?: React.ReactNode,
+    content: React.ReactNode
+}
 
+class ShowAlert {
+    _showSomething: ShowSomething;
+    constructor () {
+        this._showSomething = new ShowSomething();
+    }
+
+    notice = (props: AlertProps) => {
+        const destroy = () => {
+            if (typeof props.onClose === 'function') {
+                props.onClose();
+            }
+            this.destroy();
+        }
+
+        this._showSomething.renderElement(<Alert destroy={destroy} {...props}></Alert>)
+    }
+
+    destroy = () => this._showSomething.destroy();
+}
+
+/*
+    导出
+ */
 export const dialog = new ShowDialog();
+export const alert = new ShowAlert();
