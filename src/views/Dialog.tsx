@@ -11,9 +11,19 @@ interface DialogProps{
 function Dialog(props: DialogProps) {
 
     const [isShow, setShow] = useState(true);
-    const [isQuitting, setQuitting] = useState(false);
+    const [showState, setShowState] = useState({
+        isQuitting: false,
+        areaClassName: 'zui-dialog-area'
+    });
 
     const closeDialog = () => {
+        setShowState({
+            isQuitting: true,
+            areaClassName: 'zui-dialog-area zui-dialog-quit'
+        });
+    }
+
+    const dialogTransitionEndHandler = () => {
         if (typeof props.destroy === 'function') {
             props.destroy();
         } else {
@@ -23,9 +33,9 @@ function Dialog(props: DialogProps) {
 
     return isShow ?
         <div className="zui-dialog">
-            <Mask quitting={isQuitting}></Mask>
-            <div className="zui-dialog-area">
-                <Close onClick={closeDialog}></Close>
+            <Mask quitting={showState.isQuitting} modalHandler={closeDialog}></Mask>
+            <div className={showState.areaClassName} onTransitionEnd={dialogTransitionEndHandler}>
+                <Close className="zui-dialog-close" onClick={closeDialog}></Close>
                 <div className="zui-dialog-title">{props.title}</div>
                 <div className="zui-dialog-content">{props.content}</div>
                 <div className="zui-dialog-button-box"></div>

@@ -10,23 +10,48 @@
         box-sizing: border-box;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%);
         width: 80%;
         background: white;
         border-radius: 8px;
-        padding: 16px 20px;
+        padding: 20px;
+        animation: showDialogAnm 0.3s;
+        transform: translate(-50%, -50%) scale(1);
+        @keyframes showDialogAnm {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1.05);
+            }
+            50% {
+                opacity: 0.5;
+                transform: translate(-50%, -50%) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        .zui-dialog-close {
+            position: absolute;
+            right: 10px;
+            top: 8px;
+        }
         .zui-dialog-title {
             text-align: center;
             font-weight: bold;
             font-size: 14px;
+            margin: 0 0 12px;
         }
         .zui-dialog-content {
             font-size: 12px;
             color: #888;
-            margin: 10px 0;
         }
         .zui-dialog-button-box {
 
+        }
+        &.zui-dialog-quit {
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            transition: all 0.3s;
         }
     }
 }

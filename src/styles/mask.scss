@@ -5,8 +5,8 @@
         入场动画
      */
     opacity: 1;
-    animation: sheetMaskAnm 0.3s;
-    @keyframes sheetMaskAnm {
+    animation: showMaskAnm 0.3s;
+    @keyframes showMaskAnm {
         0% {
             opacity: 0;
         }

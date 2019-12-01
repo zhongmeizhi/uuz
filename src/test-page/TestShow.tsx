@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 
 import Button from '../views/Button'
 
-import dialog from '../views-show/dialog'
+import { dialog } from '../views-show/dialog'
 
 class TestDialog extends PureComponent {
 

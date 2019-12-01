@@ -1,6 +1,9 @@
 import React from 'react'
 
+import { ReactComponent as CloseSvg } from '../static/close.svg'
+
 interface ClickProps {
+    className?: string,
     onClick: Function
 }
 
@@ -12,5 +15,10 @@ export default function Close(props: ClickProps) {
         }
     }
     
-    return <div onClick={clickHandler}>x</div>
+    return <CloseSvg
+        className={props.className || ''}
+        onClick={clickHandler}
+        width="16px"
+        height="16px">
+    </CloseSvg>
 }

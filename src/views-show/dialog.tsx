@@ -3,20 +3,15 @@ import ReactDOM from 'react-dom';
 
 import Dialog from '../views/Dialog'
 
-interface showDialogProps {
-    title?: string,
-    content: string
-}
-
 
 class ShowSomething {
 
     _$ele: HTMLDivElement | undefined;
 
-    notice = (props: showDialogProps) => {
+    renderElement = (Component: React.FunctionComponentElement<any>) => {
         this._$ele = document.createElement('div');
         document.body.appendChild(this._$ele);
-        ReactDOM.render(<Dialog title={props.title} content={props.content} destroy={this.destroy}></Dialog>, this._$ele);
+        ReactDOM.render(Component, this._$ele);
     }
 
     destroy = () => {
@@ -27,11 +22,27 @@ class ShowSomething {
     }
 }
 
+interface showDialogProps {
+    title?: string,
+    content: string
+}
 
-class ShowDialog extends ShowSomething{
+class ShowDialog {
+
+    _showSomething: ShowSomething;
+    
+    constructor () {
+        this._showSomething = new ShowSomething();
+    }
+
+    notice = (props: showDialogProps) => {
+        this._showSomething.renderElement(<Dialog {...props} destroy={this.destroy}></Dialog>)
+    }
+
+    destroy = () => {
+        this._showSomething.destroy();
+    }
 }
 
 
-const dialog = new ShowDialog();
-
-export default dialog;
+export const dialog = new ShowDialog();
