@@ -1,14 +1,23 @@
 .zui-button {
+    font-size: 14px;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 47px;
     &.zui-primary {
         color: white;
-        line-height: 47px;
         background-color: $primaryColor;
         border: 1px solid $primaryColor;
-        border-radius: 5px;
-        text-align: center;
         &:active {
             color: rgba(255, 255, 255, 0.3);
             background-color: #1d82cc;
+        }
+    }
+    &.zui-raw {
+        border: 1px solid #dcdfe6;
+        color: #606266;
+        &:active {
+            color: $primaryColor;
+            border: 1px solid $primaryColor;
         }
     }
 }

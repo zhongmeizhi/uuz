@@ -8,28 +8,30 @@ interface ButtonProps {
     children: React.ReactNode
 }
 
-class Button extends React.PureComponent<ButtonProps> {
+export default function Button(props: ButtonProps) {
 
-    clickHandler = (e: React.MouseEvent<HTMLElement>) => {
-        if (this.props.disabled) {
+    const clickHandler = (e: React.MouseEvent<HTMLElement>) => {
+        if (props.disabled) {
             e.stopPropagation();
         } else {
-            (typeof this.props.onClick === 'function') && this.props.onClick();
+            (typeof props.onClick === 'function') && props.onClick();
         }
     }
 
-    render() {
-        const type: string = this.props.type ? this.props.type : 'zui-primary';
-        const disabledClassname = this.props.disabled ? 'zui-button-disbale' : '';
-        const buttonClassName: string = `zui-button ${type} ${this.props.className || ''} ${disabledClassname}`;
-
-        return <div 
-            className={buttonClassName}
-            onClick={this.clickHandler}>
-            {this.props.children}
-        </div>
+    let typeClassName: string = 'zui-';
+    if (props.type) {
+        typeClassName += props.type;
+    } else {
+        typeClassName += 'primary';
     }
-}
 
-export default Button;
+    const disabledClassname = props.disabled ? 'zui-button-disbale' : '';
+    const buttonClassName: string = `zui-button ${typeClassName} ${props.className || ''} ${disabledClassname}`;
+
+    return <div 
+        className={buttonClassName}
+        onClick={clickHandler}>
+        {props.children}
+    </div>
+}
 

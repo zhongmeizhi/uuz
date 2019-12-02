@@ -1,0 +1,18 @@
+.zui-dialog {
+    .zui-confirm-title {
+        font-size: 22px;
+        text-align: center;
+    }
+    .zui-confirm-content {
+        margin: 12px 0 16px;
+        font-size: 12px;
+        color: #888;
+    }
+    .zui-confirm-btn-box {
+        display: flex;
+        justify-content: space-around;
+        >div {
+            width: 44%;
+        }
+    }
+}

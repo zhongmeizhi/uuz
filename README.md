@@ -70,6 +70,18 @@
             setAlertTxt('收到关闭 Alert 回调');
         }
     });
+
+    // Confirm 使用
+    confirm.show({
+        title: <div>这里是标题</div>,
+        content: <TestContent></TestContent>,
+        onCancel: () => {
+            setConfirmTxt('取消 Confirm');
+        },
+        onConfirm: () => {
+            setConfirmTxt('确认 Confirm');
+        }
+    });
 ```
 
 
