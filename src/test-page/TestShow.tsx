@@ -17,12 +17,12 @@ export default function TestDialog() {
     const [alertTxt, setAlertTxt] = useState('未执行Alert')
 
     const openDialog = () => {
-        dialog.notice(<TestContent></TestContent>);
+        dialog.show(<TestContent></TestContent>);
     }
 
     const openAlert = () => {
         setAlertTxt('打开 Alert');
-        alert.notice({
+        alert.show({
             title: <div>这里是标题</div>,
             content: <TestContent></TestContent>,
             onClose: () => {

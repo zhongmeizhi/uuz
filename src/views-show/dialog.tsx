@@ -30,7 +30,7 @@ class ShowDialog {
         this._showSomething = new ShowSomething();
     }
 
-    notice = (children: React.ReactNode) => {
+    show = (children: React.ReactNode) => {
         this._showSomething.renderElement(<Dialog destroy={this.destroy}>{children}</Dialog>)
     }
 
@@ -52,7 +52,7 @@ class ShowAlert {
         this._showSomething = new ShowSomething();
     }
 
-    notice = (props: AlertProps) => {
+    show = (props: AlertProps) => {
         const destroy = () => {
             if (typeof props.onClose === 'function') {
                 props.onClose();

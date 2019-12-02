@@ -23,8 +23,10 @@
 |Tabs|Sheet|Fresh|
 |--|--|--|
 |![Tabs](https://zhongmeizhi.github.io/static/z-ui/Tabs.gif)|![Sheet](https://zhongmeizhi.github.io/static/z-ui/Sheet.gif)|![Fresh](https://zhongmeizhi.github.io/static/z-ui/Fresh.gif)|
-|Picker|PickerView|--|
-|![Picker](https://zhongmeizhi.github.io/static/z-ui/Picker.gif)|![PickerView](https://zhongmeizhi.github.io/static/z-ui/PickerView.gif)|--|
+|Picker|PickerView|Dialog|
+|![Picker](https://zhongmeizhi.github.io/static/z-ui/Picker.gif)|![PickerView](https://zhongmeizhi.github.io/static/z-ui/PickerView.gif)|![Dialog](https://zhongmeizhi.github.io/static/z-ui/Dialog.gif)|
+|Alert|--|--|
+|![Alert](https://zhongmeizhi.github.io/static/z-ui/Alert.gif)|--|--|
 
 
 ### 示例代码
@@ -56,6 +58,18 @@
         values={['1', '11']}
         onChange={this.changeHandler}>
     </Picker>
+
+    // Dialog 使用
+    dialog.show(<TestContent></TestContent>);
+
+    // Alert 使用
+    alert.show({
+        title: <div>这里是标题</div>,
+        content: <TestContent></TestContent>,
+        onClose: () => {
+            setAlertTxt('收到关闭 Alert 回调');
+        }
+    });
 ```
 
 
