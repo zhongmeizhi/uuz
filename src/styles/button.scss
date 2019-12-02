@@ -20,4 +20,8 @@
             border: 1px solid $primaryColor;
         }
     }
+    &.zui-button-disbale {
+        pointer-events: none;
+        opacity: 0.7;
+    }
 }

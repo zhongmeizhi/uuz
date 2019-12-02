@@ -25,8 +25,8 @@
 |![Tabs](https://zhongmeizhi.github.io/static/z-ui/Tabs.gif)|![Sheet](https://zhongmeizhi.github.io/static/z-ui/Sheet.gif)|![Fresh](https://zhongmeizhi.github.io/static/z-ui/Fresh.gif)|
 |Picker|PickerView|Dialog|
 |![Picker](https://zhongmeizhi.github.io/static/z-ui/Picker.gif)|![PickerView](https://zhongmeizhi.github.io/static/z-ui/PickerView.gif)|![Dialog](https://zhongmeizhi.github.io/static/z-ui/Dialog.gif)|
-|Alert|--|--|
-|![Alert](https://zhongmeizhi.github.io/static/z-ui/Alert.gif)|--|--|
+|Alert|Confirm|--|
+|![Alert](https://zhongmeizhi.github.io/static/z-ui/Alert.gif)|![Confirm](https://zhongmeizhi.github.io/static/z-ui/Confirm.gif)|--|
 
 
 ### 示例代码
@@ -73,8 +73,8 @@
 
     // Confirm 使用
     confirm.show({
-        title: <div>这里是标题</div>,
-        content: <TestContent></TestContent>,
+        title: '标题咯',
+        content: '哒哒哒。拉面好吃吗？阔落好喝吗？听说猪肉又涨价了。滴滴滴。滴滴滴滴滴滴。滴滴滴',
         onCancel: () => {
             setConfirmTxt('取消 Confirm');
         },

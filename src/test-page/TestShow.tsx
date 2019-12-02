@@ -36,8 +36,8 @@ export default function TestDialog() {
     const openConfirm = () => {
         setConfirmTxt('打开 Confirm');
         confirm.show({
-            title: <div>这里是标题</div>,
-            content: <TestContent></TestContent>,
+            title: '标题咯',
+            content: '哒哒哒。拉面好吃吗？阔落好喝吗？听说猪肉又涨价了。滴滴滴。滴滴滴滴滴滴。滴滴滴',
             onCancel: () => {
                 setConfirmTxt('取消 Confirm');
             },
@@ -49,7 +49,9 @@ export default function TestDialog() {
 
     return (
         <div>
-            <Button onClick={openDialog}>打开Dialog</Button>
+            <Button disabled>不让点的按钮</Button>
+            <br></br>
+            <Button type="raw" onClick={openDialog}>打开Dialog</Button>
             <br></br>
             <Button onClick={openAlert}>打开Alert</Button>
             { alertTxt }
