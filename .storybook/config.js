@@ -8,22 +8,22 @@ import theme from './theme.js';
 // 导入全局样式
 import '../src/styles/index.scss';
 
-configure(() => [
-    require('../story-book/index.stories.js'),
-    require('../story-book/button.stories.js'),
-], module);
-
 addParameters({
     options: {
-        showNav: false,
-        showPanel: false,
+        showNav: true,
+        showPanel: true,
         enableShortcuts: false,
         isToolshown: false,
         theme,
     },
 });
 
-addDecorator(storyFn => <div style={{ margin: '22px' }}>{storyFn()}</div>)
+configure(() => [
+    require('../story-book/index.stories.js'),
+    require('../story-book/component.stories.js'),
+], module);
+
+addDecorator(storyFn => <div style={{ margin: '50px 22px' }}>{storyFn()}</div>)
 
 configureActions({
     depth: 100

@@ -3,13 +3,13 @@ import { create } from '@storybook/theming/create';
 export default create({
     base: 'dark',
 
-    colorPrimary: 'hotpink',
-    colorSecondary: 'deepskyblue',
+    colorPrimary: '#108ee9',
+    colorSecondary: '#108ee9',
 
     // UI
-    appBg: 'grey',
-    appContentBg: 'silver',
-    appBorderColor: 'blue',
+    appBg: '#f2f4f5',
+    appContentBg: '#f2f4f5',
+    appBorderColor: '#108ee9',
     appBorderRadius: 4,
 
     // Typography
@@ -17,21 +17,22 @@ export default create({
     fontCode: 'monospace',
 
     // Text colors
-    textColor: 'black',
-    textInverseColor: 'rgba(255,255,255,0.9)',
+    textColor: '#108ee9',
+    textSelectedColor: 'blue',
+    textInverseColor: 'blue',
 
     // Toolbar default and active colors
-    barTextColor: 'silver',
-    barSelectedColor: 'black',
-    barBg: 'hotpink',
+    barTextColor: 'black',
+    barSelectedColor: '#108ee9',
+    barBg: '#f2f4f5',
 
     // Form colors
     inputBg: 'white',
-    inputBorder: 'silver',
-    inputTextColor: 'black',
+    inputBorder: '#108ee9',
+    inputTextColor: '#108ee9',
     inputBorderRadius: 4,
 
     brandTitle: 'Z-UI',
-    brandUrl: 'https://example.com',
-    brandImage: 'https://placehold.it/350x150',
+    brandUrl: 'https://zhongmeizhi.github.io/z-ui/',
+    brandImage: 'https://zhongmeizhi.github.io/fultter-example-app/preview/meihong1.jpg',
 });
