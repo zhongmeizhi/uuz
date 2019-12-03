@@ -1,20 +1,35 @@
-// storiesOf('组件', module)
-//     .add('按钮',
-//         () => (
-//             <>
-//                 <Button onClick={() => {}}>默认按钮</Button>
-//                 <br></br>
-//                 <Button type="raw" onClick={action('点击')}>Raw按钮</Button>
-//                 <br></br>
-//                 <Button disabled onClick={() => {}}>禁用按钮</Button>
-//             </>
-//         )
-//     )
+import React from 'react';
+import { storiesOf } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
 
-export default {
-    title: '组件'
-}
+import Button from '../src/views/Button';
 
-export { button } from './button.js';
+import popup from './popup'
+import picker from './picker/index.jsx'
 
-export { show } from './show.js';
+const componentStory = storiesOf('组件', module);
+
+
+componentStory.add('按钮 Button',
+    () => <>
+        <Button onClick={action('点击')}>默认按钮</Button>
+        <br></br>
+        <Button type="raw" onClick={action('点击')}>Raw按钮</Button>
+        <br></br>
+        <Button disabled>禁用按钮</Button>
+    </>, {notes: ''}
+)
+
+componentStory.add('选择器 Picker',
+    picker,
+    {
+    }
+)
+
+componentStory.add('弹出层',
+    popup,
+    {
+        notes: require('./popup/index.md'),
+    }
+)
+

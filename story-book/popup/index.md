@@ -1,9 +1,4 @@
-import React from 'react';
-import Button from '../src/views/Button';
-import { dialog, alert, confirm } from '../src/views-show/dialog'
-import { action } from '@storybook/addon-actions';
-
-export const show = () => {
+```
     const openDialog = () => {
         dialog.show(<div>xxxx<br></br>这里是内容</div>);
     }
@@ -38,4 +33,4 @@ export const show = () => {
         <br></br>
         <Button onClick={openConfirm}>打开Confirm</Button>
     </>
-}
+```
