@@ -1,0 +1,399 @@
+@charset "UTF-8";
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline; }
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block; }
+
+ol, ul {
+  list-style: none; }
+
+blockquote, q {
+  quotes: none; }
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+::-moz-selection {
+  background-color: #b3d4fc;
+  text-shadow: none; }
+
+::selection {
+  background-color: #b3d4fc;
+  text-shadow: none; }
+
+ul {
+  margin: 0;
+  padding: 0; }
+
+li {
+  list-style: none; }
+
+.clearfix:before,
+.clearfix:after {
+  content: " ";
+  display: table; }
+
+.clearfix:after {
+  clear: both; }
+
+/* ===============
+   自定义页面样式
+   =============== */
+a {
+  color: #666;
+  text-decoration: none; }
+
+a:hover, a:active {
+  color: #0ae;
+  text-decoration: underline; }
+
+/*公共类*/
+.zui-hide {
+  display: none; }
+
+/*  ===============
+    按钮 css样式
+    ===============
+*/
+.zui-button {
+  font-size: 14px;
+  border-radius: 5px;
+  text-align: center;
+  line-height: 47px; }
+  .zui-button.zui-primary {
+    color: white;
+    background-color: #108ee9;
+    border: 1px solid #108ee9; }
+    .zui-button.zui-primary:active {
+      color: rgba(255, 255, 255, 0.3);
+      background-color: #1d82cc; }
+  .zui-button.zui-raw {
+    border: 1px solid #dcdfe6;
+    color: #606266; }
+    .zui-button.zui-raw:active {
+      color: #108ee9;
+      border: 1px solid #108ee9; }
+  .zui-button.zui-button-disbale {
+    pointer-events: none;
+    opacity: 0.7; }
+
+/*  ===============
+    下拉刷新 + 上拉加载 CSS样式
+    ===============
+*/
+.zui-refresh-box {
+  overflow: hidden;
+  background: #108ee9;
+  /* 标准蓝色 */
+  position: relative; }
+  .zui-refresh-box .zui-refresh-area {
+    position: relative;
+    background: white;
+    height: 100%;
+    overflow-y: auto;
+    /*  扩宽空间 */
+    -webkit-transform: translate(0, -50px);
+            transform: translate(0, -50px);
+    padding-bottom: 50px;
+    margin-bottom: -50px; }
+  .zui-refresh-box .zui-refresh-tip {
+    height: 50px;
+    line-height: 50px;
+    background: #108ee9;
+    /* 标准蓝色 */
+    text-align: center;
+    color: white; }
+
+/*  ===============
+    Mask css样式
+    ===============
+*/
+.zui-mask {
+  background: rgba(0, 0, 0, 0.4);
+  height: 100%;
+  /* 
+        入场动画
+     */
+  opacity: 1;
+  -webkit-animation: showMaskAnm 0.3s;
+          animation: showMaskAnm 0.3s; }
+
+@-webkit-keyframes showMaskAnm {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+
+@keyframes showMaskAnm {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+  .zui-mask.zui-mask-quit {
+    opacity: 0;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s; }
+
+/*  ===============
+    sheet 底框 css样式
+    ===============
+*/
+.zui-sheet-box {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 6; }
+  .zui-sheet-box .zui-sheet-area {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: white;
+    z-index: 3;
+    /* 
+            入场动画
+         */
+    height: 280px;
+    -webkit-animation: sheetAreaAnm 0.3s;
+            animation: sheetAreaAnm 0.3s; }
+    .zui-sheet-box .zui-sheet-area .zui-sheet-header {
+      line-height: 38px;
+      display: flex;
+      font-size: 16px;
+      justify-content: space-between;
+      padding: 0 16px;
+      background: #f7f7f7;
+      position: relative; }
+      .zui-sheet-box .zui-sheet-area .zui-sheet-header::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        background: #d6d6d6;
+        -webkit-transform: scaleY(0.5);
+                transform: scaleY(0.5);
+        bottom: 0;
+        left: 0; }
+
+@-webkit-keyframes sheetAreaAnm {
+  0% {
+    height: 0; }
+  100% {
+    height: 280px; } }
+
+@keyframes sheetAreaAnm {
+  0% {
+    height: 0; }
+  100% {
+    height: 280px; } }
+  .zui-sheet-box.zui-quit .zui-sheet-area {
+    height: 0;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s; }
+
+/*  ===============
+    Tabs css样式
+    ===============
+*/
+.zui-tabs-container {
+  display: flex;
+  flex-direction: column; }
+  .zui-tabs-container .zui-tabs-bar-box {
+    width: 100%;
+    overflow: auto hidden;
+    position: relative; }
+    .zui-tabs-container .zui-tabs-bar-box .zui-tabs-bar {
+      display: inline-block;
+      line-height: 38px;
+      text-align: center; }
+      .zui-tabs-container .zui-tabs-bar-box .zui-tabs-bar.active {
+        color: #108ee9; }
+    .zui-tabs-container .zui-tabs-bar-box .zui-tabs-bar-underline {
+      -webkit-transition: all 0.3s;
+      transition: all 0.3s;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      border-radius: 5px;
+      background: #108ee9; }
+  .zui-tabs-container .zui-tabs-area-box {
+    width: 100%;
+    overflow: hidden;
+    flex: 1 1; }
+    .zui-tabs-container .zui-tabs-area-box .zui-tabs-area {
+      display: flex;
+      -webkit-transition: all 0.3s;
+      transition: all 0.3s; }
+      .zui-tabs-container .zui-tabs-area-box .zui-tabs-area > div {
+        width: 100%; }
+
+/*  ===============
+    Picker css样式
+    ===============
+*/
+.zui-picker {
+  height: 200px;
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  overflow: hidden; }
+  .zui-picker .zui-picker-col {
+    flex: 1 1;
+    position: relative; }
+    .zui-picker .zui-picker-col .zui-picker-col-area {
+      padding: 90px 16px;
+      text-align: center;
+      background: transparent; }
+      .zui-picker .zui-picker-col .zui-picker-col-area .zui-picker-item {
+        line-height: 20px;
+        height: 20px; }
+    .zui-picker .zui-picker-col .zui-picker-col-mask {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: -webkit-gradient(linear, left top, left bottom, from(#ffffffe6), color-stop(42%, #ffffff99), color-stop(43%, transparent), color-stop(56%, transparent), color-stop(57%, #ffffff99), to(#ffffffe6));
+      background: -webkit-linear-gradient(#ffffffe6 0%, #ffffff99 42%, transparent 43%, transparent 56%, #ffffff99 57%, #ffffffe6 100%);
+      background: linear-gradient(#ffffffe6 0%, #ffffff99 42%, transparent 43%, transparent 56%, #ffffff99 57%, #ffffffe6 100%);
+      z-index: 2; }
+  .zui-picker::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
+    width: 100%;
+    background: #f7f7f7;
+    height: 20px;
+    border-top: 1px solid #d6d6d6;
+    border-bottom: 1px solid #d6d6d6;
+    z-index: -1; }
+
+/*  ===============
+    Dialog css样式
+    ===============
+*/
+.zui-dialog {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  top: 0;
+  left: 0; }
+  .zui-dialog .zui-dialog-area {
+    position: absolute;
+    box-sizing: border-box;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    background: white;
+    border-radius: 8px;
+    padding: 22px 20px;
+    -webkit-animation: showDialogAnm 0.3s;
+            animation: showDialogAnm 0.3s;
+    -webkit-transform: translate(-50%, -50%) scale(1);
+            transform: translate(-50%, -50%) scale(1); }
+
+@-webkit-keyframes showDialogAnm {
+  0% {
+    opacity: 0;
+    -webkit-transform: translate(-50%, -50%) scale(1.05);
+            transform: translate(-50%, -50%) scale(1.05); }
+  50% {
+    opacity: 0.5;
+    -webkit-transform: translate(-50%, -50%) scale(0.95);
+            transform: translate(-50%, -50%) scale(0.95); }
+  100% {
+    opacity: 1;
+    -webkit-transform: translate(-50%, -50%) scale(1);
+            transform: translate(-50%, -50%) scale(1); } }
+
+@keyframes showDialogAnm {
+  0% {
+    opacity: 0;
+    -webkit-transform: translate(-50%, -50%) scale(1.05);
+            transform: translate(-50%, -50%) scale(1.05); }
+  50% {
+    opacity: 0.5;
+    -webkit-transform: translate(-50%, -50%) scale(0.95);
+            transform: translate(-50%, -50%) scale(0.95); }
+  100% {
+    opacity: 1;
+    -webkit-transform: translate(-50%, -50%) scale(1);
+            transform: translate(-50%, -50%) scale(1); } }
+    .zui-dialog .zui-dialog-area .zui-dialog-close {
+      position: absolute;
+      right: 10px;
+      top: 8px; }
+    .zui-dialog .zui-dialog-area.zui-dialog-quit {
+      -webkit-transform: translate(-50%, -50%) scale(0);
+              transform: translate(-50%, -50%) scale(0);
+      opacity: 0;
+      -webkit-transition: all 0.3s;
+      transition: all 0.3s; }
+
+/*  ===============
+    Alert css样式
+    ===============
+*/
+.zui-dialog .zui-alert-title {
+  font-size: 20px;
+  text-align: center; }
+
+.zui-dialog .zui-alert-content {
+  margin: 12px 0 16px;
+  font-size: 12px;
+  color: #888; }
+
+/*  ===============
+    Confirm css样式
+    ===============
+*/
+.zui-dialog .zui-confirm-title {
+  font-size: 20px;
+  text-align: center; }
+
+.zui-dialog .zui-confirm-content {
+  margin: 12px 0 16px;
+  font-size: 14px;
+  color: #888; }
+
+.zui-dialog .zui-confirm-btn-box {
+  display: flex;
+  justify-content: space-around; }
+  .zui-dialog .zui-confirm-btn-box > div {
+    width: 44%; }
+
+
+/*# sourceMappingURL=main.css.map*/

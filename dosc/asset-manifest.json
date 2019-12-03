@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/main.css",
+    "main.js": "/main.98e51fe37a358f2d2dcb.bundle.js",
+    "main.css.map": "/main.css.map",
+    "main.js.map": "/main.98e51fe37a358f2d2dcb.bundle.js.map",
+    "runtime~main.js": "/runtime~main.98e51fe37a358f2d2dcb.bundle.js",
+    "runtime~main.js.map": "/runtime~main.98e51fe37a358f2d2dcb.bundle.js.map",
+    "vendors~main.css": "/vendors~main.css",
+    "vendors~main.js": "/vendors~main.98e51fe37a358f2d2dcb.bundle.js",
+    "vendors~main.css.map": "/vendors~main.css.map",
+    "vendors~main.js.map": "/vendors~main.98e51fe37a358f2d2dcb.bundle.js.map",
+    "iframe.html": "/iframe.html",
+    "precache-manifest.f90543297d64b567572b842f324342c4.js": "/precache-manifest.f90543297d64b567572b842f324342c4.js",
+    "service-worker.js": "/service-worker.js"
+  }
+}
