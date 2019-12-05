@@ -4,11 +4,13 @@ import { action } from '@storybook/addon-actions';
 
 import Button from '../src/views/Button';
 
-import popup from './popup'
-import picker from './picker/index.jsx'
+import Picker from './picker/'
+import Popup from './popup'
+import Refresh from './refresh'
+import Sheet from './sheet'
+import TestTabs from './tabs'
 
 const componentStory = storiesOf('组件', module);
-
 
 componentStory.add('按钮 Button',
     () => <>
@@ -20,16 +22,28 @@ componentStory.add('按钮 Button',
     </>, {notes: ''}
 )
 
-componentStory.add('选择器 Picker',
-    picker,
-    {
-    }
-)
-
-componentStory.add('弹出层',
-    popup,
+componentStory.add('弹出层 Dialog Alert Confirm',
+    Popup,
     {
         notes: require('./popup/index.md'),
     }
 )
 
+componentStory.add('选择器 Picker',
+    Picker,
+)
+
+componentStory.add('上拉刷新 下拉加载 Refresh',
+    Refresh,
+    {
+        decorator: null
+    }
+)
+
+componentStory.add('底部弹窗 Sheet',
+    Sheet,
+)
+
+componentStory.add('标签页 Tabs',
+    TestTabs,
+)

@@ -5,13 +5,15 @@
     position: relative;
     .zui-refresh-area {
         position: relative;
-        background: white;
         height: 100%;
         overflow-y: auto;
         /*  扩宽空间 */
         transform: translate(0, -50px); 
-        padding-bottom: 50px;
+        // padding-bottom: 50px;
         margin-bottom: -50px;
+        .zui-refresh {
+            background: white;
+        }
     }
     .zui-refresh-tip {
         height: 50px;

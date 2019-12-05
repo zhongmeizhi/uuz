@@ -9,7 +9,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "storybook": "start-storybook",
-    "build-dosc": "build-storybook -c .storybook -o docs",
+    "build-docs": "build-storybook -c .storybook -o docs",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

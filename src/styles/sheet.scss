@@ -21,6 +21,10 @@
             background: $thinGrey;
             @include line-bottom;
         }
+        .zui-sheet-body {
+            height: calc(100% - 38px);
+            overflow-y: auto;
+        }
         /* 
             入场动画
          */

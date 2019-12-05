@@ -54,7 +54,7 @@ export default  function Sheet(props: SheetProps) {
                             <div onClick={clickHandler}>确定</div>
                         </div>
                         {/* 内容部分 */}
-                        <div>{props.children}</div>
+                        <div className="zui-sheet-body">{props.children}</div>
                     </div>
                 </div>
                 : null

@@ -23,7 +23,7 @@ configure(() => [
     require('../story-book/component.stories.js'),
 ], module);
 
-addDecorator(storyFn => <div style={{ margin: '50px 22px' }}>{storyFn()}</div>)
+// addDecorator(storyFn => <div style={{ margin: '50px 22px' }}>{storyFn()}</div>)
 
 configureActions({
     depth: 100

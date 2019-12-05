@@ -3,13 +3,14 @@ import { storiesOf } from '@storybook/react';
 
 const Z_UI = () => (
     <div style={{textAlign: 'center', fontWeight: 'bold', fontSize: '16px'}}>
-        <h2>[]~(￣▽￣)~* 这里是Z-UI的API文档</h2>
-        <p><strong>这是一个移动端的 UI 库哦，可以使用手机或调试模式打开</strong></p>
-        <p>具体说明请看图，- -.!</p>
-        <p>----------------------------------</p>
-        <img width="100%" src="https://zhongmeizhi.github.io/static/z-ui/introduce.png" alt='介绍'/>
-        <p>----------------------------------</p>
-        <img width="100%" src="https://zhongmeizhi.github.io/static/z-ui/introduce2.png" alt='介绍2'/>
+        <p>[]~(￣▽￣)~* 这里是Z-UI的API文档</p>
+        <h2 style={{fontSize: '22px', fontWeight: 'bold', margin: '33px 0', color: '#108ee9'}}>这是一个移动端 UI 库，使用了Touch事件，请使用手机或调试模式打开本网站</h2>
+        <ul>
+            <li>样例见Canvas按钮</li>
+            <li>说明见Notes按钮(简单的案例没写)</li>
+            <li>API使用见Show Info按钮</li>
+            <li>样例触发事件见Actions</li>
+        </ul>
     </div>
 )
 

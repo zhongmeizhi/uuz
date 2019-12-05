@@ -43,7 +43,7 @@ const data = [
 ]
 
 
-const testPicker = () => {
+const TestPicker = () => {
 
     const [values1, setValues1] = useState(['2', '44']);
     const [values2, setValues2] = useState(['1', '11']);
@@ -77,4 +77,4 @@ const testPicker = () => {
     </div>
 }
 
-export default testPicker;
+export default TestPicker;

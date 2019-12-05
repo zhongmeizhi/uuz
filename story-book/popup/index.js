@@ -33,9 +33,9 @@ export default  () => {
     }
 
     return <>
-        <Button type="raw" onClick={openDialog}>打开Dialog</Button>
+        <Button onClick={openDialog}>打开Dialog</Button>
         <br></br>
-        <Button onClick={openAlert}>打开Alert</Button>
+        <Button type="raw" onClick={openAlert}>打开Alert</Button>
         <br></br>
         <Button onClick={openConfirm}>打开Confirm</Button>
     </>

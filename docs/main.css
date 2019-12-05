@@ -114,14 +114,14 @@ a:hover, a:active {
   position: relative; }
   .zui-refresh-box .zui-refresh-area {
     position: relative;
-    background: white;
     height: 100%;
     overflow-y: auto;
     /*  扩宽空间 */
     -webkit-transform: translate(0, -50px);
             transform: translate(0, -50px);
-    padding-bottom: 50px;
     margin-bottom: -50px; }
+    .zui-refresh-box .zui-refresh-area .zui-refresh {
+      background: white; }
   .zui-refresh-box .zui-refresh-tip {
     height: 50px;
     line-height: 50px;
@@ -201,6 +201,9 @@ a:hover, a:active {
                 transform: scaleY(0.5);
         bottom: 0;
         left: 0; }
+    .zui-sheet-box .zui-sheet-area .zui-sheet-body {
+      height: calc(100% - 38px);
+      overflow-y: auto; }
 
 @-webkit-keyframes sheetAreaAnm {
   0% {
