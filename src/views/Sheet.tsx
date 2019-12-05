@@ -38,6 +38,10 @@ export default  function Sheet(props: SheetProps) {
         closeSheet();
     }
 
+    const bodyTansitionEndHandler = (e: any): void => {
+        e.stopPropagation(); // 阻止冒泡
+    }
+
     return <>
         <div onClick={() => setIsShow(true)}>{props.button}</div>
         {   
@@ -54,7 +58,10 @@ export default  function Sheet(props: SheetProps) {
                             <div onClick={clickHandler}>确定</div>
                         </div>
                         {/* 内容部分 */}
-                        <div className="zui-sheet-body">{props.children}</div>
+                        <div
+                            className="zui-sheet-body"
+                            onTransitionEnd={bodyTansitionEndHandler}
+                        >{props.children}</div>
                     </div>
                 </div>
                 : null

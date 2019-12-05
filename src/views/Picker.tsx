@@ -3,6 +3,7 @@ import React, { Component, TouchEvent } from 'react';
 interface PickerProps {
     data: Array<Array<{[key: string]: string}>>,
     values: Array<string | number>,
+    className?: string,
     onChange?: Function
 }
 
@@ -15,13 +16,13 @@ class GlobalAttr {
     curTouchY: number;
     translateList: Array<number>;
     pickIdxList: Array<number>;
-    LINE_HEIGHT: 20;
+    LINE_HEIGHT: 26;
 
     constructor() {
         this.curTouchY = 0;
         this.translateList = [];
         this.pickIdxList = [];
-        this.LINE_HEIGHT = 20;
+        this.LINE_HEIGHT = 26;
     }
 
     setCurTouchY(e: TouchEvent<HTMLDivElement>) {
@@ -133,7 +134,8 @@ class Picker extends Component<PickerProps, PickerState> {
     }
 
     render() {
-        return <div className="zui-picker">
+        const pickerClassName = `zui-picker ${this.props.className || ''}`
+        return <div className={pickerClassName}>
             {
                 this.props.data.map((list, idx) => <div key={idx} 
                 className="zui-picker-col">

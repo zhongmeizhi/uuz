@@ -58,7 +58,7 @@ const TestPicker = () => {
     }
 
     const ensureHandler = (values, indexes) => {
-        action(values);
+        action(values.toString())
     }
 
     return <div>

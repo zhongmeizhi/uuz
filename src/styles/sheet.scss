@@ -24,6 +24,7 @@
         .zui-sheet-body {
             height: calc(100% - 38px);
             overflow-y: auto;
+            position: relative;
         }
         /* 
             入场动画

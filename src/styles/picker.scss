@@ -1,7 +1,7 @@
-$itemLineHeight: 20px;
+$itemLineHeight: 26px;
 $indicatorBorder: 1px solid #d6d6d6;
 $pickerHeight: 200px;
-$colPadding: $pickerHeight/2 - 10;
+$colPadding: $pickerHeight/2 - $itemLineHeight/2;
 
 .zui-picker {
     height: $pickerHeight;
@@ -32,6 +32,13 @@ $colPadding: $pickerHeight/2 - 10;
             z-index: 2;
         }
     }
+    &.zui-picker-view {
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+    }
     // .zui-picker-indicator
     &::after {
         content: '';
@@ -44,6 +51,7 @@ $colPadding: $pickerHeight/2 - 10;
         height: $itemLineHeight;
         border-top: $indicatorBorder;
         border-bottom: $indicatorBorder;
+        box-sizing: border-box;
         z-index: -1;
     }
 }

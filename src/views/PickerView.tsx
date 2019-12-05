@@ -41,6 +41,7 @@ class PickerView extends React.Component<PickerViewProps> {
             ensureHandler={this.ensureHandler}
             button={<Button>弹出Picker</Button>}>
             <Picker
+                className="zui-picker-view"
                 data={this.props.data}
                 values={this.props.values}
                 onChange={this.changeHandler}>
