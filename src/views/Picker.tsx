@@ -1,51 +1,12 @@
 import React, { Component, TouchEvent } from 'react';
+import PickerAttr, { PickerProps } from '../utils/pickerAttr';
 
-interface PickerProps {
-    data: Array<Array<{[key: string]: string}>>,
-    values: Array<string | number>,
-    className?: string,
-    onChange?: Function
-}
 
 interface PickerState {
     colStyleList: Array<any>,
 }
 
-class GlobalAttr {
-
-    curTouchY: number;
-    translateList: Array<number>;
-    pickIdxList: Array<number>;
-    LINE_HEIGHT: 26;
-
-    constructor() {
-        this.curTouchY = 0;
-        this.translateList = [];
-        this.pickIdxList = [];
-        this.LINE_HEIGHT = 26;
-    }
-
-    setCurTouchY(e: TouchEvent<HTMLDivElement>) {
-        this.curTouchY = e.touches[0].pageY;
-    }
-
-    initPickIndexList(props: PickerProps) {
-        this.pickIdxList = props.values.map((val, idx) => {
-            let pickIdx = props.data[idx].findIndex(sub => sub.value === val);
-            return pickIdx === -1 ? 0 : pickIdx;
-        });
-    }
-
-    getTranslateY(index: number) {
-        let curTranslateY = 0;
-        if (this.pickIdxList[index]) {
-            curTranslateY = -this.pickIdxList[index] * this.LINE_HEIGHT;
-        }
-        return curTranslateY;
-    }
-}
-
-const _attr = new GlobalAttr();
+const _attr = new PickerAttr();
 
 class Picker extends Component<PickerProps, PickerState> {
 
@@ -114,7 +75,7 @@ class Picker extends Component<PickerProps, PickerState> {
         const translateY = e.touches[0].pageY - _attr.curTouchY + _attr.translateList[idx];
         
         _attr.setCurTouchY(e);
-        _attr.translateList[idx] = translateY;
+        _attr.translateList.splice(idx, 1, translateY);
 
         this.setColStyleList(idx, 'none', `translateY(${translateY}px)`)
     }
@@ -122,8 +83,8 @@ class Picker extends Component<PickerProps, PickerState> {
     // 手指抬起 完成Pick
     colTouchEndHandler = (idx: number) => (e: TouchEvent<HTMLDivElement>) => {
         const { pickIdx, adjustTranslate } = this.getFinallyTranslate(idx);
-        _attr.pickIdxList[idx] = pickIdx;
-        _attr.translateList[idx] = adjustTranslate;
+        _attr.pickIdxList.splice(idx, 1, pickIdx);
+        _attr.translateList.splice(idx, 1, adjustTranslate);
 
         const values = this.props.data.map((val, i) => val[_attr.pickIdxList[i]].value)
         if (typeof this.props.onChange === 'function') {

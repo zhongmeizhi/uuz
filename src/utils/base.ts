@@ -39,6 +39,17 @@ function getDefaultVal<T>(val: any, emptyVal: any): T {
     return isUndef(val) ? emptyVal : val;
 }
 
+/**
+ * 缓存函数的执行结果
+ */
+function cached (fn: Function) {
+    var cache = Object.create(null);
+    return (function cachedFn (str: string) {
+        var hit = cache[str];
+        return hit || (cache[str] = fn(str))
+    })
+}
+
 export {
     toRawType,
     isUndef,
@@ -47,5 +58,6 @@ export {
     isFalse,
     isObject,
     isPlainObject,
-    getDefaultVal
+    getDefaultVal,
+    cached
 }

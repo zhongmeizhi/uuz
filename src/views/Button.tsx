@@ -25,7 +25,7 @@ export default function Button(props: ButtonProps) {
         typeClassName += 'primary';
     }
 
-    const disabledClassname = props.disabled ? 'zui-button-disbale' : '';
+    const disabledClassname: string = props.disabled ? 'zui-button-disbale' : '';
     const buttonClassName: string = `zui-button ${typeClassName} ${props.className || ''} ${disabledClassname}`;
 
     return <div 
