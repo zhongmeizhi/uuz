@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Mask from './Mask';
 import Close from './Close';
+import Mask from './sub-views/Mask';
 
 interface DialogProps{
     children: React.ReactNode,

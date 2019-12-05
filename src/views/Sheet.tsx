@@ -1,5 +1,5 @@
 import React, { useState, ReactNode, MouseEvent } from 'react';
-import Mask from './Mask';
+import Mask from './sub-views/Mask';
 
 interface SheetProps {
     children: ReactNode,

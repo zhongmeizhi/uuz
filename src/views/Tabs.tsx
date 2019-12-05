@@ -6,7 +6,6 @@ interface TabsProps {
     tabs: Array<string>
 }
 
-
 export default function Tabs(props: TabsProps) {
     const [curTabIdx, setCurTabIdx] = useState(0);
 
@@ -41,7 +40,6 @@ export default function Tabs(props: TabsProps) {
                     {tab}
                 </div>)
             }
-            {/* tabLineStyle */}
             <div className="zui-tabs-bar-underline" style={{
                 width: `${100/tabLen}%`,
                 transform: `translateX(${curTabIdx}00%)`

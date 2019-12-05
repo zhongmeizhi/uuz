@@ -44,8 +44,8 @@ class PickerView extends React.Component<PickerViewProps> {
                 className="zui-picker-view"
                 data={this.props.data}
                 values={this.props.values}
-                onChange={this.changeHandler}>
-            </Picker>
+                onChange={this.changeHandler}
+            ></Picker>
         </Sheet>
     }
 }
