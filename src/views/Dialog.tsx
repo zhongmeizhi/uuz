@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import Close from './Close';
+import Close from './sub-views/Close';
 import Mask from './sub-views/Mask';
+
+import { typeCheck } from '../utils/base';
 
 interface DialogProps{
     children: React.ReactNode,
@@ -11,12 +13,18 @@ interface DialogProps{
 // conext
 export const DialogContext = React.createContext(() => {});
 
-export default function Dialog(props: DialogProps) {
+export default function Dialog({children, isBtnCloseOnly, destroy}: DialogProps) {
     const [isShow, setShow] = useState(true);
     const [showState, setShowState] = useState({
         isQuitting: false,
         areaClassName: 'zui-dialog-area'
     });
+
+    // if (typeCheck([
+    //     ['children', children, 'Element', 'String'],
+    //     ['isBtnCloseOnly', isBtnCloseOnly, 'Boolean', 'Undefined'],
+    //     ['destroy', destroy, 'Function', 'Undefined', 'Null'],
+    // ])) return null;
 
     const closeDialog = () => {
         setShowState({
@@ -26,13 +34,13 @@ export default function Dialog(props: DialogProps) {
     }
 
     const modalHandler = () => {
-        if (props.isBtnCloseOnly) return;
+        if (isBtnCloseOnly) return;
         closeDialog();
     }
 
     const dialogTransitionEndHandler = () => {
-        if (typeof props.destroy === 'function') {
-            props.destroy();
+        if (typeof destroy === 'function') {
+            destroy();
         } else {
             setShow(false);
         }
@@ -44,11 +52,11 @@ export default function Dialog(props: DialogProps) {
                 <Mask quitting={showState.isQuitting} modalHandler={modalHandler}></Mask>
                 <div className={showState.areaClassName} onTransitionEnd={dialogTransitionEndHandler}>
                     {
-                        props.isBtnCloseOnly ?
+                        isBtnCloseOnly ?
                             null:
                             <Close className="zui-dialog-close" onClick={closeDialog}></Close>
                     }
-                    { props.children }
+                    { children }
                 </div>
             </div>
         </DialogContext.Provider>

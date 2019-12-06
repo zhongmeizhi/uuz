@@ -50,6 +50,41 @@ function cached (fn: Function) {
     })
 }
 
+
+/* 
+    是否为 React Element
+*/
+function isReactElement(obj: any) {
+    if (obj &&
+            obj['$$typeof'] &&
+            obj['$$typeof'].toString() === 'Symbol(react.element)'
+        ) {
+        return true;
+    }
+}
+
+/* 
+    参数校验机制
+*/
+function typeCheck (typeList: Array<Array<any>>) {
+    for (let typeChild of typeList) {
+        console.log(typeChild)
+        const [name, value] = typeChild.splice(0, 2);
+        const actualType = toRawType(value);
+        if (typeChild.indexOf(actualType) === -1) {
+            if (typeChild.includes('Element')) {
+                if (!isReactElement(value)) {
+                    console.error(new Error(`${name} 期望是:${typeChild}, 实际是:${actualType}`))
+                return 'Thorw Error';
+                }
+            } else {
+                console.error(new Error(`${name} 期望是:${typeChild}, 实际是:${actualType}`))
+                return 'Thorw Error';
+            }
+        }
+    }
+}
+
 export {
     toRawType,
     isUndef,
@@ -59,5 +94,6 @@ export {
     isObject,
     isPlainObject,
     getDefaultVal,
-    cached
+    cached,
+    typeCheck
 }

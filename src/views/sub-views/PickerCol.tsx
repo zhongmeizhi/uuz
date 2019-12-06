@@ -2,20 +2,31 @@ import React, { useState, TouchEvent } from 'react';
 
 interface PickerColProps {
     list: Array<any>,
+    value: ValueType,
     onChange?: Function
 }
+
+type ValueType = string | number
 
 const LINE_HEIGHT = 26;
 
 // 写在function中的非useState的属性是不能被动态获取的
 // 写在function外部没问题 - -
-export default function PickerCol({list, onChange}: PickerColProps) {
-    const [colStyle, setColStyle] = useState({
-        translateY: 0,
-        transition: 'none',
-    })
+export default function PickerCol({list, value, onChange}: PickerColProps) {
+
+    // useState init时 需要传入函数，否则每次set都会执行
+    const [colStyle, setColStyle] = useState(() => initState(list, value))
     const [curTouchY, setCurTouchY] = useState(0);
     // const [pickIdx, setPickIdx] = useState(0);
+
+    function initState (list: Array<any>, value: ValueType): {translateY: number, transition: string} {
+        let index = list.findIndex(val => val.value === value);
+        index = index === -1 ? 0 : index;
+        return {
+            translateY: - (index * LINE_HEIGHT),
+            transition: 'none',
+        }
+    }
 
     const getFinallyTranslate = () => {
         let adjustTranslate, adjustTranIdx;
@@ -55,7 +66,7 @@ export default function PickerCol({list, onChange}: PickerColProps) {
         const { adjustTranIdx, adjustTranslate } = getFinallyTranslate();
         const value = list[adjustTranIdx].value;
         if (typeof onChange === 'function') {
-            onChange(value, adjustTranIdx)
+            onChange(value)
         }
         // setPickIdx(adjustTranIdx);
         setColStyle({

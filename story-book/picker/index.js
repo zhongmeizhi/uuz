@@ -34,7 +34,7 @@ const data = [
             label: '测试3'
         },{
             value: '44',
-            label: '测试5'
+            label: '测试4'
         },{
             value: '55',
             label: '测试5'
@@ -46,18 +46,18 @@ const data = [
 const TestPicker = () => {
 
     const [values1, setValues1] = useState(['2', '44']);
-    const [values2, setValues2] = useState(['1', '11']);
+    const [values2, setValues2] = useState(['3', '22']);
 
 
-    const changeHandler = (values, indexes) => {
+    const changeHandler = (values) => {
         setValues1(values)
     }
 
-    const changeHandler2 = (values, indexes) => {
+    const changeHandler2 = (values) => {
         setValues2(values)
     }
 
-    const ensureHandler = (values, indexes) => {
+    const ensureHandler = (values) => {
         action(values.toString())
     }
 

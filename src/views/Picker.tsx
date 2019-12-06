@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import PickerCol from './sub-views/PickerCol';
 
+// import { typeCheck } from '../utils/base';
+
 export interface PickerProps {
     data: Array<Array<{[key: string]: string}>>,
     values: Array<string | number>,
@@ -8,23 +10,32 @@ export interface PickerProps {
     onChange?: Function
 }
 
-function Picker(props: PickerProps) {
+function Picker({data, values, className, onChange}: PickerProps) {
 
-    const [values, setValues] = useState(['', '']);
-    const [indexes, setIndexes] = useState([0, 0]);
+    const [pickValues, setValues] = useState(['', '']);
+
+    // if (typeCheck([
+    //     ['data', data, 'Array'],
+    //     ['values', values, 'Array'],
+    //     ['className', className, 'String', 'Undefined', 'Null'],
+    //     ['onChange', onChange, 'Function', 'Undefined', 'Null']
+    // ])) return null;
 
     const colChangeHandler = (idx: number) => (value: string, pickIdx: number) => {
-        console.log(value, pickIdx)
-        if (typeof props.onChange === 'function') {
-            props.onChange(values, indexes);
-        }
+        setValues((oldState) => {
+            oldState.splice(idx, 1, value);
+            return oldState;
+        })
+        onChange && onChange(pickValues);
     }
 
-    const pickerClassName = `zui-picker ${props.className || ''}`
+    const pickerClassName = `zui-picker ${className || ''}`
+
     return <div className={pickerClassName}>
         {
-            props.data.map((list, idx) => <PickerCol
+            data.map((list, idx) => <PickerCol
                 key={idx}
+                value={values[idx]}
                 list={list}
                 onChange={colChangeHandler(idx)}
             ></PickerCol>)

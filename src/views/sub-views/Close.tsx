@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ReactComponent as CloseSvg } from '../static/close.svg'
+import { ReactComponent as CloseSvg } from '../../static/close.svg'
 
 interface ClickProps {
     className?: string,
