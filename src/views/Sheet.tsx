@@ -1,5 +1,4 @@
 import React, { useState, ReactNode, MouseEvent } from 'react';
-import Mask from './sub-views/Mask';
 
 interface SheetProps {
     children: ReactNode,
@@ -11,7 +10,6 @@ interface SheetProps {
 
 export default  function Sheet(props: SheetProps) {
     const [isShow, setIsShow] = useState(false);
-    const [isQuitting, setIsQuitting] = useState(false);
     const [sheetClassName, setSheetClassName] = useState('zui-sheet-box');
 
     const modalHandler = () => {
@@ -19,13 +17,11 @@ export default  function Sheet(props: SheetProps) {
     }
 
     const closeSheet = () => {
-        setIsQuitting(true);
         setSheetClassName('zui-sheet-box zui-quit')
     }
 
     const transitionEndHandler = () => {
         setIsShow(false);
-        setIsQuitting(false);
         setSheetClassName('zui-sheet-box')
     }
 
@@ -46,11 +42,10 @@ export default  function Sheet(props: SheetProps) {
         <div onClick={() => setIsShow(true)}>{props.button}</div>
         {   
             isShow ?
-                <div className={sheetClassName}>
-                    <Mask quitting={isQuitting} modalHandler={modalHandler}></Mask>
+                <div className={sheetClassName} onTransitionEnd={transitionEndHandler}>
+                    <div className="zui-sheet-mask" onClick={modalHandler}></div>
                     {/* sheet主体 */}
-                    <div className="zui-sheet-area"
-                        onTransitionEnd={transitionEndHandler}>
+                    <div className="zui-sheet-area">
                         {/* 头部信息 */}
                         <div className="zui-sheet-header">
                             <div onClick={closeSheet}>取消</div>

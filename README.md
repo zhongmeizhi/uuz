@@ -103,13 +103,13 @@
 * [x] PickerView
 * [x] Dialog
 * [x] Alert
-* [ ] Comfirm
-* [ ] Transition
+* [x] Comfirm
 * [ ] Toast
 * [ ] Loading
-* [ ] List
 * [ ] Switch
 * [ ] Progress
+* [ ] Transition
+* [ ] List
 * [ ] Carousel
 
 

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import Close from './sub-views/Close';
-import Mask from './sub-views/Mask';
 
-import { typeCheck } from '../utils/base';
+// import { typeCheck } from '../utils/base';
 
 interface DialogProps{
     children: React.ReactNode,
@@ -15,10 +14,7 @@ export const DialogContext = React.createContext(() => {});
 
 export default function Dialog({children, isBtnCloseOnly, destroy}: DialogProps) {
     const [isShow, setShow] = useState(true);
-    const [showState, setShowState] = useState({
-        isQuitting: false,
-        areaClassName: 'zui-dialog-area'
-    });
+    const [dialogClassName, setDialogClassName] = useState('zui-dialog');
 
     // if (typeCheck([
     //     ['children', children, 'Element', 'String'],
@@ -27,10 +23,7 @@ export default function Dialog({children, isBtnCloseOnly, destroy}: DialogProps)
     // ])) return null;
 
     const closeDialog = () => {
-        setShowState({
-            isQuitting: true,
-            areaClassName: 'zui-dialog-area zui-dialog-quit'
-        });
+        setDialogClassName('zui-dialog zui-dialog-quit');
     }
 
     const modalHandler = () => {
@@ -38,19 +31,16 @@ export default function Dialog({children, isBtnCloseOnly, destroy}: DialogProps)
         closeDialog();
     }
 
-    const dialogTransitionEndHandler = () => {
-        if (typeof destroy === 'function') {
-            destroy();
-        } else {
-            setShow(false);
-        }
+    const tansitionEndHandler = () => {
+        (typeof destroy === 'function') ? destroy() : setShow(false);
     }
 
     return isShow ?
         <DialogContext.Provider value={closeDialog}> {/** context 注入 */}
-            <div className="zui-dialog">
-                <Mask quitting={showState.isQuitting} modalHandler={modalHandler}></Mask>
-                <div className={showState.areaClassName} onTransitionEnd={dialogTransitionEndHandler}>
+            <div className={dialogClassName} 
+                onTransitionEnd={tansitionEndHandler}>
+                <div className="zui-dialog-mask" onClick={modalHandler}></div>
+                <div className="zui-dialog-area">
                     {
                         isBtnCloseOnly ?
                             null:

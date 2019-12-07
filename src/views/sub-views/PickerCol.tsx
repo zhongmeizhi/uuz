@@ -11,13 +11,12 @@ type ValueType = string | number
 const LINE_HEIGHT = 26;
 
 // 写在function中的非useState的属性是不能被动态获取的
-// 写在function外部没问题 - -
+// 可以写在function外部
 export default function PickerCol({list, value, onChange}: PickerColProps) {
 
     // useState init时 需要传入函数，否则每次set都会执行
     const [colStyle, setColStyle] = useState(() => initState(list, value))
     const [curTouchY, setCurTouchY] = useState(0);
-    // const [pickIdx, setPickIdx] = useState(0);
 
     function initState (list: Array<any>, value: ValueType): {translateY: number, transition: string} {
         let index = list.findIndex(val => val.value === value);
@@ -68,7 +67,6 @@ export default function PickerCol({list, value, onChange}: PickerColProps) {
         if (typeof onChange === 'function') {
             onChange(value)
         }
-        // setPickIdx(adjustTranIdx);
         setColStyle({
             translateY: adjustTranslate,
             transition: 'all 0.3s'

@@ -5,6 +5,23 @@
     z-index: 5;
     top: 0;
     left: 0;
+    /* 
+        开场动画
+    */
+    transition: all 0.3s;
+    animation: showMaskAnm 0.3s;
+    @keyframes showMaskAnm {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+    .zui-dialog-mask {
+        background: rgba(0, 0, 0, 0.4);
+        height: 100%;
+    }
     .zui-dialog-area {
         position: absolute;
         box-sizing: border-box;
@@ -14,19 +31,19 @@
         background: white;
         border-radius: 8px;
         padding: 22px 20px;
+        /*
+            开场动画 
+         */
         animation: showDialogAnm 0.3s;
         transform: translate(-50%, -50%) scale(1);
         @keyframes showDialogAnm {
             0% {
-                opacity: 0;
                 transform: translate(-50%, -50%) scale(1.05);
             }
             50% {
-                opacity: 0.5;
                 transform: translate(-50%, -50%) scale(0.95);
             }
             100% {
-                opacity: 1;
                 transform: translate(-50%, -50%) scale(1);
             }
         }
@@ -35,9 +52,14 @@
             right: 10px;
             top: 8px;
         }
-        &.zui-dialog-quit {
+    }
+    /*
+        离场动画 
+     */
+    &.zui-dialog-quit {
+        opacity: 0;
+        .zui-dialog-area {
             transform: translate(-50%, -50%) scale(0);
-            opacity: 0;
             transition: all 0.3s;
         }
     }
