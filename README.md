@@ -104,6 +104,7 @@
 * [x] Dialog
 * [x] Alert
 * [x] Comfirm
+* [ ] Step
 * [ ] Toast
 * [ ] Loading
 * [ ] Switch

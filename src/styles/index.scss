@@ -3,6 +3,7 @@
 
 // 统一颜色
 $primaryColor: #108ee9;
+$descTxtColor: #888;
 $grey: #d6d6d6;
 $thinGrey: #f7f7f7;
 
@@ -55,13 +56,11 @@ $thinGrey: #f7f7f7;
 */
 @import './picker.scss';
 
-
 /*  ===============
     Dialog css样式
     ===============
 */
 @import './dialog.scss';
-
 
 /*  ===============
     Alert css样式
@@ -69,9 +68,14 @@ $thinGrey: #f7f7f7;
 */
 @import './alert.scss';
 
-
 /*  ===============
     Confirm css样式
     ===============
 */
 @import './confirm.scss';
+
+/*  ===============
+    Confirm css样式
+    ===============
+*/
+@import './steps.scss';

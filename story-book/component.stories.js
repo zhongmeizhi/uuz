@@ -9,6 +9,7 @@ import Popup from './popup'
 import Refresh from './refresh'
 import Sheet from './sheet'
 import TestTabs from './tabs'
+import TestStep from './step'
 
 const componentStory = storiesOf('组件', module);
 
@@ -46,4 +47,8 @@ componentStory.add('底部弹窗 Sheet',
 
 componentStory.add('标签页 Tabs',
     TestTabs,
+)
+
+componentStory.add('步骤条 Steps',
+    TestStep,
 )

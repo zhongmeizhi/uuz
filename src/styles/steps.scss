@@ -1,0 +1,85 @@
+
+@mixin setpLine {
+    content: '';
+    width: 2px;
+    height: 50%;
+    background: $descTxtColor;
+    position: absolute;
+    z-index: 1;
+    left: 21px;
+    transition: all 1s;
+}
+
+.zui-steps {
+    .zui-step {
+        display: flex;
+        flex-direction: row;
+        padding: 7px 12px;
+        position: relative;
+        .zui-step-num {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+            margin-right: 12px;
+            border-radius: 50%;
+            font-size: 12px;
+            align-self: center;
+            color: white;
+            background: $descTxtColor;
+            z-index: 2;
+        }
+        .zui-step-area {
+            flex: 1;
+            .zui-step-desc {
+                font-size: 12px;
+                color: $descTxtColor;
+            }
+        }
+        &::before {
+            @include setpLine;
+            top: 0;
+        }
+        &::after {
+            @include setpLine;
+            bottom: 0;
+        }
+        &:first-child::before, &:last-child::after {
+            content: none;
+        }
+        &.zui-step-finish {
+            .zui-step-num {
+                font-size: 0;
+                background: white;
+                border: 1px solid $primaryColor;
+                box-sizing: border-box;
+                position: relative;
+                &::before {
+                    content: '';
+                    width: 9px;
+                    height: 5px;
+                    border-bottom: 2px solid $primaryColor;
+                    border-left: 2px solid $primaryColor;
+                    position: absolute;
+                    border-radius: 1px;
+                    top: 4px;
+                    left: 4px;
+                    transform: rotate(-45deg);
+                }
+            }
+            &::before, &::after  {
+                background: $primaryColor;
+            }
+        }
+        &.zui-step-active {
+            .zui-step-num {
+                color: white;
+                background: $primaryColor;
+            }
+            &::before, &::after  {
+                background: $primaryColor;
+            }
+        }
+    }
+}
