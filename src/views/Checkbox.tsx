@@ -2,10 +2,10 @@ import React from 'react';
 import {getClassName} from '../utils/base'
 
 interface CheckBoxProps {
-    checked: boolean,
+    checked?: boolean,
     children?: React.ReactNode,
     disabled?: boolean,
-    onChange: Function
+    onChange?: Function
 }
 
 export default function CheckBox({checked, children, disabled, onChange}: CheckBoxProps) {

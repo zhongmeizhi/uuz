@@ -3,6 +3,7 @@
 
 // 统一颜色
 $primaryColor: #108ee9;
+$errorColor: #ff4949;
 $descTxtColor: #888;
 $grey: #d6d6d6;
 $thinGrey: #f7f7f7;
@@ -85,3 +86,9 @@ $thinGrey: #f7f7f7;
     ===============
 */
 @import './checkbox.scss';
+
+/*  ===============
+    Switch css样式
+    ===============
+*/
+@import './switch.scss';

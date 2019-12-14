@@ -11,6 +11,7 @@ import Sheet from './sheet'
 import TestTabs from './tabs'
 import TestStep from './step'
 import TestCheckbox from './checkbox'
+import TestSwitch from './switch'
 
 const componentStory = storiesOf('组件', module);
 
@@ -56,4 +57,8 @@ componentStory.add('步骤条 Steps',
 
 componentStory.add('选择框 Checkbox',
     TestCheckbox,
+)
+
+componentStory.add('开关 Switch',
+    TestSwitch,
 )
