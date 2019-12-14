@@ -10,6 +10,7 @@ import Refresh from './refresh'
 import Sheet from './sheet'
 import TestTabs from './tabs'
 import TestStep from './step'
+import TestCheckbox from './checkbox'
 
 const componentStory = storiesOf('组件', module);
 
@@ -51,4 +52,8 @@ componentStory.add('标签页 Tabs',
 
 componentStory.add('步骤条 Steps',
     TestStep,
+)
+
+componentStory.add('选择框 Checkbox',
+    TestCheckbox,
 )

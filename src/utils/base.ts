@@ -34,7 +34,7 @@ function isPlainObject (obj: any): Boolean {
     return toRawType(obj) === 'Object'
 }
 
-// 返回泛型
+// 匹配默认值
 function getDefaultVal<T>(val: any, emptyVal: any): T {
     return isUndef(val) ? emptyVal : val;
 }
@@ -48,6 +48,24 @@ function cached (fn: Function) {
         var hit = cache[str];
         return hit || (cache[str] = fn(str))
     })
+}
+
+/* 
+    参考 Vue 获取className的方式
+    获取 className 
+*/
+function getClassName(obj: {[key: string]: boolean | undefined}): string {
+    if (isObject(obj)) {
+        const keys = Object.keys(obj);
+        let className = ''
+        for(let key of keys) {
+            if (obj[key]) {
+                className += ` ${key}`;
+            }
+        }
+        return className;
+    }
+    return ''
 }
 
 
@@ -95,5 +113,6 @@ export {
     isPlainObject,
     getDefaultVal,
     cached,
+    getClassName,
     typeCheck
 }

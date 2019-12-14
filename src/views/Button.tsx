@@ -1,4 +1,5 @@
 import React from 'react';
+import { getClassName } from '../utils/base';
 
 interface ButtonProps {
     className?: string,
@@ -8,30 +9,28 @@ interface ButtonProps {
     children: React.ReactNode
 }
 
-export default function Button(props: ButtonProps) {
+export default function Button({disabled, type, className, onClick, children}: ButtonProps) {
+
+    const btnClassNames = {
+        'zui-button-disbale': disabled,
+        'zui-primary': !type,
+        'zui-raw': type === 'raw',
+    }
 
     const clickHandler = (e: React.MouseEvent<HTMLElement>) => {
-        if (props.disabled) {
+        if (disabled) {
             e.stopPropagation();
         } else {
-            (typeof props.onClick === 'function') && props.onClick();
+            (typeof onClick === 'function') && onClick();
         }
     }
 
-    let typeClassName: string = 'zui-';
-    if (props.type) {
-        typeClassName += props.type;
-    } else {
-        typeClassName += 'primary';
-    }
-
-    const disabledClassname: string = props.disabled ? 'zui-button-disbale' : '';
-    const buttonClassName: string = `zui-button ${typeClassName} ${props.className || ''} ${disabledClassname}`;
+    const buttonClassName: string = `zui-button ${className || ''} ${getClassName(btnClassNames)}`;
 
     return <div 
         className={buttonClassName}
         onClick={clickHandler}>
-        {props.children}
+        {children}
     </div>
 }
 

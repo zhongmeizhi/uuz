@@ -1,0 +1,45 @@
+.zui-checkbox {
+    .zui-check {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        background: white;
+        border: 1px solid $descTxtColor;
+        border-radius: 3px;
+        position: relative;
+        transition: all 0.3s;
+    }
+    &.zui-checked {
+        .zui-check {
+            background: $primaryColor;
+            border: 1px solid $primaryColor;
+            box-shadow: 0 0 2px 0 $primaryColor;
+            &::before {
+                content: '';
+                position: absolute;
+                width: 7px;
+                height: 4px;
+                border-radius: 1px;
+                top: 2px;
+                left: 1px;
+                transform: rotate(-45deg);
+                animation: checkAnm 0.5s forwards;
+            }
+            @keyframes checkAnm {
+                0% {
+                }
+                50% {
+                    border-left: 2px solid white;
+                }
+                100% {
+                    border-bottom: 2px solid white;
+                    border-left: 2px solid white;
+                }
+            }
+        }
+    }
+    &.zui-check-disabled {
+        opacity: 0.7;
+        pointer-events: none;
+    }
+}
