@@ -98,7 +98,8 @@ a:hover, a:active {
     color: #606266; }
     .zui-button.zui-raw:active {
       color: #108ee9;
-      border: 1px solid #108ee9; }
+      border: 1px solid #108ee9;
+      box-shadow: 0 0 2px 0 #108ee9; }
   .zui-button.zui-button-disbale {
     pointer-events: none;
     opacity: 0.7; }
@@ -131,16 +132,22 @@ a:hover, a:active {
     color: white; }
 
 /*  ===============
-    Mask css样式
+    sheet 底框 css样式
     ===============
 */
-.zui-mask {
-  background: rgba(0, 0, 0, 0.4);
-  height: 100%;
+.zui-sheet-box {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 6;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
   /* 
-        入场动画
-     */
-  opacity: 1;
+        开场动画
+    */
+  transition: all 0.3s;
   -webkit-animation: showMaskAnm 0.3s;
           animation: showMaskAnm 0.3s; }
 
@@ -155,22 +162,9 @@ a:hover, a:active {
     opacity: 0; }
   100% {
     opacity: 1; } }
-  .zui-mask.zui-mask-quit {
-    opacity: 0;
-    -webkit-transition: all 0.3s;
-    transition: all 0.3s; }
-
-/*  ===============
-    sheet 底框 css样式
-    ===============
-*/
-.zui-sheet-box {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 6; }
+  .zui-sheet-box .zui-sheet-mask {
+    background: rgba(0, 0, 0, 0.4);
+    height: 100%; }
   .zui-sheet-box .zui-sheet-area {
     position: absolute;
     bottom: 0;
@@ -203,7 +197,8 @@ a:hover, a:active {
         left: 0; }
     .zui-sheet-box .zui-sheet-area .zui-sheet-body {
       height: calc(100% - 38px);
-      overflow-y: auto; }
+      overflow-y: auto;
+      position: relative; }
 
 @-webkit-keyframes sheetAreaAnm {
   0% {
@@ -216,10 +211,12 @@ a:hover, a:active {
     height: 0; }
   100% {
     height: 280px; } }
-  .zui-sheet-box.zui-quit .zui-sheet-area {
-    height: 0;
-    -webkit-transition: all 0.3s;
-    transition: all 0.3s; }
+  .zui-sheet-box.zui-quit {
+    opacity: 0; }
+    .zui-sheet-box.zui-quit .zui-sheet-area {
+      height: 0;
+      -webkit-transition: all 0.3s;
+      transition: all 0.3s; }
 
 /*  ===============
     Tabs css样式
@@ -272,12 +269,12 @@ a:hover, a:active {
     flex: 1 1;
     position: relative; }
     .zui-picker .zui-picker-col .zui-picker-col-area {
-      padding: 90px 16px;
+      padding: 87px 16px;
       text-align: center;
       background: transparent; }
       .zui-picker .zui-picker-col .zui-picker-col-area .zui-picker-item {
-        line-height: 20px;
-        height: 20px; }
+        line-height: 26px;
+        height: 26px; }
     .zui-picker .zui-picker-col .zui-picker-col-mask {
       content: '';
       position: absolute;
@@ -289,6 +286,13 @@ a:hover, a:active {
       background: -webkit-linear-gradient(#ffffffe6 0%, #ffffff99 42%, transparent 43%, transparent 56%, #ffffff99 57%, #ffffffe6 100%);
       background: linear-gradient(#ffffffe6 0%, #ffffff99 42%, transparent 43%, transparent 56%, #ffffff99 57%, #ffffffe6 100%);
       z-index: 2; }
+  .zui-picker.zui-picker-view {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    left: 0;
+    -webkit-transform: translateY(-50%);
+            transform: translateY(-50%); }
   .zui-picker::after {
     content: '';
     position: absolute;
@@ -298,9 +302,10 @@ a:hover, a:active {
             transform: translateY(-50%);
     width: 100%;
     background: #f7f7f7;
-    height: 20px;
+    height: 26px;
     border-top: 1px solid #d6d6d6;
     border-bottom: 1px solid #d6d6d6;
+    box-sizing: border-box;
     z-index: -1; }
 
 /*  ===============
@@ -313,7 +318,26 @@ a:hover, a:active {
   height: 100%;
   z-index: 5;
   top: 0;
-  left: 0; }
+  left: 0;
+  /* 
+        开场动画
+    */
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  -webkit-animation: showMaskAnm 0.3s;
+          animation: showMaskAnm 0.3s;
+  /*
+        离场动画 
+     */ }
+
+@keyframes showMaskAnm {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+  .zui-dialog .zui-dialog-mask {
+    background: rgba(0, 0, 0, 0.4);
+    height: 100%; }
   .zui-dialog .zui-dialog-area {
     position: absolute;
     box-sizing: border-box;
@@ -323,6 +347,9 @@ a:hover, a:active {
     background: white;
     border-radius: 8px;
     padding: 22px 20px;
+    /*
+            开场动画 
+         */
     -webkit-animation: showDialogAnm 0.3s;
             animation: showDialogAnm 0.3s;
     -webkit-transform: translate(-50%, -50%) scale(1);
@@ -330,39 +357,34 @@ a:hover, a:active {
 
 @-webkit-keyframes showDialogAnm {
   0% {
-    opacity: 0;
     -webkit-transform: translate(-50%, -50%) scale(1.05);
             transform: translate(-50%, -50%) scale(1.05); }
   50% {
-    opacity: 0.5;
     -webkit-transform: translate(-50%, -50%) scale(0.95);
             transform: translate(-50%, -50%) scale(0.95); }
   100% {
-    opacity: 1;
     -webkit-transform: translate(-50%, -50%) scale(1);
             transform: translate(-50%, -50%) scale(1); } }
 
 @keyframes showDialogAnm {
   0% {
-    opacity: 0;
     -webkit-transform: translate(-50%, -50%) scale(1.05);
             transform: translate(-50%, -50%) scale(1.05); }
   50% {
-    opacity: 0.5;
     -webkit-transform: translate(-50%, -50%) scale(0.95);
             transform: translate(-50%, -50%) scale(0.95); }
   100% {
-    opacity: 1;
     -webkit-transform: translate(-50%, -50%) scale(1);
             transform: translate(-50%, -50%) scale(1); } }
     .zui-dialog .zui-dialog-area .zui-dialog-close {
       position: absolute;
       right: 10px;
       top: 8px; }
-    .zui-dialog .zui-dialog-area.zui-dialog-quit {
+  .zui-dialog.zui-dialog-quit {
+    opacity: 0; }
+    .zui-dialog.zui-dialog-quit .zui-dialog-area {
       -webkit-transform: translate(-50%, -50%) scale(0);
               transform: translate(-50%, -50%) scale(0);
-      opacity: 0;
       -webkit-transition: all 0.3s;
       transition: all 0.3s; }
 
@@ -398,5 +420,197 @@ a:hover, a:active {
   .zui-dialog .zui-confirm-btn-box > div {
     width: 44%; }
 
+/*  ===============
+    Confirm css样式
+    ===============
+*/
+.zui-steps .zui-step {
+  display: flex;
+  flex-direction: row;
+  padding: 7px 12px;
+  position: relative; }
+  .zui-steps .zui-step .zui-step-num {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    margin-right: 12px;
+    border-radius: 50%;
+    font-size: 12px;
+    align-self: center;
+    color: white;
+    background: #888;
+    z-index: 2; }
+  .zui-steps .zui-step .zui-step-area {
+    flex: 1 1; }
+    .zui-steps .zui-step .zui-step-area .zui-step-desc {
+      font-size: 12px;
+      color: #888; }
+  .zui-steps .zui-step::before {
+    content: '';
+    width: 2px;
+    height: 50%;
+    background: #888;
+    position: absolute;
+    z-index: 1;
+    left: 21px;
+    -webkit-transition: all 1s;
+    transition: all 1s;
+    top: 0; }
+  .zui-steps .zui-step::after {
+    content: '';
+    width: 2px;
+    height: 50%;
+    background: #888;
+    position: absolute;
+    z-index: 1;
+    left: 21px;
+    -webkit-transition: all 1s;
+    transition: all 1s;
+    bottom: 0; }
+  .zui-steps .zui-step:first-child::before, .zui-steps .zui-step:last-child::after {
+    content: none; }
+  .zui-steps .zui-step.zui-step-finish .zui-step-num {
+    font-size: 0;
+    background: white;
+    border: 1px solid #108ee9;
+    box-sizing: border-box;
+    position: relative; }
+    .zui-steps .zui-step.zui-step-finish .zui-step-num::before {
+      content: '';
+      width: 9px;
+      height: 5px;
+      border-bottom: 2px solid #108ee9;
+      border-left: 2px solid #108ee9;
+      position: absolute;
+      border-radius: 1px;
+      top: 4px;
+      left: 4px;
+      -webkit-transform: rotate(-45deg);
+              transform: rotate(-45deg); }
+  .zui-steps .zui-step.zui-step-finish::before, .zui-steps .zui-step.zui-step-finish::after {
+    background: #108ee9; }
+  .zui-steps .zui-step.zui-step-active .zui-step-num {
+    color: white;
+    background: #108ee9; }
+  .zui-steps .zui-step.zui-step-active::before, .zui-steps .zui-step.zui-step-active::after {
+    background: #108ee9; }
+
+/*  ===============
+    Checkbox css样式
+    ===============
+*/
+.zui-checkbox .zui-check {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background: white;
+  border: 1px solid #888;
+  border-radius: 3px;
+  position: relative;
+  margin-right: 2px;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s; }
+
+.zui-checkbox.zui-checked .zui-check {
+  background: #108ee9;
+  border: 1px solid #108ee9;
+  box-shadow: 0 0 2px 0 #108ee9; }
+  .zui-checkbox.zui-checked .zui-check::before {
+    content: '';
+    position: absolute;
+    width: 7px;
+    height: 4px;
+    border-radius: 1px;
+    top: 2px;
+    left: 1px;
+    -webkit-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+    -webkit-animation: checkAnm 0.5s forwards;
+            animation: checkAnm 0.5s forwards; }
+
+@-webkit-keyframes checkAnm {
+  0% { }
+  50% {
+    border-left: 2px solid white; }
+  100% {
+    border-bottom: 2px solid white;
+    border-left: 2px solid white; } }
+
+@keyframes checkAnm {
+  0% { }
+  50% {
+    border-left: 2px solid white; }
+  100% {
+    border-bottom: 2px solid white;
+    border-left: 2px solid white; } }
+
+.zui-checkbox.zui-check-disabled {
+  opacity: 0.7;
+  pointer-events: none; }
+
+/*  ===============
+    Switch css样式
+    ===============
+*/
+.zui-switch {
+  display: inline-block;
+  width: 45px;
+  height: 22px; }
+  .zui-switch .zui-switch-body {
+    display: block;
+    background: #ff4949;
+    width: 100%;
+    height: 100%;
+    border-radius: 66px;
+    position: relative; }
+    .zui-switch .zui-switch-body::after {
+      content: '';
+      display: inline-block;
+      background: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      position: absolute;
+      left: 2px;
+      top: 2px;
+      -webkit-transition: all 0.3s;
+      transition: all 0.3s; }
+  .zui-switch.zui-switch-disabled {
+    opacity: 0.7;
+    pointer-events: none; }
+    .zui-switch.zui-switch-disabled .zui-switch-body {
+      background: gray; }
+  .zui-switch.zui-switch-checked .zui-switch-body {
+    background: #108ee9; }
+    .zui-switch.zui-switch-checked .zui-switch-body::after {
+      -webkit-transform: translateX(23px);
+              transform: translateX(23px); }
+
+/*  ===============
+    Keyboard css样式
+    ===============
+*/
+.zui-keyboard {
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around; }
+  .zui-keyboard .zui-key {
+    width: 31%;
+    font-size: 18px;
+    margin-top: 1.5%; }
+
+.test-value-box {
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    font-size: 18px;
+    margin: 3px 15px;
+    border: 1px solid #888;
+    border-radius: 55px;
+}
 
 /*# sourceMappingURL=main.css.map*/
