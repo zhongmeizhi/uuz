@@ -1,4 +1,5 @@
 import React, { useState, ReactNode, MouseEvent } from 'react';
+import Transition from './Transition';
 
 interface SheetProps {
     children: ReactNode,
@@ -42,28 +43,29 @@ export default  function Sheet(props: SheetProps) {
     return <>
         <div onClick={() => setIsShow(true)}>{props.button}</div>
         {   
-            isShow ?
-                <div className={sheetClassName} onTransitionEnd={transitionEndHandler}>
-                    <div className="zui-sheet-mask" onClick={modalHandler}></div>
-                    {/* sheet主体 */}
-                    <div className="zui-sheet-area">
-                        {/* 头部信息 */}
-                        {
-                            props.header ?
-                                props.header :
-                                <div className="zui-sheet-header">
-                                    <div onClick={closeSheet}>取消</div>
-                                    <div>{props.titleTxt || ''}</div>
-                                    <div onClick={clickHandler}>确定</div>
-                                </div>
-                        }
-                        {/* 内容部分 */}
-                        <div
-                            className="zui-sheet-body"
-                            onTransitionEnd={bodyTansitionEndHandler}
-                        >{props.children}</div>
+            isShow ? <Transition name="zui-sheet-transition">
+                    <div className={sheetClassName} onTransitionEnd={transitionEndHandler}>
+                        <div className="zui-sheet-mask" onClick={modalHandler}></div>
+                        {/* sheet主体 */}
+                        <div className="zui-sheet-area">
+                            {/* 头部信息 */}
+                            {
+                                props.header ?
+                                    props.header :
+                                    <div className="zui-sheet-header">
+                                        <div onClick={closeSheet}>取消</div>
+                                        <div>{props.titleTxt || ''}</div>
+                                        <div onClick={clickHandler}>确定</div>
+                                    </div>
+                            }
+                            {/* 内容部分 */}
+                            <div
+                                className="zui-sheet-body"
+                                onTransitionEnd={bodyTansitionEndHandler}
+                            >{props.children}</div>
+                        </div>
                     </div>
-                </div>
+                </Transition>
                 : null
         }
     </>
