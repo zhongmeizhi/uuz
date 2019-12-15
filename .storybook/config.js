@@ -8,6 +8,8 @@ import theme from './theme.js';
 // 导入全局样式
 import '../src/styles/index.scss';
 
+import '../story-book/test.css';
+
 addParameters({
     options: {
         showNav: true,

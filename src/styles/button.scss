@@ -18,6 +18,7 @@
         &:active {
             color: $primaryColor;
             border: 1px solid $primaryColor;
+            box-shadow: 0 0 2px 0 $primaryColor;
         }
     }
     &.zui-button-disbale {

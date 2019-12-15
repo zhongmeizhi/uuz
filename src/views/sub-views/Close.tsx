@@ -4,15 +4,13 @@ import { ReactComponent as CloseSvg } from '../../static/close.svg'
 
 interface ClickProps {
     className?: string,
-    onClick: Function
+    onClick?: Function
 }
 
 export default function Close(props: ClickProps) {
 
     const clickHandler = () => {
-        if (typeof props.onClick === 'function') {
-            props.onClick();
-        }
+        (typeof props.onClick === 'function') && props.onClick();
     }
     
     return <CloseSvg

@@ -3,6 +3,7 @@ import React, { useState, ReactNode, MouseEvent } from 'react';
 interface SheetProps {
     children: ReactNode,
     button: ReactNode, // 触发Sheet的按钮
+    header?: ReactNode,
     titleTxt?: string,
     canModalClose?: boolean,
     ensureHandler?: Function
@@ -47,11 +48,15 @@ export default  function Sheet(props: SheetProps) {
                     {/* sheet主体 */}
                     <div className="zui-sheet-area">
                         {/* 头部信息 */}
-                        <div className="zui-sheet-header">
-                            <div onClick={closeSheet}>取消</div>
-                            <div>{props.titleTxt || ''}</div>
-                            <div onClick={clickHandler}>确定</div>
-                        </div>
+                        {
+                            props.header ?
+                                props.header :
+                                <div className="zui-sheet-header">
+                                    <div onClick={closeSheet}>取消</div>
+                                    <div>{props.titleTxt || ''}</div>
+                                    <div onClick={clickHandler}>确定</div>
+                                </div>
+                        }
                         {/* 内容部分 */}
                         <div
                             className="zui-sheet-body"

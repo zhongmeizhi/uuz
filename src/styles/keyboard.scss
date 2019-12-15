@@ -1,0 +1,12 @@
+.zui-keyboard {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    .zui-key {
+        width: 31%;
+        font-size: 18px;
+        margin-top: 1.5%;
+    }
+}

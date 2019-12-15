@@ -55,6 +55,7 @@
 * [ ] Loading
 * [x] Checkbox
 * [x] Switch
+* [x] Keyboard
 * [ ] Progress
 * [ ] Transition
 * [ ] List

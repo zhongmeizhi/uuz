@@ -3,7 +3,6 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 
 import Button from '../src/views/Button';
-
 import Picker from './picker/'
 import Popup from './popup'
 import Refresh from './refresh'
@@ -12,6 +11,7 @@ import TestTabs from './tabs'
 import TestStep from './step'
 import TestCheckbox from './checkbox'
 import TestSwitch from './switch'
+import TestKeyBoard from './keyboard'
 
 const componentStory = storiesOf('组件', module);
 
@@ -61,4 +61,8 @@ componentStory.add('选择框 Checkbox',
 
 componentStory.add('开关 Switch',
     TestSwitch,
+)
+
+componentStory.add('键盘 Keyboard',
+    TestKeyBoard,
 )
