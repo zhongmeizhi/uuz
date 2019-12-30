@@ -1,8 +1,6 @@
-import React from 'react';
 import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
 
-import Button from '../src/views/Button';
+import Button from './button/'
 import Picker from './picker/'
 import Popup from './popup'
 import Refresh from './refresh'
@@ -16,13 +14,7 @@ import TestKeyBoard from './keyboard'
 const componentStory = storiesOf('组件', module);
 
 componentStory.add('按钮 Button',
-    () => <>
-        <Button onClick={action('点击')}>默认按钮</Button>
-        <br></br>
-        <Button type="raw" onClick={action('点击')}>Raw按钮</Button>
-        <br></br>
-        <Button disabled>禁用按钮</Button>
-    </>, {notes: ''}
+    Button
 )
 
 componentStory.add('弹出层 Dialog Alert Confirm',

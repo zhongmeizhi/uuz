@@ -3,6 +3,8 @@
     border-radius: 5px;
     text-align: center;
     line-height: 47px;
+    display: inline-block;
+    width: 100%;
     &.zui-primary {
         color: white;
         background-color: $primaryColor;
@@ -21,8 +23,17 @@
             box-shadow: 0 0 2px 0 $primaryColor;
         }
     }
+    &.zui-button-warn {
+        background: $errorColor;
+        color: white;
+        &:active {
+            background-color: red;
+        }
+    }
     &.zui-button-disbale {
         pointer-events: none;
+        background: $descTxtColor;
+        border: 1px solid $descTxtColor;
         opacity: 0.7;
     }
 }

@@ -35,7 +35,7 @@ function isPlainObject (obj: any): Boolean {
 }
 
 // 匹配默认值
-function getDefaultVal<T>(val: any, emptyVal: any): T {
+function getValOrDefault<T>(val: any, emptyVal: any): T {
     return isUndef(val) ? emptyVal : val;
 }
 
@@ -103,6 +103,16 @@ function typeCheck (typeList: Array<Array<any>>) {
     }
 }
 
+/* 
+    单例
+*/
+function singleton () {
+    var _instance: any;
+    return function(obj: any) {
+        return _instance || (_instance = obj);
+    }
+}
+
 export {
     toRawType,
     isUndef,
@@ -111,8 +121,9 @@ export {
     isFalse,
     isObject,
     isPlainObject,
-    getDefaultVal,
+    getValOrDefault,
     cached,
     getClassName,
-    typeCheck
+    typeCheck,
+    singleton
 }

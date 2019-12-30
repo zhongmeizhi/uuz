@@ -21,6 +21,6 @@
   },
   "include": [
     "src",
-    "story-book/index.stories.js"
+    "story-book/index.stories.js", "src/utils/.js", "src/utils/.js"
   ]
 }

@@ -4,6 +4,8 @@ import { action } from '@storybook/addon-actions';
 import Button from '../../src/views/Button';
 import { dialog, alert, confirm } from '../../src/views-show/dialog';
 
+const Gap = () => <div style={{height: '8px'}}></div>
+
 export default  () => {
     const openDialog = () => {
         dialog.show(<div>xxxx<br></br>这里是内容</div>);
@@ -28,15 +30,16 @@ export default  () => {
             },
             onConfirm: () => {
                 action('确定');
+                openDialog();
             }
         });
     }
 
     return <>
-        <Button onClick={openDialog}>打开Dialog</Button>
-        <br></br>
-        <Button type="raw" onClick={openAlert}>打开Alert</Button>
-        <br></br>
+        <Button type="raw" onClick={openDialog}>打开Dialog</Button>
+        <Gap></Gap>
+        <Button type="warn" onClick={openAlert}>打开Alert</Button>
+        <Gap></Gap>
         <Button onClick={openConfirm}>打开Confirm</Button>
     </>
 }

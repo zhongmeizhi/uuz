@@ -5,11 +5,16 @@ import Dialog from '../views/Dialog'
 import Alert from '../views/Alert';
 import Confirm from '../views/Confirm';
 
-class PopUpBox {
+import { singleton } from '../utils/base'
+
+const dialogElement = singleton();
+
+class ShowSomething {
+
     _$ele: HTMLDivElement | undefined;
 
     renderElement = (Component: React.FunctionComponentElement<any>) => {
-        this._$ele = document.createElement('div');
+        this._$ele = dialogElement(document.createElement('div')) as HTMLDivElement;
         document.body.appendChild(this._$ele);
         ReactDOM.render(Component, this._$ele);
     }
@@ -20,17 +25,9 @@ class PopUpBox {
             ReactDOM.unmountComponentAtNode(this._$ele);
         }
     }
-}
-
-class ShowSomething {
-    _showSomething: PopUpBox;
-    constructor () {
-        this._showSomething = new PopUpBox();
-    }
 
     show: Function = () => new Error('需要重写 show 方法');
 
-    destroy = () => this._showSomething.destroy();
 }
 
 /* 
@@ -38,7 +35,7 @@ class ShowSomething {
 */
 class ShowDialog extends ShowSomething{
     show = (children: React.ReactNode) => {
-        this._showSomething.renderElement(<Dialog destroy={this.destroy}>{children}</Dialog>)
+        this.renderElement(<Dialog destroy={this.destroy}>{children}</Dialog>)
     }
 }
 
@@ -59,7 +56,7 @@ class ShowAlert extends ShowSomething{
             }
             this.destroy();
         }
-        this._showSomething.renderElement(<Alert destroy={destroy} {...props}></Alert>)
+        this.renderElement(<Alert destroy={destroy} {...props}></Alert>)
     }
 }
 
@@ -75,7 +72,7 @@ interface ConfirmProps {
 
 class ShowConfirm extends ShowSomething {
     show = (props: ConfirmProps) => {
-        this._showSomething.renderElement(<Confirm destroy={this.destroy} {...props}></Confirm>)
+        this.renderElement(<Confirm destroy={this.destroy} {...props}></Confirm>)
     }
 }
 

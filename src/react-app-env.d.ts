@@ -1,2 +1,2 @@
 /// <reference types="react-scripts" />
-/// <reference path="./utils/throttle.js" />
+/// <reference path="./utils/.js" />
