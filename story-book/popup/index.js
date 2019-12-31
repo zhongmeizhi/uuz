@@ -30,7 +30,6 @@ export default  () => {
             },
             onConfirm: () => {
                 action('确定');
-                openDialog();
             }
         });
     }

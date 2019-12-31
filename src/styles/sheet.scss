@@ -6,23 +6,6 @@
     width: 100vw;
     height: 100vh;
     z-index: 6;
-    transition: all 0.3s;
-    &.zui-sheet-transition {
-        
-    }
-    /* 
-        开场动画
-    */
-    transition: all 0.3s;
-    animation: showMaskAnm 0.3s;
-    @keyframes showMaskAnm {
-        0% {
-            opacity: 0;
-        }
-        100% {
-            opacity: 1;
-        }
-    }
     .zui-sheet-mask {
         background: rgba(0, 0, 0, 0.4);
         height: 100%;
@@ -33,6 +16,7 @@
         width: 100%;
         background: white;
         z-index: 3;
+        transition: all 0.3s;
         .zui-sheet-header {
             line-height: 38px;
             display: flex;
@@ -49,24 +33,25 @@
         }
         /* 
             入场动画
-         */
-        height: 280px;
-        animation: sheetAreaAnm 0.3s;
-        @keyframes sheetAreaAnm {
-            0% {
-                height: 0;
-            }
-            100% {
-                height: 280px;
-            }
+        */
+        height: 0;
+    }
+    /* 
+        开场动画
+    */
+    opacity: 0;
+    transition: all 0.3s;
+    &.zui-sheet--in {
+        opacity: 1;
+        .zui-sheet-area {
+            height: 280px;
         }
     }
     // 退出动画
-    &.zui-quit {
+    &.zui-sheet--out {
         opacity: 0;
         .zui-sheet-area {
             height: 0;
-            transition: all 0.3s;
         }
     }
 }

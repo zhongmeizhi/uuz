@@ -13,7 +13,7 @@ interface DialogProps{
 export const DialogContext = React.createContext(() => {});
 
 export default function Dialog({children, isBtnCloseOnly, destroy}: DialogProps) {
-    const [isShow, setShow] = useState(true);
+
     const [dialogClassName, setDialogClassName] = useState('zui-dialog');
 
     // if (typeCheck([
@@ -32,23 +32,21 @@ export default function Dialog({children, isBtnCloseOnly, destroy}: DialogProps)
     }
 
     const tansitionEndHandler = () => {
-        (typeof destroy === 'function') ? destroy() : setShow(false);
+        (typeof destroy === 'function') && destroy();
     }
 
-    return isShow ?
-        <DialogContext.Provider value={closeDialog}> {/** context 注入 */}
-            <div className={dialogClassName} 
-                onTransitionEnd={tansitionEndHandler}>
-                <div className="zui-dialog-mask" onClick={modalHandler}></div>
-                <div className="zui-dialog-area">
-                    {
-                        isBtnCloseOnly ?
-                            null:
-                            <Close className="zui-dialog-close" onClick={closeDialog}></Close>
-                    }
-                    { children }
-                </div>
+    return <DialogContext.Provider value={closeDialog}> {/** context 注入 */}
+        <div className={dialogClassName} 
+            onTransitionEnd={tansitionEndHandler}>
+            <div className="zui-dialog-mask" onClick={modalHandler}></div>
+            <div className="zui-dialog-area">
+                {
+                    isBtnCloseOnly ?
+                        null:
+                        <Close className="zui-dialog-close" onClick={closeDialog}></Close>
+                }
+                { children }
             </div>
-        </DialogContext.Provider>
-        : null
+        </div>
+    </DialogContext.Provider>
 }

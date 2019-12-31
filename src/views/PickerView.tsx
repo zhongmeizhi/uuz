@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import Sheet from './Sheet';
 import Button from './Button';
@@ -16,38 +16,33 @@ interface GlobalAttr {
     indexes: Array<number>
 }
 
-let _attr:GlobalAttr = {
-    values: [],
-    indexes: []
-}
+function PickerView(props: PickerViewProps) {
 
-class PickerView extends React.Component<PickerViewProps> {
+    const [pickObj, setValue] = useState({values: [], indexes: []} as GlobalAttr);
 
-    ensureHandler = () => {
-        if (typeof this.props.onEnsure === 'function') {
-            this.props.onEnsure(_attr.values, _attr.indexes)
+    const ensureHandler = () => {
+        if (typeof props.onEnsure === 'function') {
+            props.onEnsure(pickObj.values, pickObj.indexes)
         }
     }
 
-    changeHandler = (values: Array<string>, indexes: Array<number>) => {
-        _attr = { values, indexes }
-        if (typeof this.props.onChange === 'function') {
-            this.props.onChange(values, indexes)
+    const changeHandler = (values: Array<string>, indexes: Array<number>) => {
+        setValue({ values, indexes });
+        if (typeof props.onChange === 'function') {
+            props.onChange(values, indexes)
         }
     }
 
-    render() {
-        return <Sheet
-            ensureHandler={this.ensureHandler}
-            button={<Button>弹出Picker</Button>}>
-            <Picker
-                className="zui-picker-view"
-                data={this.props.data}
-                values={this.props.values}
-                onChange={this.changeHandler}
-            ></Picker>
-        </Sheet>
-    }
+    return <Sheet
+        ensureHandler={ensureHandler}
+        button={<Button>弹出Picker</Button>}>
+        <Picker
+            className="zui-picker-view"
+            data={props.data}
+            values={props.values}
+            onChange={changeHandler}
+        ></Picker>
+    </Sheet>
 }
 
 export default PickerView;

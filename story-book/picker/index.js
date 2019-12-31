@@ -50,15 +50,17 @@ const TestPicker = () => {
 
 
     const changeHandler = (values) => {
-        setValues1(values)
+        setValues1(values);
+        console.log(values);
     }
 
     const changeHandler2 = (values) => {
-        setValues2(values)
+        setValues2(values);
+        console.log(values);
     }
 
     const ensureHandler = (values) => {
-        action(values.toString())
+        console.log(values);
     }
 
     return <div>

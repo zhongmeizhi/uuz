@@ -57,7 +57,7 @@
 * [x] Switch
 * [x] Keyboard
 * [ ] Progress
-* [ ] Transition
+* [x] Transition
 * [ ] List
 * [ ] Carousel
 
