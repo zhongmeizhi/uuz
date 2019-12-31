@@ -3,13 +3,14 @@ import { storiesOf } from '@storybook/react';
 import Button from './button/'
 import Picker from './picker/'
 import Popup from './popup'
-import Refresh from './refresh'
+import Scroll from './scroll'
 import Sheet from './sheet'
 import TestTabs from './tabs'
 import TestStep from './step'
 import TestCheckbox from './checkbox'
 import TestSwitch from './switch'
 import TestKeyBoard from './keyboard'
+import TestWaterfall from './waterfall'
 
 const componentStory = storiesOf('组件', module);
 
@@ -28,8 +29,8 @@ componentStory.add('选择器 Picker',
     Picker,
 )
 
-componentStory.add('上拉刷新 下拉加载 Refresh',
-    Refresh,
+componentStory.add('上拉刷新 下拉加载 Scroll',
+    Scroll,
     {
         decorator: null
     }
@@ -57,4 +58,8 @@ componentStory.add('开关 Switch',
 
 componentStory.add('键盘 Keyboard',
     TestKeyBoard,
+)
+
+componentStory.add('瀑布流 Waterfall',
+    TestWaterfall,
 )

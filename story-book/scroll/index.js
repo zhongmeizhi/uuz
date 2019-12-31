@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import ReFresh from '../../src/views/ReFresh'
+import Scroll from '../../src/views/Scroll'
 
 function TestContent(props) {
     return Array(props.num).fill(0).map((val, idx) => {
@@ -20,12 +20,12 @@ function TestReFresh() {
         setNum(num + 30);
     }
 
-    return <ReFresh
+    return <Scroll
         className="test-fresh"
         freshHandler={freshHandler}
         loadHandler={loadHandler}>
         <TestContent num={num}></TestContent>
-    </ReFresh>
+    </Scroll>
 }
 
 export default TestReFresh;
