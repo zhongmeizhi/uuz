@@ -27,6 +27,15 @@ $thinGrey: #f7f7f7;
 .zui-hide {
     display: none
 }
+
+.zui-clearfix {
+    &::after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+}
+
 /*  ===============
     按钮 css样式
     ===============
@@ -37,7 +46,7 @@ $thinGrey: #f7f7f7;
     下拉刷新 + 上拉加载 CSS样式
     ===============
 */ 
-@import './refresh.scss';
+@import './scroll.scss';
 
 /*  ===============
     sheet 底框 css样式
@@ -98,3 +107,9 @@ $thinGrey: #f7f7f7;
     ===============
 */
 @import './keyboard.scss';
+
+/*  ===============
+    Waterfall css样式
+    ===============
+*/
+@import './waterfall.scss';

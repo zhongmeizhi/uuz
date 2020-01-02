@@ -15,7 +15,7 @@ export default () => {
         setChecked2(checked2)
     }
 
-    return <div>
+    return <div style={{margin: '50px 16px'}}>
         <Checkbox checked={checked} onChange={onChange}><span>选择框</span></Checkbox>
         <br></br>
         <Checkbox checked={checked2} onChange={onChange2} disabled><span>选择框</span></Checkbox>

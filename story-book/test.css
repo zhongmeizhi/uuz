@@ -7,3 +7,15 @@
     border: 1px solid #888;
     border-radius: 55px;
 }
+
+.test-waterfall-img {
+    width: 100%;
+    height: auto;
+    float: left;
+    font-size: 0;
+}
+.test-waterfall-txt {
+    clear: both;
+    line-height: 26px;
+    font-size: 14px;
+}

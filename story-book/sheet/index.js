@@ -8,12 +8,14 @@ function TestContent() {
 }
 
 function TestSheet() {
-    return <Sheet
-        titleTxt='sheet的标题'
-        canModalClose
-        button={<Button>点击弹出Sheet</Button>}>
-        <TestContent></TestContent>
-    </Sheet>
+    return <div style={{margin: '50px 16px'}}>
+        <Sheet
+            titleTxt='sheet的标题'
+            canModalClose
+            button={<Button>点击弹出Sheet</Button>}>
+            <TestContent></TestContent>
+        </Sheet>
+    </div>
 }
 
 export default TestSheet;

@@ -34,11 +34,11 @@ export default  () => {
         });
     }
 
-    return <>
+    return <div style={{margin: '50px 16px'}}>
         <Button type="raw" onClick={openDialog}>打开Dialog</Button>
         <Gap></Gap>
         <Button type="warn" onClick={openAlert}>打开Alert</Button>
         <Gap></Gap>
         <Button onClick={openConfirm}>打开Confirm</Button>
-    </>
+    </div>
 }

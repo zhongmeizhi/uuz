@@ -10,7 +10,7 @@ export default () => {
         setValue(val);
     }
 
-    return <div>
+    return <div style={{margin: '50px 16px'}}>
         <Keyboard
             onChange={onChange}
             header={<div className="test-value-box">{value}</div>}

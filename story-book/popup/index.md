@@ -1,3 +1,5 @@
+# 弹出框
+
 ```
     const openDialog = () => {
         dialog.show(<div>xxxx<br></br>这里是内容</div>);

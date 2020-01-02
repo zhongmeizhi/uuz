@@ -3,7 +3,7 @@ var _toString = Object.prototype.toString;
 
 // 获取 从第九个到倒数第二个
 // 比如 [object String]  获取 String
-function toRawType (value: any): String {
+function toRawType(value: any): String {
     return _toString.call(value).slice(8, -1)
 }
 
@@ -25,12 +25,12 @@ function isFalse(v: any): Boolean {
     return v === false
 }
 
-function isObject (obj: any): Boolean {
+function isObject(obj: any): Boolean {
     return obj !== null && typeof obj === 'object'
 }
 
 // 朴素对象
-function isPlainObject (obj: any): Boolean {
+function isPlainObject(obj: any): Boolean {
     return toRawType(obj) === 'Object'
 }
 
@@ -42,7 +42,7 @@ function getValOrDefault<T>(val: any, emptyVal: any): T {
 /**
  * 缓存函数的执行结果
  */
-function cached (fn: Function) {
+function cached(fn: Function) {
     var cache = Object.create(null);
     return (function cachedFn (str: string) {
         var hit = cache[str];
@@ -84,7 +84,7 @@ function isReactElement(obj: any) {
 /* 
     参数校验机制
 */
-function typeCheck (typeList: Array<Array<any>>) {
+function typeCheck(typeList: Array<Array<any>>) {
     for (let typeChild of typeList) {
         console.log(typeChild)
         const [name, value] = typeChild.splice(0, 2);
@@ -106,11 +106,29 @@ function typeCheck (typeList: Array<Array<any>>) {
 /* 
     单例
 */
-function singleton () {
+function singleton() {
     var _instance: any;
     return function(obj: any) {
         return _instance || (_instance = obj);
     }
+}
+
+/* 
+    图片 ready
+*/
+function imgReady(url: string, callback: Function, errorBack?: Function) {
+    var imgObj = new Image();
+        imgObj.src = url;
+        var timer = setInterval(function () {
+        if(imgObj.width > 0 && imgObj.height > 0) {
+            callback();
+            clearInterval(timer);
+        }
+        imgObj.onerror = function() {
+            (errorBack && errorBack()) || callback();
+            clearInterval(timer);
+        }
+    }, 18);
 }
 
 export {
@@ -125,5 +143,6 @@ export {
     cached,
     getClassName,
     typeCheck,
-    singleton
+    singleton,
+    imgReady
 }

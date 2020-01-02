@@ -5,7 +5,7 @@ import { action } from '@storybook/addon-actions';
 
 const Gap = () => <div style={{height: '8px'}}></div>
 
-export default () => <div>
+export default () => <div style={{margin: '50px 16px'}}>
     <Button onClick={action('点击')}>默认按钮</Button>
     <Gap></Gap>
     <Button type="raw" onClick={action('点击')}>Raw按钮</Button>

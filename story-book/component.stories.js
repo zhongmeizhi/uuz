@@ -15,7 +15,10 @@ import TestWaterfall from './waterfall'
 const componentStory = storiesOf('组件', module);
 
 componentStory.add('按钮 Button',
-    Button
+    Button,
+    {
+        notes: require('./button/index.md'),
+    }
 )
 
 componentStory.add('弹出层 Dialog Alert Confirm',
@@ -62,4 +65,7 @@ componentStory.add('键盘 Keyboard',
 
 componentStory.add('瀑布流 Waterfall',
     TestWaterfall,
+    {
+        notes: require('./waterfall/index.md'),
+    }
 )

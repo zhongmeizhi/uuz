@@ -1,44 +1,32 @@
 # 简介
 
-写UI库的原因：
-1. 巩固 React
-2. 学习 React Hooks
-3. 加强对组件化的理解
-4. 对一些框架的源码做一些实践，比如 iScroll、hammer、tween之类的
-5. 让自己多一些系统性的思考
-6. 方便自己写项目的时候 copy `:)`
+> 立志于打造一个高口碑的 移动端 UI库。
 
 
 定位：
-* 使用 `Create React App` 作为脚手架
-* 主要采用 `React Hook`
+* 采用 `React Hook`
 * 组件使用 `.tsx`
-* 测试&&API文档使用`.js` 
+* 测试 && API文档使用`.js` 
 * 使用 `sass` 作为 `css` 扩展
 * 使用 `px` 为单位
-* 不应该使用 `cssModule`
 * 内含`hammer`手势（将会重写一遍）
+* 由于是移动端库，使用了很多 touch 事件
+  * PC端不使用仿真会出现无法点击的情况
+* 不应该使用 `cssModule`
 * 目前不会发布上npm
 * 移动端UI应该有自己的定制化（TODO）
 * 需要做参数的异常处理（TODO）
 
 ***
 
-## [Z-UI文档地址](https://zhongmeizhi.github.io/z-ui/)
+## [文档地址 https://zhongmeizhi.github.io/z-ui/](https://zhongmeizhi.github.io/z-ui/)
 
-文档内容正在优化中...
+PS：
+1. 文档采用 `StroyBook` 搭建，初次打开白屏时间较久
+    * 目前没发现更好的：即可以自动展示源码又可以进行UI展示的API文档工具
+    * 如果有更好的工具，请留言
 
 ***
-
-### 部分效果图
-
-|Tabs|Sheet|Fresh|
-|--|--|--|
-|![Tabs](https://zhongmeizhi.github.io/static/z-ui/Tabs.gif)|![Sheet](https://zhongmeizhi.github.io/static/z-ui/Sheet.gif)|![Fresh](https://zhongmeizhi.github.io/static/z-ui/Fresh.gif)|
-|Picker|PickerView|Dialog|
-|![Picker](https://zhongmeizhi.github.io/static/z-ui/Picker.gif)|![PickerView](https://zhongmeizhi.github.io/static/z-ui/PickerView.gif)|![Dialog](https://zhongmeizhi.github.io/static/z-ui/Dialog.gif)|
-|Alert|Confirm|--|
-|![Alert](https://zhongmeizhi.github.io/static/z-ui/Alert.gif)|![Confirm](https://zhongmeizhi.github.io/static/z-ui/Confirm.gif)|--|
 
 进度：
 * [x] Button // 激活动画 + disable
@@ -57,9 +45,10 @@
 * [x] Switch
 * [x] Keyboard
 * [ ] Progress
-* [x] Transition
+* [x] Transition // 动画组件
 * [ ] List
 * [ ] Carousel
+* [x] Waterfall // 瀑布流
 
 
 使用的脚手架：[Create React App](https://github.com/facebook/create-react-app).

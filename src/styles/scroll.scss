@@ -1,9 +1,9 @@
 
-.zui-refresh-box {
+.zui-scroll-box {
     overflow: hidden;
     background: $primaryColor; /* 标准蓝色 */
     position: relative;
-    .zui-refresh-area {
+    .zui-scroll-area {
         position: relative;
         height: 100%;
         overflow-y: auto;
@@ -11,11 +11,11 @@
         transform: translate(0, -50px); 
         // padding-bottom: 50px;
         margin-bottom: -50px;
-        .zui-refresh {
+        .zui-scroll {
             background: white;
         }
     }
-    .zui-refresh-tip {
+    .zui-scroll-tip {
         height: 50px;
         line-height: 50px;
         background: $primaryColor; /* 标准蓝色 */

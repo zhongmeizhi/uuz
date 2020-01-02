@@ -1,0 +1,21 @@
+.zui-waterfall {
+    text-align: center;
+    padding: 0 5px;
+    .zui-waterfall-col {
+        padding: 0 5px;
+        float: left;
+        box-sizing: border-box;
+        .zui-waterfall-item {
+            overflow: hidden;
+            background: $grey;
+            margin: 10px 0;
+            border-radius: 6px;
+            .zui-waterfall-img {
+                width: 100%;
+                height: auto;
+                float: left;
+                font-size: 0;
+            }
+        }
+    }
+}

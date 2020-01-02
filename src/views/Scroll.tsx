@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-interface ReFreshProps {
+interface ReScrollProps {
   className?: String, // 刷新组件的 支持添加className
   freshDistance?: number, // 触发刷新需要的：下拉距离
   loadDistance?: number, // 触发加载需要的：距离最底部距离
@@ -25,51 +25,51 @@ const _attr = {
   domHeight: 0
 }
 
-export default function ReFresh(props: ReFreshProps) {
-  const [refreshTip, setRefreshTip] = useState('');
-  const [freshAreaStyle, setFreshAreaStyle] = useState({transform: '', transition: ''});
+export default function Scroll(props: ReScrollProps) {
+  const [scrollTip, setScrollTip] = useState('');
+  const [freshAreaStyle, setScrollAreaStyle] = useState({transform: '', transition: ''});
 
-  let refFreshArea: HTMLDivElement | any;
-  let refFreshDom: HTMLDivElement | any;
+  let refScrollArea: HTMLDivElement | any;
+  let refScrollDom: HTMLDivElement | any;
 
-  let freshBoxClassName = `zui-refresh-box ${props.className || ''}`;
+  let freshBoxClassName = `zui-scroll-box ${props.className || ''}`;
   
   // 副作用处理
   useEffect(() => {
-    _attr.domHeight = refFreshDom.offsetHeight;
+    _attr.domHeight = refScrollDom.offsetHeight;
   })
 
   const getHasNeedLoad = (): boolean => {
-    const areaHeight = refFreshArea.offsetHeight;
-    const scrollTop = refFreshArea.scrollTop;
+    const areaHeight = refScrollArea.offsetHeight;
+    const scrollTop = refScrollArea.scrollTop;
     const isNeedLoad = (_attr.domHeight <= _attr.loadDistance + areaHeight + scrollTop);
     return isNeedLoad;
   }
   
-  const computedRefreshSatus = (event: React.TouchEvent<HTMLDivElement>): void => {
+  const computedScrollSatus = (event: React.TouchEvent<HTMLDivElement>): void => {
     const curPageY = event.touches[0].pageY;
     const startPageY = _attr.startPageY; // 小写
     const distanceY = (curPageY - startPageY) / 2;
     // 下拉动画
     if (distanceY > 0) {
-      setFreshAreaStyle({
+      setScrollAreaStyle({
         transform: `translate(0, ${distanceY - 50}px)`,
         transition: ''
       })
       if (distanceY > _attr.freshDistance) {
         _attr.distanceStatus = DistanceStatus.DONE;
-        setRefreshTip('松开刷新');
+        setScrollTip('松开刷新');
       } else {
         _attr.distanceStatus = DistanceStatus.HALF;
-        setRefreshTip('下拉刷新');
+        setScrollTip('下拉刷新');
       }
     }
   }
   
   // tip 隐藏（恢复原状）
-  const hideFreshTip = (): void => {
+  const hideScrollTip = (): void => {
     _attr.distanceStatus = DistanceStatus.DONE;
-    setFreshAreaStyle({
+    setScrollAreaStyle({
       transform: `translate(0, -50px)`,
       transition: 'transform 0.6s'
     })
@@ -77,39 +77,39 @@ export default function ReFresh(props: ReFreshProps) {
 
   const touchStartHandler = (val: React.TouchEvent<HTMLDivElement>): void => {
     if (typeof props.freshHandler === 'function') {
-      setFreshAreaStyle({
+      setScrollAreaStyle({
         transform: ``,
         transition: ''
       })
       _attr.distanceStatus = DistanceStatus.EMPTY;
       _attr.startPageY = val.touches[0].pageY;
-      _attr.freshAble = (refFreshArea.scrollTop === 0);
+      _attr.freshAble = (refScrollArea.scrollTop === 0);
     } else {
       _attr.freshAble = false;
     }
   }
 
   const touchMoveHandler = (event: React.TouchEvent<HTMLDivElement>): void => {
-    _attr.freshAble && computedRefreshSatus(event);
+    _attr.freshAble && computedScrollSatus(event);
   }
 
   const touchEndHandler = (): void => {
     // 需要刷新的时候执行 传入的刷新方法
     if (_attr.distanceStatus === DistanceStatus.DONE &&
         typeof props.freshHandler === 'function') {
-      setFreshAreaStyle({
+      setScrollAreaStyle({
         transform: `translate(0, 0)`,
         transition: 'transform 3s'
       })
-      setRefreshTip('刷新中 >>>');
+      setScrollTip('刷新中 >>>');
 
       props.freshHandler();
-      setTimeout(() => hideFreshTip(), 300);
+      setTimeout(() => hideScrollTip(), 300);
       return;
     }
     
     if(_attr.distanceStatus === DistanceStatus.HALF) {
-      hideFreshTip()
+      hideScrollTip()
       return;
     }
 
@@ -123,17 +123,17 @@ export default function ReFresh(props: ReFreshProps) {
       <div className={freshBoxClassName}>
         {/* 滚动区域 */}
         <div
-          ref={ele => refFreshArea = ele}
-          className="zui-refresh-area"
+          ref={ele => refScrollArea = ele}
+          className="zui-scroll-area"
           style={freshAreaStyle}
           onTouchStart={touchStartHandler}
           onTouchMove={touchMoveHandler}
           onTouchEnd={touchEndHandler}
         >
           {/* 刷新tip */}
-          <div className="zui-refresh-tip">{refreshTip}</div>
+          <div className="zui-scroll-tip">{scrollTip}</div>
           {/* 真正的内容 */}
-          <div ref={ele => refFreshDom = ele} className="zui-refresh">
+          <div ref={ele => refScrollDom = ele} className="zui-scroll">
             {props.children}
           </div>
         </div>
