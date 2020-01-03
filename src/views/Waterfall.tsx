@@ -9,6 +9,8 @@ interface WaterfallProps {
     linkName: string
 }
 
+// TODO
+// useState ?
 let minEle = {
     idx: 0,
     height: 0 
@@ -31,7 +33,7 @@ function Waterfall({ data, col = 2, childRender, linkName = 'url'}: WaterfallPro
     const len = data.length;
     const initColData = Array(col).fill('col').map(() => []) as Array<Array<any>>;
 
-    const [colData, setCol] = useState(initColData)
+    const [colData, setCol] = useState(initColData);
 
     useEffect(() => {
         if (dataIdx < len) {
@@ -69,9 +71,14 @@ function Waterfall({ data, col = 2, childRender, linkName = 'url'}: WaterfallPro
                     }
                 })
             }
+        } else {
+            dataIdx = 0;
         }
     }, [colData])
 
+    useEffect(() => {
+        dataIdx = 0;
+    }, [])
 
     return <div className="zui-waterfall zui-clearfix">
         {
