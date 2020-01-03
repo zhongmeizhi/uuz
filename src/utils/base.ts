@@ -114,12 +114,15 @@ function singleton() {
 }
 
 /* 
-    图片 ready
+    图片 ready，
+    每一帧调用一次
 */
 function imgReady(url: string, callback: Function, errorBack?: Function) {
     var imgObj = new Image();
-        imgObj.src = url;
-        var timer = setInterval(function () {
+    imgObj.src = url;
+    // TODO
+    // 改成 requestAnimationFrame
+    var timer = setInterval(function () {
         if(imgObj.width > 0 && imgObj.height > 0) {
             callback();
             clearInterval(timer);

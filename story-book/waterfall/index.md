@@ -6,6 +6,7 @@
 | col              | 列数：number 默认为 2                    |
 | childRender      | Function 接收 瀑布流的item，需要返回 JSX |
 | 不传 childRender | 默认根据 url 展示图片                    |
+| linkName         | string 图片url键名，默认 'url'           |
 
 
 ```

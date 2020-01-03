@@ -77,6 +77,11 @@ a:hover, a:active {
 .zui-hide {
   display: none; }
 
+.zui-clearfix::after {
+  content: '';
+  display: block;
+  clear: both; }
+
 /*  ===============
     按钮 css样式
     ===============
@@ -85,7 +90,9 @@ a:hover, a:active {
   font-size: 14px;
   border-radius: 5px;
   text-align: center;
-  line-height: 47px; }
+  line-height: 47px;
+  display: inline-block;
+  width: 100%; }
   .zui-button.zui-primary {
     color: white;
     background-color: #108ee9;
@@ -100,20 +107,27 @@ a:hover, a:active {
       color: #108ee9;
       border: 1px solid #108ee9;
       box-shadow: 0 0 2px 0 #108ee9; }
+  .zui-button.zui-button-warn {
+    background: #ff4949;
+    color: white; }
+    .zui-button.zui-button-warn:active {
+      background-color: red; }
   .zui-button.zui-button-disbale {
     pointer-events: none;
+    background: #888;
+    border: 1px solid #888;
     opacity: 0.7; }
 
 /*  ===============
     下拉刷新 + 上拉加载 CSS样式
     ===============
 */
-.zui-refresh-box {
+.zui-scroll-box {
   overflow: hidden;
   background: #108ee9;
   /* 标准蓝色 */
   position: relative; }
-  .zui-refresh-box .zui-refresh-area {
+  .zui-scroll-box .zui-scroll-area {
     position: relative;
     height: 100%;
     overflow-y: auto;
@@ -121,9 +135,9 @@ a:hover, a:active {
     -webkit-transform: translate(0, -50px);
             transform: translate(0, -50px);
     margin-bottom: -50px; }
-    .zui-refresh-box .zui-refresh-area .zui-refresh {
+    .zui-scroll-box .zui-scroll-area .zui-scroll {
       background: white; }
-  .zui-refresh-box .zui-refresh-tip {
+  .zui-scroll-box .zui-scroll-tip {
     height: 50px;
     line-height: 50px;
     background: #108ee9;
@@ -142,26 +156,12 @@ a:hover, a:active {
   width: 100vw;
   height: 100vh;
   z-index: 6;
-  -webkit-transition: all 0.3s;
-  transition: all 0.3s;
   /* 
         开场动画
     */
-  transition: all 0.3s;
-  -webkit-animation: showMaskAnm 0.3s;
-          animation: showMaskAnm 0.3s; }
-
-@-webkit-keyframes showMaskAnm {
-  0% {
-    opacity: 0; }
-  100% {
-    opacity: 1; } }
-
-@keyframes showMaskAnm {
-  0% {
-    opacity: 0; }
-  100% {
-    opacity: 1; } }
+  opacity: 0;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s; }
   .zui-sheet-box .zui-sheet-mask {
     background: rgba(0, 0, 0, 0.4);
     height: 100%; }
@@ -171,12 +171,12 @@ a:hover, a:active {
     width: 100%;
     background: white;
     z-index: 3;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
     /* 
             入场动画
-         */
-    height: 280px;
-    -webkit-animation: sheetAreaAnm 0.3s;
-            animation: sheetAreaAnm 0.3s; }
+        */
+    height: 0; }
     .zui-sheet-box .zui-sheet-area .zui-sheet-header {
       line-height: 38px;
       display: flex;
@@ -199,24 +199,14 @@ a:hover, a:active {
       height: calc(100% - 38px);
       overflow-y: auto;
       position: relative; }
-
-@-webkit-keyframes sheetAreaAnm {
-  0% {
-    height: 0; }
-  100% {
-    height: 280px; } }
-
-@keyframes sheetAreaAnm {
-  0% {
-    height: 0; }
-  100% {
-    height: 280px; } }
-  .zui-sheet-box.zui-quit {
+  .zui-sheet-box.zui-sheet--in {
+    opacity: 1; }
+    .zui-sheet-box.zui-sheet--in .zui-sheet-area {
+      height: 280px; }
+  .zui-sheet-box.zui-sheet--out {
     opacity: 0; }
-    .zui-sheet-box.zui-quit .zui-sheet-area {
-      height: 0;
-      -webkit-transition: all 0.3s;
-      transition: all 0.3s; }
+    .zui-sheet-box.zui-sheet--out .zui-sheet-area {
+      height: 0; }
 
 /*  ===============
     Tabs css样式
@@ -329,12 +319,6 @@ a:hover, a:active {
   /*
         离场动画 
      */ }
-
-@keyframes showMaskAnm {
-  0% {
-    opacity: 0; }
-  100% {
-    opacity: 1; } }
   .zui-dialog .zui-dialog-mask {
     background: rgba(0, 0, 0, 0.4);
     height: 100%; }
@@ -380,6 +364,18 @@ a:hover, a:active {
       position: absolute;
       right: 10px;
       top: 8px; }
+
+@-webkit-keyframes showMaskAnm {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+
+@keyframes showMaskAnm {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
   .zui-dialog.zui-dialog-quit {
     opacity: 0; }
     .zui-dialog.zui-dialog-quit .zui-dialog-area {
@@ -615,6 +611,46 @@ a:hover, a:active {
               transform: rotate(-90deg);
       vertical-align: middle; }
 
+/*  ===============
+    Waterfall css样式
+    ===============
+*/
+.zui-waterfall {
+  text-align: center;
+  padding: 0 5px; }
+  .zui-waterfall .zui-waterfall-col {
+    padding: 0 5px;
+    float: left;
+    box-sizing: border-box; }
+    .zui-waterfall .zui-waterfall-col .zui-waterfall-item {
+      overflow: hidden;
+      background: #d6d6d6;
+      margin: 10px 0;
+      border-radius: 6px;
+      -webkit-animation: itemAnm 0.5s;
+              animation: itemAnm 0.5s; }
+
+@-webkit-keyframes itemAnm {
+  0% {
+    -webkit-transform: rotateY(90deg);
+            transform: rotateY(90deg); }
+  100% {
+    -webkit-transform: rotateY(0);
+            transform: rotateY(0); } }
+
+@keyframes itemAnm {
+  0% {
+    -webkit-transform: rotateY(90deg);
+            transform: rotateY(90deg); }
+  100% {
+    -webkit-transform: rotateY(0);
+            transform: rotateY(0); } }
+      .zui-waterfall .zui-waterfall-col .zui-waterfall-item .zui-waterfall-img {
+        width: 100%;
+        height: auto;
+        float: left;
+        font-size: 0; }
+
 .test-value-box {
     height: 36px;
     line-height: 36px;
@@ -623,6 +659,18 @@ a:hover, a:active {
     margin: 3px 15px;
     border: 1px solid #888;
     border-radius: 55px;
+}
+
+.test-waterfall-img {
+    width: 100%;
+    height: auto;
+    float: left;
+    font-size: 0;
+}
+.test-waterfall-txt {
+    clear: both;
+    line-height: 26px;
+    font-size: 14px;
 }
 
 /*# sourceMappingURL=main.css.map*/

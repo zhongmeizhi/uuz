@@ -5,7 +5,8 @@ import { imgReady } from '../utils/base';
 interface WaterfallProps {
     data: Array<any>,
     col: number,
-    childRender: any
+    childRender: any,
+    linkName: string
 }
 
 let minEle = {
@@ -23,7 +24,7 @@ let dataIdx = 0;
     2. 已知图片宽高
     3. 动态获取图片宽高
 */
-function Waterfall({ data, col = 2, childRender}: WaterfallProps) {
+function Waterfall({ data, col = 2, childRender, linkName = 'url'}: WaterfallProps) {
 
     let refFlag: Array<HTMLDivElement | any> = [];
     
@@ -41,7 +42,7 @@ function Waterfall({ data, col = 2, childRender}: WaterfallProps) {
                     dataIdx += 1;
                 }
 
-                imgReady(data[dataIdx].url, () => {
+                imgReady(data[dataIdx][linkName], () => {
                     setCol(initData)
                 })
 
@@ -59,7 +60,7 @@ function Waterfall({ data, col = 2, childRender}: WaterfallProps) {
                 }
                 const cloneData = JSON.parse(JSON.stringify(colData));
                 cloneData[minEle.idx].push(data[dataIdx]);
-                imgReady(data[dataIdx].url, () => {
+                imgReady(data[dataIdx][linkName], () => {
                     dataIdx += 1;
                     setCol(cloneData)
                     minEle = {
@@ -88,7 +89,7 @@ function Waterfall({ data, col = 2, childRender}: WaterfallProps) {
                                 childRender(sub) :
                                 <img
                                     className="zui-waterfall-img"
-                                    src={sub.url}
+                                    src={sub[linkName]}
                                     alt="瀑布流"
                                 />
                         }
