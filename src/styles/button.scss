@@ -30,6 +30,10 @@
             background-color: red;
         }
     }
+    &.zui-avatar {
+        border-radius: 666px;
+        overflow: hidden;
+    }
     &.zui-button-disbale {
         pointer-events: none;
         background: $descTxtColor;

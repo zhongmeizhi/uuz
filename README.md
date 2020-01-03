@@ -4,18 +4,16 @@
 
 
 定位：
-* 采用 `React Hook`
-* 组件使用 `.tsx`
-* 测试 && API文档使用`.js` 
-* 使用 `sass` 作为 `css` 扩展
+* 采用 `React Hook` + `.tsx` + `sass`
 * 使用 `px` 为单位
-* 内含`hammer`手势（将会重写一遍）
+* 使用 `hammer` 手势（将会重写一遍）
+* 测试 && API文档使用`.js` 
 * 由于是移动端库，使用了很多 touch 事件
   * PC端不使用仿真会出现无法点击的情况
 * 不应该使用 `cssModule`
-* 目前不会发布上npm
-* 移动端UI应该有自己的定制化（TODO）
-* 需要做参数的异常处理（TODO）
+* 后期可能使用 `FastClick`
+* 不打算发布到 npm
+
 
 ***
 

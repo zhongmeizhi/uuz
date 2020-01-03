@@ -64,6 +64,10 @@ const TestPicker = () => {
     }
 
     return <div>
+        <div style={{textAlign: 'center', margin: '33px 0'}}>
+            <p>使用了 touch 事件</p>
+            <p>需使用手机模式</p>
+        </div>
         <Picker
             data={data}
             values={values1}

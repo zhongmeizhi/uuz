@@ -112,6 +112,9 @@ a:hover, a:active {
     color: white; }
     .zui-button.zui-button-warn:active {
       background-color: red; }
+  .zui-button.zui-avatar {
+    border-radius: 666px;
+    overflow: hidden; }
   .zui-button.zui-button-disbale {
     pointer-events: none;
     background: #888;

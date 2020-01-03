@@ -12,10 +12,11 @@ interface ButtonProps {
     children: React.ReactNode,
     width?: string,
     height?: string,
-    throttleTime?: number
+    throttleTime?: number,
+    avatar?: boolean
 }
 
-function Button({disabled, type, className, onClick, children, width, height, throttleTime = 200}: ButtonProps) {
+function Button({disabled, type, className, onClick, children, width, height, throttleTime = 200, avatar}: ButtonProps) {
 
     const throttleClick = throttle(onClick, throttleTime);
 
@@ -24,6 +25,7 @@ function Button({disabled, type, className, onClick, children, width, height, th
         'zui-primary': !type,
         'zui-raw': type === 'raw',
         'zui-button-warn': type === 'warn',
+        'zui-avatar': avatar
     }
 
     const sizeStyle: React.CSSProperties = {

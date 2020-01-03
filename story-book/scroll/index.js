@@ -4,7 +4,7 @@ import Scroll from '../../src/views/Scroll'
 
 function TestContent(props) {
     return Array(props.num).fill(0).map((val, idx) => {
-        return <div className="test-content" key={idx}>第{idx + 1}个</div>
+        return <div className="test-content" key={idx}>第{idx + 1}个，需手机模式</div>
     })
 }
 
