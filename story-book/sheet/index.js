@@ -8,7 +8,7 @@ function TestContent() {
 }
 
 function TestSheet() {
-    return <div style={{margin: '50px 16px'}}>
+    return <div style={{margin: '33px 16px'}}>
         <Sheet
             titleTxt='sheet的标题'
             canModalClose

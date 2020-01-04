@@ -34,7 +34,7 @@ export default  () => {
         });
     }
 
-    return <div style={{margin: '50px 16px'}}>
+    return <div style={{margin: '33px 16px'}}>
         <Button type="raw" onClick={openDialog}>打开Dialog</Button>
         <Gap></Gap>
         <Button type="warn" onClick={openAlert}>打开Alert</Button>

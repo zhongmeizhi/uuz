@@ -1,25 +1,48 @@
 .zui-switch {
     display: inline-block;
-    width: 45px;
-    height: 22px;
+    width: 52px;
+    height: 28px;
     .zui-switch-body {
-        display: block;
         background: $errorColor;
+        display: block;
         width: 100%;
         height: 100%;
         border-radius: 66px;
         position: relative;
+        transition: all 0.3s;
+        z-index: 1;
+        box-shadow: 0 0 1px 1px $grey;
+        .zui-switch-txt {
+            position: absolute;
+            z-index: 2;
+            left: 2px;
+            font-size: 14px;
+            line-height: 28px;
+            transition: opacity 0.3s;
+            &.zui-on {
+                left: 8px;
+                color: white;
+                opacity: 0;
+            }
+            &.zui-off {
+                color: white;
+                left: auto;
+                right: 8px;
+                opacity: 1;
+            }
+        }
         &::after {
             content: '';
             display: inline-block;
             background: white;
             border-radius: 50%;
-            width: 18px;
-            height: 18px;
+            width: 24px;
+            height: 24px;
             position: absolute;
             left: 2px;
             top: 2px;
             transition: all 0.3s;
+            box-shadow: 0 0 4px 0 $grey;
         }
     }
     &.zui-switch-disabled {
@@ -32,8 +55,17 @@
     &.zui-switch-checked {
         .zui-switch-body {
             background: $primaryColor;
+            .zui-switch-txt {
+                &.zui-on {
+                    opacity: 1;
+                }
+                &.zui-off {
+                    opacity: 0;
+                }
+            }
             &::after {
-                transform: translateX(23px);
+                margin-left: -26px;
+                left: 100%;
             }
         }
     }

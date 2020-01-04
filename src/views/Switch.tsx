@@ -4,10 +4,12 @@ import { getClassName } from '../utils/base';
 interface SwitchProps {
     checked?: boolean,
     disabled?: boolean,
-    onChange?: Function
+    onChange?: Function,
+    activeName?: string,
+    closeName?: string
 }
 
-export default function Switch({checked, disabled, onChange}: SwitchProps) {
+export default function Switch({checked, disabled, onChange, activeName, closeName}: SwitchProps) {
 
     const switchClassNames = {
         'zui-switch-disabled': disabled,
@@ -27,7 +29,10 @@ export default function Switch({checked, disabled, onChange}: SwitchProps) {
                 onChange={valueChangeHandler}
                 hidden
             ></input>
-            <i className="zui-switch-body"></i>
+            <p className="zui-switch-body">
+                <span className="zui-switch-txt zui-on">{activeName}</span>
+                <span className="zui-switch-txt zui-off">{closeName}</span>
+            </p>
         </label>
     </div>
 }
