@@ -17,10 +17,10 @@ const data = [
     }
 ];
 
-const curStep = 3;
-
 export default () => {
     return <div>
-        <Steps data={data} curStep={curStep}></Steps>
+        <Steps data={data} curStep={3}></Steps>
+        <br/>
+        <Steps data={data} row curStep={2}></Steps>
     </div>
 }

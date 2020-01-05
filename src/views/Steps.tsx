@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { getClassName } from '../utils/base';
+
 type StepType = {
     title: string,
     desc?: string
@@ -7,10 +9,15 @@ type StepType = {
 
 interface StepsProps {
     data: Array<StepType>,
-    curStep: number
+    curStep: number,
+    row?: boolean
 }
 
-export default function Steps({data, curStep}: StepsProps) {
+export default function Steps({data, curStep, row}: StepsProps) {
+
+    const stepsClassName = {
+        'zui-steps-row': row
+    }
 
     const getStepClassName = (idx: number) => {
         let className = 'zui-step';
@@ -23,7 +30,7 @@ export default function Steps({data, curStep}: StepsProps) {
         return className;
     }
 
-    return <div className="zui-steps">
+    return <div className={"zui-steps".concat(getClassName(stepsClassName))}>
         {
             data.map((val, idx) => <div key={idx}
                 className={getStepClassName(idx)}>

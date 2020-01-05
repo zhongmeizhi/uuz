@@ -1,19 +1,27 @@
 import React from 'react';
-import { getClassName } from '../utils/base';
+import { getClassName, getValOrDefault } from '../utils/base';
 
 interface SwitchProps {
     checked?: boolean,
     disabled?: boolean,
     onChange?: Function,
     activeName?: string,
-    closeName?: string
+    closeName?: string,
+    width?: string,
+    type?: string
 }
 
-export default function Switch({checked, disabled, onChange, activeName, closeName}: SwitchProps) {
+export default function Switch({checked, disabled, onChange, activeName, closeName, width, type}: SwitchProps) {
 
     const switchClassNames = {
         'zui-switch-disabled': disabled,
-        'zui-switch-checked': checked
+        'zui-switch-checked': checked,
+        'zui-switch-raw': type === 'raw',
+        'zui-switch-square': type === 'square'
+    }
+
+    const sizeStyle: React.CSSProperties = {
+        width: getValOrDefault(width, '')
     }
 
     const valueChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,7 +37,7 @@ export default function Switch({checked, disabled, onChange, activeName, closeNa
                 onChange={valueChangeHandler}
                 hidden
             ></input>
-            <p className="zui-switch-body">
+            <p className="zui-switch-body" style={sizeStyle}>
                 <span className="zui-switch-txt zui-on">{activeName}</span>
                 <span className="zui-switch-txt zui-off">{closeName}</span>
             </p>

@@ -5,14 +5,16 @@ interface CheckBoxProps {
     checked?: boolean,
     children?: React.ReactNode,
     disabled?: boolean,
-    onChange?: Function
+    onChange?: Function,
+    type?: string
 }
 
-export default function CheckBox({checked, children, disabled, onChange}: CheckBoxProps) {
+export default function CheckBox({checked, children, disabled, onChange, type}: CheckBoxProps) {
 
     const checkClassNames = {
         'zui-check-disabled': disabled,
-        'zui-checked': checked
+        'zui-checked': checked,
+        'zui-check-round': type === 'round'
     }
 
     const valueChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
