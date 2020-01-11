@@ -152,5 +152,6 @@ export {
     getClassName,
     typeCheck,
     singleton,
-    imgReady
+    imgReady,
+    isRegExp
 }
