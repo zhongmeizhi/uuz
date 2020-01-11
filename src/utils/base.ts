@@ -50,6 +50,11 @@ function cached(fn: Function) {
     })
 }
 
+// 返回结果 要么是正则，要么就不是。
+const isRegExp = (reg: any): reg is RegExp => {
+    return '[object RegExp]' === _toString.call(reg)
+}
+
 /* 
     参考 Vue 获取className的方式
     获取 className 
