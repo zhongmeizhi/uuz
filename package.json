@@ -8,6 +8,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "bisheng": "bisheng start",
+    "bs-build": "bisheng build --ssr",
+    "bs-deploy": "bisheng gh-pages --ssr && rm -rf _site",
     "storybook": "start-storybook",
     "build-docs": "build-storybook -c .storybook -o docs",
     "test": "react-scripts test",
@@ -45,6 +48,10 @@
     "@storybook/addon-actions": "^5.2.8",
     "@storybook/addon-info": "^5.2.8",
     "@storybook/addon-notes": "^5.2.8",
-    "@storybook/react": "^5.2.8"
+    "@storybook/react": "^5.2.8",
+    "bisheng": "^1.4.6",
+    "bisheng-plugin-description": "^0.1.4",
+    "bisheng-plugin-react": "^1.1.1",
+    "bisheng-plugin-toc": "^0.4.4"
   }
 }
