@@ -9,7 +9,7 @@ interface KeyboardProps {
     onChange?: Function
 }
 
-export default function Keyboard({emitButton, header, onChange}: KeyboardProps) {
+export default ({emitButton, header, onChange}: KeyboardProps) => {
 
     const [keyList, setKeyList] = useState([] as Array<number>);
 

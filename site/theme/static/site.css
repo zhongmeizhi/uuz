@@ -36,8 +36,8 @@ html, body {
   margin-left: 14px;
 }
 .container {
-  max-width: 640px;
-  *width: 650px;
+  max-width: 820px;
+  *width: 830px;
   margin: 0 auto;
   zoom: 1;
 }
@@ -48,8 +48,8 @@ html, body {
   clear: both;
 }
 .document {
-  max-width: 640px;
-  *width: 650px;
+  max-width: 820px;
+  *width: 830px;
   margin: 0 auto;
   padding: 30px 10px;
 }
@@ -77,6 +77,16 @@ html, body {
 }
 
 /* entry */
+.document.yue {
+  display: flex;
+  justify-content: space-between;
+}
+.layout-left {
+  width: 333px;
+}
+.hentry {
+  flex: 1;
+}
 .entry-meta {
   border-top: 1px solid #eee;
   padding-top: 10px;

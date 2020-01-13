@@ -5,13 +5,20 @@ import { Helmet } from 'react-helmet-async';
 import Layout from './Layout';
 
 const Post = (props) => {
-  const { pageData, utils } = props;
+  const { pageData, utils, posts } = props;
   const { meta, description, content } = pageData;
   return (
     <Layout {...props}>
+      <div className="layout-left">
+        {
+          posts.map(({meta}) => <div key={meta.filename}>
+            <Link to={`/${meta.filename.replace(/\.md$/i, '')}`}>{meta.title}</Link>
+          </div>)
+        }
+      </div>
       <div className="hentry">
         <Helmet>
-          <title>{`${meta.title} | BiSheng Theme One`}</title>
+          <title>{`${meta.title}`}</title>
           <meta name="description" content={description} />
         </Helmet>
         <h1 className="entry-title">{meta.title}</h1>
@@ -50,11 +57,19 @@ const Post = (props) => {
 }
 
 export default collect(async (nextProps) => {
+  console.log(nextProps, 'nextProps')
   if (!nextProps.pageData) {
+    // eslint-disable-next-line no-throw-literal
     throw 404;
   }
   const pageData = await nextProps.pageData();
-  return { pageData };
+  let posts = [];
+  try {
+    posts = nextProps.picked.posts;
+  } catch (error) {
+    console.error(error, 'posts')
+  }
+  return { pageData, posts };
 })(Post);
 
 // TODO

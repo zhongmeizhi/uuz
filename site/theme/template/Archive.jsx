@@ -12,46 +12,41 @@ export default (props) => {
   const posts = props.picked.posts
           .sort((a, b) => getTime(b.meta.publishDate) - getTime(a.meta.publishDate));
 
-  let year = NaN;
+  // let year = NaN;
   const entryList = [];
 
   posts.forEach(({ meta, description }, index) => {
-    if (!meta.publishDate) {
-      console.error(`You must set 'publishDate' in meta data for ${meta.filename}.`);
-      return;
-    }
-    const publishYear = meta.publishDate.slice(0, 4);
-    if (year !== publishYear) {
-      year = publishYear;
-      entryList.push(
-        <a className="item-year" href={`#${publishYear}`} key={publishYear} id={publishYear}>
-          {publishYear}
-        </a>);
-    }
+    // if (!meta.publishDate) {
+    //   console.error(`You must set 'publishDate' in meta data for ${meta.filename}.`);
+    //   return;
+    // }
+    // const publishYear = meta.publishDate.slice(0, 4);
+    // if (year !== publishYear) {
+    //   year = publishYear;
+    //   entryList.push(
+    //     <a className="item-year" href={`#${publishYear}`} key={publishYear} id={publishYear}>
+    //       {publishYear}
+    //     </a>);
+    // }
 
     entryList.push(
       <div className="item" key={index}>
         <h2 className="item-title" id={meta.title}>
-          <time>{`${meta.publishDate.slice(0, 10)} `}</time>
           <Link to={`/${meta.filename.replace(/\.md$/i, '')}`}>{meta.title}</Link>
         </h2>
-        {
-          !description ? null :
-            <div className="item-description">
-              { toReactComponent(description) }
-            </div>
-        }
       </div>
     );
   })
 
   return (
-    <DocumentTitle title="BiSheng Theme One">
+    <DocumentTitle title="ZUI-文档">
       <Layout {...props}>
-        <h1 className="entry-title">Archive</h1>
-        <div className="entry-list">
-          {entryList}
+        <div>
+          <div className="entry-list">
+            {entryList}
+          </div>
         </div>
+        <h1 className="entry-title">Z-UI 文档</h1>
       </Layout>
     </DocumentTitle>
   );

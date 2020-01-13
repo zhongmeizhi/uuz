@@ -7,7 +7,6 @@ export default ({ themeConfig, children, helmetContext = {} }) => {
   return (
     <HelmetProvider context={helmetContext}>
       <div>
-        <div>xxx</div>
         <div className="header">
           <div className="container">
             <div className="brand">
