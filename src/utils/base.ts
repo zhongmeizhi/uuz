@@ -55,6 +55,8 @@ const isRegExp = (reg: any): reg is RegExp => {
     return '[object RegExp]' === _toString.call(reg)
 }
 
+// ignore this log
+
 /* 
     参考 Vue 获取className的方式
     获取 className 
@@ -152,5 +154,6 @@ export {
     getClassName,
     typeCheck,
     singleton,
-    imgReady
+    imgReady,
+    isRegExp
 }
