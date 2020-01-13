@@ -12,6 +12,7 @@ module.exports = {
   themeConfig: {
     home: '/',
     sitename: 'Z-UI文档',
+    github: 'https://github.com/zhongmeizhi/z-ui'
   },
   root: '/',
   hash: true,

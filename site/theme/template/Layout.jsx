@@ -32,15 +32,11 @@ export default ({ themeConfig, children, helmetContext = {} }) => {
           {children}
         </div>
         <div className="footer">
-          {themeConfig.footer ? themeConfig.footer : null}
-          {
-            themeConfig.hideBisheng ? null :
-              <p className="copyright">powered by <a href="https://github.com/benjycui/bisheng">BiSheng</a></p>
-          }
+          <p className="copyright">by <a href="https://github.com/zhongmeizhi">Mokou</a></p>
         </div>
         {
           !themeConfig.github ? null :
-            <div className="github"><a className="github-link" href={themeConfig.github}>Fork me on GitHub</a></div>
+            <div className="github"><a className="github-link" href={themeConfig.github}>Start on GitHub</a></div>
         }
       </div>
     </HelmetProvider>      

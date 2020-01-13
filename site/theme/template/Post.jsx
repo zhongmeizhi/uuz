@@ -27,30 +27,6 @@ const Post = (props) => {
             <div className="entry-description">{utils.toReactComponent(description)}</div>
         }
         <div className="entry-content">{utils.toReactComponent(content)}</div>
-
-        <div className="entry-meta">
-          <time className="updated">
-            {`${meta.publishDate.slice(0, 10)} `}
-          </time>
-          {
-            !meta.tags ? null :
-              <span>
-                in <span className="entry-tags">
-                {
-                  meta.tags.map((tag, index) =>
-                    <Link to={`/tags#${tag}`} key={index}>{tag}</Link>
-                  )
-                }
-                </span>
-              </span>
-          }
-          {
-            !meta.source ? null :
-              <a className="source sep" href={meta.source}>
-                {meta.source}
-              </a>
-          }
-        </div>
       </div>
     </Layout>
   );

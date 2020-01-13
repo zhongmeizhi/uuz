@@ -3,31 +3,19 @@ import { Link } from 'bisheng/router';
 import DocumentTitle from 'react-document-title';
 import Layout from './Layout';
 
-function getTime(date) {
-  return (new Date(date)).getTime();
-}
+// function getTime(date) {
+//   return (new Date(date)).getTime();
+// }
 
 export default (props) => {
-  const toReactComponent = props.utils.toReactComponent;
-  const posts = props.picked.posts
-          .sort((a, b) => getTime(b.meta.publishDate) - getTime(a.meta.publishDate));
+  // const toReactComponent = props.utils.toReactComponent;
+  const posts = props.picked.posts;
+          // .sort((a, b) => getTime(b.meta.publishDate) - getTime(a.meta.publishDate));
 
   // let year = NaN;
   const entryList = [];
 
   posts.forEach(({ meta, description }, index) => {
-    // if (!meta.publishDate) {
-    //   console.error(`You must set 'publishDate' in meta data for ${meta.filename}.`);
-    //   return;
-    // }
-    // const publishYear = meta.publishDate.slice(0, 4);
-    // if (year !== publishYear) {
-    //   year = publishYear;
-    //   entryList.push(
-    //     <a className="item-year" href={`#${publishYear}`} key={publishYear} id={publishYear}>
-    //       {publishYear}
-    //     </a>);
-    // }
 
     entryList.push(
       <div className="item" key={index}>
