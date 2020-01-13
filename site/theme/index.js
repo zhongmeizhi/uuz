@@ -11,7 +11,7 @@ module.exports = {
     },
   },
   plugins: [
-    'bisheng-plugin-react',
+    'bisheng-plugin-react?lang=jsx',
     'bisheng-plugin-toc?maxDepth=2',
     'bisheng-plugin-description'
   ],

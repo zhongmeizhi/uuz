@@ -7,11 +7,6 @@ import Layout from './Layout';
 const Post = (props) => {
   const { pageData, utils } = props;
   const { meta, description, content } = pageData;
-
-  console.log({
-    props,
-    pageData
-  })
   return (
     <Layout {...props}>
       <div className="hentry">

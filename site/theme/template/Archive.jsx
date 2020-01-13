@@ -45,11 +45,6 @@ export default (props) => {
     );
   })
 
-  console.log({
-    props,
-    entryList
-  })
-
   return (
     <DocumentTitle title="BiSheng Theme One">
       <Layout {...props}>
