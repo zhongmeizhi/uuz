@@ -9,6 +9,10 @@ publishDate: 2019-05-12
 
 ## 安装和初始化
 
+```jsx
+ReactDOM.render(<div>Click!</div>, mountNode);
+```
+
 请确保电脑上已经安装了最新版的 [yarn](https://yarnpkg.com) 或者 [npm](https://www.npmjs.com/)。
 
 创建并进入文件夹。

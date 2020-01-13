@@ -8,7 +8,7 @@
     "preview": "npm run build && http-server ./build"
   },
   "keywords": [
-    "bisheng-theme-blog-site"
+    "Z-UI"
   ],
   "author": "swdenglian",
   "license": "MIT",
@@ -16,9 +16,11 @@
     "babel-plugin-import": "^1.11.0",
     "bisheng": "^1.2.4",
     "bisheng-plugin-react": "^1.1.1",
-    "bisheng-theme-blog-site": "^0.1.2",
+    "bisheng-plugin-description": "^0.1.4",
+    "bisheng-plugin-toc": "^0.4.4",
     "cross-env": "^5.2.0",
-    "http-server": "^0.11.1"
+    "http-server": "^0.11.1",
+    "react-helmet-async": "^1.0.4"
   },
   "dependencies": {}
 }
