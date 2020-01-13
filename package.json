@@ -8,9 +8,6 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "bisheng": "bisheng start",
-    "bs-build": "bisheng build --ssr",
-    "bs-deploy": "bisheng gh-pages --ssr && rm -rf _site",
     "storybook": "start-storybook",
     "build-docs": "build-storybook -c .storybook -o docs",
     "test": "react-scripts test",
@@ -38,20 +35,12 @@
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.9.4",
     "hammerjs": "^2.0.8",
-    "node-sass": "^4.13.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
-    "react-scripts": "3.1.0",
-    "typescript": "^3.7.2"
+    "react-scripts": "3.1.0"
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^5.2.8",
-    "@storybook/addon-info": "^5.2.8",
-    "@storybook/addon-notes": "^5.2.8",
-    "@storybook/react": "^5.2.8",
-    "bisheng": "^1.4.6",
-    "bisheng-plugin-description": "^0.1.4",
-    "bisheng-plugin-react": "^1.1.1",
-    "bisheng-plugin-toc": "^0.4.4"
+    "node-sass": "^4.13.0",
+    "typescript": "^3.7.2"
   }
 }

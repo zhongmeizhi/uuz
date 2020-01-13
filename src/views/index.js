@@ -1,28 +1,15 @@
-import Button from "./Button";
-import Alert from "./Alert";
-import Checkbox from "./Checkbox";
-import Confirm from "./Confirm";
-import Keyboard from "./Keyboard";
-import Picker from "./Picker";
-import PickerView from "./PickerView";
-import ReFresh from "./ReFresh";
-import Sheet from "./Sheet";
-import Steps from "./Steps";
-import Switch from "./Switch";
-import Tabs from "./Tabs";
 
-export {
-    Button,
-    Alert,
-    Checkbox,
-    Confirm,
-    Keyboard,
-    Picker,
-    PickerView,
-    ReFresh,
-    Sheet,
-    Steps,
-    Switch,
-    Tabs
-};
+export { default as Button } from './Button';
+export { default as Alert } from './Alert';
+export { default as Checkbox } from './Checkbox';
+export { default as Confirm } from './Confirm';
+export { default as Keyboard } from './Keyboard';
+export { default as Picker } from './Picker';
+export { default as PickerView } from './PickerView';
+export { default as ReFresh } from './ReFresh';
+export { default as Sheet } from './Sheet';
+export { default as Steps } from './Steps';
+export { default as Switch } from './Switch';
+export { default as Tabs } from './Tabs';
+
 
