@@ -9,7 +9,7 @@ interface KeyboardProps {
     onChange?: Function
 }
 
-export default ({emitButton, header, onChange}: KeyboardProps) => {
+export default function Keyboard ({emitButton, header, onChange}: KeyboardProps) {
 
     const [keyList, setKeyList] = useState([] as Array<number>);
 
@@ -42,4 +42,6 @@ export default ({emitButton, header, onChange}: KeyboardProps) => {
             <Button type="raw" className="zui-key zui-key-del" onClick={removeKeyHandler}><Arrow className="zui-key-arrow"></Arrow></Button>
         </div>
     </Sheet>
+
 }
+

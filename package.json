@@ -8,6 +8,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "bisheng": "bisheng start",
+    "bs-build": "bisheng build --ssr",
+    "bs-deploy": "bisheng gh-pages --ssr && rm -rf _site",
     "storybook": "start-storybook",
     "build-docs": "build-storybook -c .storybook -o docs",
     "test": "react-scripts test",
@@ -40,6 +43,7 @@
     "react-scripts": "3.1.0"
   },
   "devDependencies": {
+    "bisheng-plugin-description": "^0.1.4",
     "node-sass": "^4.13.0",
     "typescript": "^3.7.2"
   }
