@@ -5,8 +5,10 @@ import { Helmet } from 'react-helmet-async';
 import Layout from './Layout';
 
 const Post = (props) => {
-  const { pageData, utils, posts } = props;
+  const { pageData, utils, posts, name } = props;
+  console.log(pageData, 'pageData')
   const { meta, description, content } = pageData;
+  
   return (
     <Layout {...props}>
       <div className="layout-left">
@@ -26,6 +28,9 @@ const Post = (props) => {
           !description ? null :
             <div className="entry-description">{utils.toReactComponent(description)}</div>
         }
+        <div>
+          {/* <Child></Child> */}
+        </div>
         <div className="entry-content">{utils.toReactComponent(content)}</div>
       </div>
     </Layout>
@@ -33,19 +38,19 @@ const Post = (props) => {
 }
 
 export default collect(async (nextProps) => {
-  console.log(nextProps, 'nextProps')
   if (!nextProps.pageData) {
     // eslint-disable-next-line no-throw-literal
     throw 404;
   }
   const pageData = await nextProps.pageData();
+  const name = nextProps.params.sub;
   let posts = [];
   try {
     posts = nextProps.picked.posts;
   } catch (error) {
     console.error(error, 'posts')
   }
-  return { pageData, posts };
+  return { pageData, posts, name };
 })(Post);
 
 // TODO

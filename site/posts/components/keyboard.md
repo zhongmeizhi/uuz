@@ -7,7 +7,7 @@ publishDate: 2020-01-13
 
 import Keyboard from '../../../src/views/Keyboard.tsx';
 import Button from '../../../src/views/Button.tsx';
-import {useState} from 'react';
+import React, {useState} from 'react';
 
 const Test = () => {
     const [value, setValue] = useState('');
