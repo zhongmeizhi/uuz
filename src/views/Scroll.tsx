@@ -119,24 +119,22 @@ export default function Scroll(props: ReScrollProps) {
     }
   }
 
-  return <>
-      <div className={freshBoxClassName}>
-        {/* 滚动区域 */}
-        <div
-          ref={ele => refScrollArea = ele}
-          className="zui-scroll-area"
-          style={freshAreaStyle}
-          onTouchStart={touchStartHandler}
-          onTouchMove={touchMoveHandler}
-          onTouchEnd={touchEndHandler}
-        >
-          {/* 刷新tip */}
-          <div className="zui-scroll-tip">{scrollTip}</div>
-          {/* 真正的内容 */}
-          <div ref={ele => refScrollDom = ele} className="zui-scroll">
-            {props.children}
-          </div>
+  return <div className={freshBoxClassName}>
+      {/* 滚动区域 */}
+      <div
+        ref={ele => refScrollArea = ele}
+        className="zui-scroll-area"
+        style={freshAreaStyle}
+        onTouchStart={touchStartHandler}
+        onTouchMove={touchMoveHandler}
+        onTouchEnd={touchEndHandler}
+      >
+        {/* 刷新tip */}
+        <div className="zui-scroll-tip">{scrollTip}</div>
+        {/* 真正的内容 */}
+        <div ref={ele => refScrollDom = ele} className="zui-scroll">
+          {props.children}
         </div>
       </div>
-  </>
+    </div>
 }

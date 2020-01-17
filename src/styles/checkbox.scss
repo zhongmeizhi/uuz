@@ -10,7 +10,7 @@
         border-radius: 3px;
         position: relative;
         margin-right: 2px;
-        transition: all 0.3s;
+        transition: all 0.2s;
         box-shadow: 0 0 1px 1px $thinGrey inset;
     }
     &.zui-check-round {
@@ -32,7 +32,7 @@
                 top: 3px;
                 left: 2px;
                 transform: rotate(-45deg);
-                animation: checkAnm 0.5s forwards;
+                animation: checkAnm 0.3s forwards;
             }
             @keyframes checkAnm {
                 0% {

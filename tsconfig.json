@@ -17,10 +17,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react"
+    "jsx": "preserve"
   },
   "include": [
     "src",
-    "story-book/index.stories.js", "src/utils/.js", "src/utils/.js"
+    "story-book/index.stories.js",
+    "src/utils/.js"
   ]
 }

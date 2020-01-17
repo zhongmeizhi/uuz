@@ -39,8 +39,9 @@ export default function Transition({name, isShow, children, time = 300}: Transit
     }, [isShow])
 
     return <>
-        { 
-            isConShow ? React.Children.map(children, (child) => {
+        {
+            isConShow ?
+                React.Children.map(children, (child) => {
                     const childTs = child as React.DetailedReactHTMLElement<any, HTMLElement>;
                     return React.cloneElement(childTs,
                         {

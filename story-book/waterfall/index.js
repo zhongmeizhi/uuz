@@ -11,12 +11,12 @@ const data = Array(21).fill('data').map((val, idx) => {
 
 
 function SubBody(props) {
-    return <>
+    return <div>
         <img className="test-waterfall-img" alt="瀑布流"
             src={props.url}></img>
         <p className="zui-waterfall-txt">{props.name}</p>
         <p className="zui-waterfall-txt">{props.desc}</p>
-    </>
+    </div>
 }
 
 export default () => {
