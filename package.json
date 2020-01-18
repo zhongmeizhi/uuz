@@ -11,8 +11,7 @@
     "storybook": "start-storybook -p 9009 -s public",
     "build-docs": "build-storybook -c .storybook -o docs",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "build-storybook": "build-storybook -s public"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"

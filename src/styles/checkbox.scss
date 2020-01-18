@@ -7,11 +7,15 @@
         height: 16px;
         background: white;
         border: 1px solid $descTxtColor;
-        border-radius: 3px;
         position: relative;
         margin-right: 2px;
         transition: all 0.2s;
         box-shadow: 0 0 1px 1px $thinGrey inset;
+    }
+    &.zui-check-primary {
+        .zui-check {
+            border-radius: 3px;
+        }
     }
     &.zui-check-round {
         .zui-check {

@@ -13,7 +13,7 @@ interface StepsProps {
     row?: boolean
 }
 
-export default function Steps({data, curStep, row}: StepsProps) {
+export default function Steps({data, curStep, row = true}: StepsProps) {
 
     const stepsClassName = {
         'zui-steps-row': row

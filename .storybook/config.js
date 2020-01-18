@@ -14,8 +14,8 @@ addParameters({
     options: {
         showNav: true,
         showPanel: true,
-        enableShortcuts: true,
-        isToolshown: true,
+        enableShortcuts: false,
+        isToolshown: false,
         theme,
     },
 });

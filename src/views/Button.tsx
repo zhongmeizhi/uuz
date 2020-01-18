@@ -16,15 +16,14 @@ interface ButtonProps {
     avatar?: boolean
 }
 
-function Button({disabled, type, className, onClick, children, width, height, throttleTime = 200, avatar}: ButtonProps) {
+function Button({disabled, type = 'primary', className, onClick, children, width, height, throttleTime = 200, avatar}: ButtonProps) {
 
     const throttleClick = throttle(onClick, throttleTime);
 
     const btnClassNames = {
         'zui-button-disbale': disabled,
-        'zui-primary': !type,
-        'zui-raw': type === 'raw',
-        'zui-button-warn': type === 'warn',
+        // primary || raw || warn
+        [`zui-button-${type}`]: true,
         'zui-avatar': avatar
     }
 

@@ -11,13 +11,13 @@ interface SwitchProps {
     type?: string
 }
 
-export default function Switch({checked, disabled, onChange, activeName, closeName, width, type}: SwitchProps) {
+export default function Switch({checked, disabled, onChange, activeName, closeName, width, type = 'primary'}: SwitchProps) {
 
     const switchClassNames = {
         'zui-switch-disabled': disabled,
         'zui-switch-checked': checked,
-        'zui-switch-raw': type === 'raw',
-        'zui-switch-square': type === 'square'
+        // primary || raw || square
+        [`zui-switch-${type}`]: true
     }
 
     const sizeStyle: React.CSSProperties = {

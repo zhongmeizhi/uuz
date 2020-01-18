@@ -9,12 +9,13 @@ interface CheckBoxProps {
     type?: string
 }
 
-export default function CheckBox({checked, children, disabled, onChange, type}: CheckBoxProps) {
+export default function CheckBox({checked, children, disabled, onChange, type = 'primary'}: CheckBoxProps) {
 
     const checkClassNames = {
         'zui-check-disabled': disabled,
         'zui-checked': checked,
-        'zui-check-round': type === 'round'
+        // primary || round
+        [`zui-check-${type}`]: true
     }
 
     const valueChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {

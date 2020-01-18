@@ -66,7 +66,8 @@ function getClassName(obj: {[key: string]: boolean | undefined}): string {
         const keys = Object.keys(obj);
         let className = ''
         for(let key of keys) {
-            if (obj[key]) {
+            const item = obj[key];
+            if (item === true) {
                 className += ` ${key}`;
             }
         }

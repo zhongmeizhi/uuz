@@ -5,7 +5,7 @@
     line-height: 47px;
     display: inline-block;
     width: 100%;
-    &.zui-primary {
+    &.zui-button-primary {
         color: white;
         background-color: $primaryColor;
         border: 1px solid $primaryColor;
@@ -14,7 +14,7 @@
             background-color: #1d82cc;
         }
     }
-    &.zui-raw {
+    &.zui-button-raw {
         border: 1px solid #dcdfe6;
         color: #606266;
         &:active {

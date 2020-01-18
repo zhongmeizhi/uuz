@@ -5,7 +5,6 @@
         display: block;
         width: 52px;
         height: 28px;
-        border-radius: 66px;
         position: relative;
         transition: all 0.3s;
         z-index: 1;
@@ -43,8 +42,14 @@
             box-shadow: 0 0 4px 0 $grey;
         }
     }
+    &.zui-switch-primary {
+        .zui-switch-body {
+            border-radius: 66px;
+        }
+    }
     &.zui-switch-raw {
         .zui-switch-body {
+            border-radius: 66px;
             box-shadow: 0 0 2px 2px #e5e5e5 inset;
             background: white;
         }
