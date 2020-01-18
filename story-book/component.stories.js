@@ -11,6 +11,7 @@ import TestCheckbox from './checkbox'
 import TestSwitch from './switch'
 import TestKeyBoard from './keyboard'
 import TestWaterfall from './waterfall'
+import TestSwiper from './swiper'
 
 const componentStory = storiesOf('组件', module);
 
@@ -67,5 +68,11 @@ componentStory.add('瀑布流 Waterfall',
     TestWaterfall,
     {
         notes: require('./waterfall/index.md'),
+    }
+)
+
+componentStory.add('轮播 Swiper',
+    TestSwiper,
+    {
     }
 )
