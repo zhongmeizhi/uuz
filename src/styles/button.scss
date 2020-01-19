@@ -5,6 +5,7 @@
     line-height: 47px;
     display: inline-block;
     width: 100%;
+    box-sizing: border-box;
     &.zui-button-primary {
         color: white;
         background-color: $primaryColor;
@@ -24,6 +25,7 @@
         }
     }
     &.zui-button-warn {
+        border: 1px solid $errorColor;
         background: $errorColor;
         color: white;
         &:active {

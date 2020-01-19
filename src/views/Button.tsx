@@ -16,14 +16,14 @@ interface ButtonProps {
     avatar?: boolean
 }
 
-function Button({disabled, type = 'primary', className, onClick, children, width, height, throttleTime = 200, avatar}: ButtonProps) {
+function Button({disabled, type = 'primary', className = '', onClick, children, width, height, throttleTime = 200, avatar}: ButtonProps) {
 
     const throttleClick = throttle(onClick, throttleTime);
 
     const btnClassNames = {
         'zui-button-disbale': disabled,
-        // primary || raw || warn
-        [`zui-button-${type}`]: true,
+        [className]: !!className,
+        [`zui-button-${type}`]: true, // primary || raw || warn
         'zui-avatar': avatar
     }
 
@@ -41,10 +41,8 @@ function Button({disabled, type = 'primary', className, onClick, children, width
         }
     }
 
-    const buttonClassName: string = `zui-button ${className || ''} ${getClassName(btnClassNames)}`;
-
     return <div 
-        className={buttonClassName}
+        className={'zui-button'.concat(getClassName(btnClassNames))}
         style={sizeStyle}
         onClick={clickHandler}>
         {children}
