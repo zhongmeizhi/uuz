@@ -1,4 +1,3 @@
-
 interface SwiperMasterProps {
     curIdx: number,
     direction: 'x' | 'y',
@@ -11,7 +10,6 @@ type Point = {
     y: number
 }
 
-
 class SwiperMaster {
 
     startPoint: Point;
@@ -22,6 +20,7 @@ class SwiperMaster {
     swiperRange: number;
     justifyDistance: number;
     len: number;
+    Prevent_Distance: number;
 
     constructor({curIdx = 0, direction = 'x', len, justifyDistance = 77}: SwiperMasterProps) {
         this.direction = direction;
@@ -30,14 +29,17 @@ class SwiperMaster {
         this.len = len;
         // 初始值
         const zeroPoint = JSON.stringify({ x: 0, y: 0 });
+        // 
         this.startPoint = JSON.parse(zeroPoint);
         this.distance = JSON.parse(zeroPoint);
         this.endPoint = JSON.parse(zeroPoint);
         this.swiperRange = 0;
+        this.Prevent_Distance = 7;
     }
 
     setSwiperRange(range: number) {
-        // 会出现屏幕变化，所以宽高是动态获取的
+        // 可能横竖屏 或者 使用者改变 Swiper大小
+        // 所以宽高是动态获取的
         this.swiperRange = range;
     }
 
@@ -47,27 +49,18 @@ class SwiperMaster {
 
     _justifyAxis(): Point {
         const distance = this.distance[this.direction];
-        if (Math.abs(distance) > this.justifyDistance) {
-            if (distance > 0) {
-                if (this.curIdx < this.len - 2) {
-                    this.curIdx++;
-                    this.endPoint[this.direction] -= this.swiperRange;
-                }
-            } else {
-                if (this.curIdx > 0) {
-                    this.curIdx--;
-                    this.endPoint[this.direction] += this.swiperRange;
-                }
+        if (distance > this.justifyDistance) {
+            if (this.curIdx < this.len - 2) {
+                this.curIdx++;
+                this.endPoint[this.direction] -= this.swiperRange;
+            }
+        } else if (distance < this.justifyDistance) {
+            if (this.curIdx > 0) {
+                this.curIdx--;
+                this.endPoint[this.direction] += this.swiperRange;
             }
         }
-        return this.endPoint!;
-    }
-
-    _computeMoveDistance(curPintt: React.Touch) {
-        this.distance =  {
-            x: this.startPoint.x - curPintt.pageX,
-            y: this.startPoint.y - curPintt.pageY,
-        }
+        return this.endPoint;
     }
 
     start(event: React.TouchEvent<HTMLDivElement>) {
@@ -82,7 +75,16 @@ class SwiperMaster {
     move(event: React.TouchEvent<HTMLDivElement>): Point {
         event.stopPropagation();
         const point = event.changedTouches[0];
-        this._computeMoveDistance(point);
+        this.distance =  {
+            x: this.startPoint.x - point.pageX,
+            y: this.startPoint.y - point.pageY,
+        }
+        // TODO 方向锁定
+        // const isCockX = this.distance.y > this.Prevent_Distance;
+        // const isCockY = this.distance.x > this.Prevent_Distance;
+        // if (isCockX || isCockY) {
+        //     event.preventDefault();
+        // }
         return {
             x: this.endPoint.x - this.distance.x,
             y: this.endPoint.y - this.distance.y,
