@@ -1,3 +1,10 @@
+type Point = {
+    x: number,
+    y: number
+}
+
+type Direction = 'x' | 'y';
+
 interface SwiperMasterProps {
     curIdx: number,
     direction: 'x' | 'y',
@@ -5,22 +12,18 @@ interface SwiperMasterProps {
     justifyDistance?: number,
 }
 
-type Point = {
-    x: number,
-    y: number
-}
-
 class SwiperMaster {
 
     startPoint: Point;
     distance: Point;
     endPoint: Point;
-    direction: 'x' | 'y';
+    direction: Direction;
     curIdx: number;
     swiperRange: number;
     justifyDistance: number;
     len: number;
     Prevent_Distance: number;
+    lockDirection: Direction | null;
 
     constructor({curIdx = 0, direction = 'x', len, justifyDistance = 77}: SwiperMasterProps) {
         this.direction = direction;
@@ -35,11 +38,12 @@ class SwiperMaster {
         this.endPoint = JSON.parse(zeroPoint);
         this.swiperRange = 0;
         this.Prevent_Distance = 7;
+        this.lockDirection = null;
     }
 
+    // 可能横竖屏 或者 使用者改变 Swiper大小
+    // 所以宽高是动态获取的
     setSwiperRange(range: number) {
-        // 可能横竖屏 或者 使用者改变 Swiper大小
-        // 所以宽高是动态获取的
         this.swiperRange = range;
     }
 
@@ -47,25 +51,57 @@ class SwiperMaster {
         return this.curIdx;
     }
 
-    _justifyAxis(): Point {
-        const distance = this.distance[this.direction];
-        if (distance > this.justifyDistance) {
-            if (this.curIdx < this.len - 2) {
-                this.curIdx++;
-                this.endPoint[this.direction] -= this.swiperRange;
-            }
-        } else if (distance < this.justifyDistance) {
-            if (this.curIdx > 0) {
-                this.curIdx--;
-                this.endPoint[this.direction] += this.swiperRange;
+    // 终止时位置调整
+    _getFinalEndPonit(): Point {
+        if (this.direction === this.lockDirection) {
+            const distance = this.distance[this.direction];
+            if (distance > this.justifyDistance) {
+                if (this.curIdx < this.len - 1) {
+                    this.curIdx++;
+                    this.endPoint[this.direction] -= this.swiperRange;
+                }
+            } else if (distance < this.justifyDistance) {
+                if (this.curIdx > 0) {
+                    this.curIdx--;
+                    this.endPoint[this.direction] += this.swiperRange;
+                }
             }
         }
         return this.endPoint;
     }
 
+    // 方向锁定
+    _getLockDirection(event: React.TouchEvent<HTMLDivElement>): Direction | null {
+        const absX = Math.abs(this.distance.x);
+        const absY = Math.abs(this.distance.y);
+
+        let lockDirection: Direction | null = null;
+
+        if (this.direction === 'x') {
+            if (absX >= absY &&
+                absX > this.Prevent_Distance) {
+                lockDirection = 'x';
+                event.nativeEvent.preventDefault();
+            } else if (absY > this.Prevent_Distance) {
+                lockDirection = 'y';
+            }
+        } else {
+            if (absY >= absX &&
+                absY > this.Prevent_Distance) {
+                lockDirection = 'y';
+                event.nativeEvent.preventDefault();
+            } else if (absX > this.Prevent_Distance) {
+                lockDirection = 'x';
+            }
+        }
+        
+        return lockDirection;
+    }
+
     start(event: React.TouchEvent<HTMLDivElement>) {
         event.stopPropagation();
         const point = event.touches[0];
+        this.lockDirection = null;
         this.startPoint = {
             x: point.pageX,
             y: point.pageY
@@ -75,25 +111,34 @@ class SwiperMaster {
     move(event: React.TouchEvent<HTMLDivElement>): Point {
         event.stopPropagation();
         const point = event.changedTouches[0];
-        this.distance =  {
+        this.distance = {
             x: this.startPoint.x - point.pageX,
             y: this.startPoint.y - point.pageY,
         }
-        // TODO 方向锁定
-        // const isCockX = this.distance.y > this.Prevent_Distance;
-        // const isCockY = this.distance.x > this.Prevent_Distance;
-        // if (isCockX || isCockY) {
-        //     event.preventDefault();
-        // }
-        return {
-            x: this.endPoint.x - this.distance.x,
-            y: this.endPoint.y - this.distance.y,
+        if (!this.lockDirection) {
+            this.lockDirection = this._getLockDirection(event);
+        } else {
+            if (this.direction === this.lockDirection) {
+                if (this.direction === 'x') {
+                    return {
+                        x: this.endPoint.x - this.distance.x,
+                        y: this.endPoint.y,
+                    }
+                } else {
+                    return {
+                        x: this.endPoint.x,
+                        y: this.endPoint.y - this.distance.y,
+                    }
+                }
+            }
         }
+        // 如果return movePoint 那么位置不变
+        return this.endPoint;
     }
 
     end(event: React.TouchEvent<HTMLDivElement>): Point {
         event.stopPropagation();
-        return this._justifyAxis();
+        return this._getFinalEndPonit();
     }
 
 }

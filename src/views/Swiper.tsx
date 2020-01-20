@@ -1,15 +1,20 @@
 import React, {useState, useEffect, useRef} from 'react';
 
 import SwiperMaster from '../controller/swiper';
-import { getValOrDefault } from '../utils/base';
+import { getClassName, getValOrDefault } from '../utils/base';
 
 interface SwiperProps {
     children: React.ReactNodeArray,
-    height: string
+    width: string,
+    height: string,
+    direction: 'x' | 'y',
+    className: string
 }
 
-export default function Swiper ({children, height}: SwiperProps) {
-
+export default function Swiper ({
+        children, width, height,
+        direction = 'x', className
+    }: SwiperProps) {
     // const [curSwiperIdx, setCurTabIdx] = useState(0);
     const [swiperMaster, setSwiperMaster] = useState();
     const [swiperPoint, setSwiperPoint] = useState({ x: 0, y: 0});
@@ -18,19 +23,30 @@ export default function Swiper ({children, height}: SwiperProps) {
     const refSwiper = useRef(null);
 
     useEffect(() => {
-        const len = children.length;
-        const swiperMaster = new SwiperMaster({
+        const instance = new SwiperMaster({
             curIdx: 0,
-            direction: 'x',
-            len: len
+            direction,
+            len: children.length
         });
-        setSwiperMaster(swiperMaster);
 
         const refItem = refSwiper.current as any;
-        swiperMaster.setSwiperRange(refItem.offsetWidth);
+        if (direction === 'x') {
+            instance.setSwiperRange(refItem.offsetWidth);
+        } else {
+            instance.setSwiperRange(refItem.offsetHeight);
+        }
+
+        setSwiperMaster(instance);
+
     }, [])
 
+    const swiperClassNames = {
+        [className]: !!className,
+        [`zui-swiper-${direction}`]: true
+    }
+
     const swiperStyle: React.CSSProperties = {
+        width: getValOrDefault(width, ''),
         height: getValOrDefault(height, '')
     }
 
@@ -50,14 +66,14 @@ export default function Swiper ({children, height}: SwiperProps) {
         setTansitionStyle('all 0.3s');
     }
 
-    return <div className="zui-swiper"
+    return <div className={'zui-swiper'.concat(getClassName(swiperClassNames))}
         ref={refSwiper}
         onTouchStart={touchStartHandler}
         onTouchMove={touchMoveHandler}
         onTouchEnd={touchEndHander}
         style={swiperStyle}>
         <div className="zui-swiper-body" style={{
-            transform: `translate(${swiperPoint.x}px, 0)`,
+            transform: `translate(${swiperPoint.x}px, ${swiperPoint.y}px)`,
             transition: tansitionStyle
         }}>
             { children }

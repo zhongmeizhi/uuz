@@ -11,4 +11,9 @@
             flex-shrink: 0;
         }
     }
+    &.zui-swiper-y {
+        .zui-swiper-body {
+            flex-direction: column;
+        }
+    }
 }
