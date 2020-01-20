@@ -37,7 +37,6 @@ export default function Swiper ({
         }
 
         setSwiperMaster(instance);
-
     }, [])
 
     const swiperClassNames = {

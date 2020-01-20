@@ -7,7 +7,7 @@ type Direction = 'x' | 'y';
 
 interface SwiperMasterProps {
     curIdx: number,
-    direction: 'x' | 'y',
+    direction: Direction,
     len: number,
     justifyDistance?: number,
 }
@@ -98,7 +98,7 @@ class SwiperMaster {
         return lockDirection;
     }
 
-    start(event: React.TouchEvent<HTMLDivElement>) {
+    start(event: React.TouchEvent<HTMLDivElement>): void {
         event.stopPropagation();
         const point = event.touches[0];
         this.lockDirection = null;
@@ -116,21 +116,12 @@ class SwiperMaster {
             y: this.startPoint.y - point.pageY,
         }
         if (!this.lockDirection) {
+            // 试图锁定滑动方向
             this.lockDirection = this._getLockDirection(event);
-        } else {
-            if (this.direction === this.lockDirection) {
-                if (this.direction === 'x') {
-                    return {
-                        x: this.endPoint.x - this.distance.x,
-                        y: this.endPoint.y,
-                    }
-                } else {
-                    return {
-                        x: this.endPoint.x,
-                        y: this.endPoint.y - this.distance.y,
-                    }
-                }
-            }
+        } else if (this.direction === this.lockDirection) {
+            // 方向锁定 且 方向正确
+            const dist = this.endPoint[this.direction] - this.distance[this.direction];
+            return Object.assign({}, {x: 0, y: 0}, {[this.direction]: dist})
         }
         // 如果return movePoint 那么位置不变
         return this.endPoint;

@@ -32,9 +32,10 @@ configureActions({
 })
 
 addDecorator(withInfo({
-    header: true,
-    maxPropsIntoLine: 100,
-    maxPropObjectKeys: 100,
-    maxPropArrayLength: 100,
-    maxPropStringLength: 100,
+    text: '源码',
+    // header: true,
+    // maxPropsIntoLine: 100,
+    // maxPropObjectKeys: 100,
+    // maxPropArrayLength: 100,
+    // maxPropStringLength: 100,
 }))
