@@ -53,6 +53,8 @@ export default function PickerCol({list, value, onChange}: PickerColProps) {
     }
 
     const colTouchMoveHandler = (e: TouchEvent<HTMLDivElement>) => {
+        e.stopPropagation();
+        e.preventDefault();
         const translateY = e.touches[0].pageY - curTouchY;
         setCurTouchY(e.touches[0].pageY);
         setColStyle({
