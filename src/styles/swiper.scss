@@ -1,5 +1,7 @@
 .zui-swiper {
     overflow: hidden;
+    // touch-action: none;
+    position: relative;
     .zui-swiper-body {
         width: 100%;
         height: 100%;
@@ -11,9 +13,52 @@
             flex-shrink: 0;
         }
     }
+    &.zui-swiper-x {
+        .zui-swiper-nav-box {
+            position: absolute;
+            left: 50%;
+            bottom: 3px;
+            transform: translate(-50%, 0);
+            .zui-swiper-nav {
+                display: inline-block;
+                width: 6px;
+                height: 3px;
+                border-radius: 10px;
+                background: $grey;
+                margin: 0 2px;
+                transition: all 0.3s;
+                &.active {
+                    width: 10px;
+                    background: $primaryColor;
+                }
+            }
+        }
+    }
     &.zui-swiper-y {
         .zui-swiper-body {
             flex-direction: column;
+        }
+        .zui-swiper-nav-box {
+            position: absolute;
+            left: auto;
+            right: 3px;
+            top: 50%;
+            transform: translate(0, -50%);
+            width: 3px;
+            font-size: 0;
+            .zui-swiper-nav {
+                display: inline-block;
+                width: 3px;
+                height: 6px;
+                border-radius: 10px;
+                background: $grey;
+                margin: 2px 0;
+                transition: all 0.5s;
+                &.active {
+                    height: 10px;
+                    background: $primaryColor;
+                }
+            }
         }
     }
 }

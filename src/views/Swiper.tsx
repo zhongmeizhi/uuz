@@ -15,7 +15,7 @@ export default function Swiper ({
         children, width, height,
         direction = 'x', className
     }: SwiperProps) {
-    // const [curSwiperIdx, setCurTabIdx] = useState(0);
+    const [curSwiperIdx, setCurTabIdx] = useState(0);
     const [swiperMaster, setSwiperMaster] = useState();
     const [swiperPoint, setSwiperPoint] = useState({ x: 0, y: 0});
     const [tansitionStyle, setTansitionStyle] = useState('');
@@ -61,6 +61,7 @@ export default function Swiper ({
 
     const touchEndHander = (event: React.TouchEvent<HTMLDivElement>) => {
         const point = swiperMaster.end(event);
+        setCurTabIdx(swiperMaster.getIndex());
         setSwiperPoint(point);
         setTansitionStyle('all 0.3s');
     }
@@ -77,14 +78,35 @@ export default function Swiper ({
         }}>
             { children }
         </div>
+        <SwiperNav
+            len={children.length}
+            curActiveIdx={curSwiperIdx}
+        ></SwiperNav>
     </div>
 }
 
-
-interface SwiperItem {
+interface SwiperItemProps {
     children: React.ReactNode
 }
 
-Swiper.Item = ({children}: SwiperItem) => {
+export function SwiperItem ({children}: SwiperItemProps): JSX.Element {
     return <div className="zui-swiper-item">{children}</div>
 };
+
+interface SwiperNavProps {
+    len: number,
+    curActiveIdx: number
+}
+
+function SwiperNav({len, curActiveIdx}: SwiperNavProps): JSX.Element {
+
+    return <div className="zui-swiper-nav-box">
+        {
+            Array(len).fill('').map((val, idx) => 
+            <span
+                key={idx}
+                className={'zui-swiper-nav'.concat(curActiveIdx === idx ? ' active' : '')}
+            ></span>)
+        }
+    </div>
+}

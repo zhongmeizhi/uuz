@@ -25,7 +25,7 @@ class SwiperMaster {
     Prevent_Distance: number;
     lockDirection: Direction | null;
 
-    constructor({curIdx = 0, direction = 'x', len, justifyDistance = 77}: SwiperMasterProps) {
+    constructor({curIdx = 0, direction = 'x', len, justifyDistance = 33}: SwiperMasterProps) {
         this.direction = direction;
         this.curIdx = curIdx;
         this.justifyDistance = justifyDistance;
