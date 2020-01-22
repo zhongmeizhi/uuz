@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { imgReady } from '../utils/base';
+import WaterfallManager from '../controller/waterf';
 
 interface WaterfallProps {
     data: Array<any>,
@@ -8,23 +9,13 @@ interface WaterfallProps {
     childRender: any,
     linkName: string
 }
-
-// TODO
-// useState ?
-let minEle = {
-    idx: 0,
-    height: 0 
-}
-
-let dataIdx = 0;
-
 /* 
     瀑布流：图片需要从cdn下载，所以不能实时获取到图片宽高
 
-    实现瀑布流的3种情况
+    已知获取图片宽高的方法
     1. 限制图片宽高
     2. 已知图片宽高
-    3. 动态获取图片宽高
+    3. 等待图片加载获取宽高
 */
 function Waterfall({ data, col = 2, childRender, linkName = 'url'}: WaterfallProps) {
 
@@ -32,53 +23,30 @@ function Waterfall({ data, col = 2, childRender, linkName = 'url'}: WaterfallPro
     
     const len = data.length;
     const initColData = Array(col).fill('col').map(() => []) as Array<Array<any>>;
-
     const [colData, setCol] = useState(initColData);
 
+    const slotManager = new WaterfallManager();
+    slotManager.setData(data);
+    slotManager.setCol(col);
+    
+    const [dataManager, setManager] = useState(slotManager);
+    const [curIdx, setCurIdx] = useState(0);
+
     useEffect(() => {
-        if (dataIdx < len) {
-            if (dataIdx < col) {
-                let initData = JSON.parse(JSON.stringify(initColData));
-                for (let i=0; i<col; i++) {
-                    initData[i].push(data[i]);
-                    dataIdx += 1;
-                }
-
-                imgReady(data[dataIdx][linkName], () => {
-                    setCol(initData)
-                })
-
+        if (curIdx < len - 1) {
+            if (curIdx < col) {
+                dataManager.setFirstRowData()
+                setCol(dataManager.getColData());
             } else {
-                let colIdx = col;
-                // 反向遍历，左边优先
-                while (--colIdx >= 0) {
-                    const offsetTop = refFlag[colIdx].offsetTop;
-                    if (!minEle.height || (offsetTop < minEle.height)) {
-                        minEle = {
-                            idx: colIdx,
-                            height: offsetTop
-                        }
-                    }
-                }
-                const cloneData = JSON.parse(JSON.stringify(colData));
-                cloneData[minEle.idx].push(data[dataIdx]);
-                imgReady(data[dataIdx][linkName], () => {
-                    dataIdx += 1;
-                    setCol(cloneData)
-                    minEle = {
-                        idx: 0,
-                        height: 0 
-                    }
-                })
+                dataManager.pushDataToLowCol(refFlag);
+                setCol(dataManager.getColData());
             }
-        } else {
-            dataIdx = 0;
+            const dataIdx = dataManager.getCurIdx();
+            imgReady(data[dataIdx][linkName], () => {
+                setCurIdx(dataIdx);
+            })
         }
-    }, [colData])
-
-    useEffect(() => {
-        dataIdx = 0;
-    }, [])
+    }, [curIdx])
 
     return <div className="zui-waterfall zui-clearfix">
         {
