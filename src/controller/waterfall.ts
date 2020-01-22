@@ -38,7 +38,9 @@ class WaterfallManager {
 
     setFirstRowData() {
         this.colData = this.data.slice(0, this.col).map(val => [val]);
-        this.curIdx = this.colData.length;
+        if (this.colData.length) {
+            this.curIdx = this.colData.length - 1;
+        }
     }
 
     _findLowCol(elements: Array<HTMLDivElement>) {

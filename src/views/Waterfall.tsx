@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { imgReady } from '../utils/base';
-import WaterfallManager from '../controller/waterf';
+import WaterfallManager from '../controller/waterfall';
 
 interface WaterfallProps {
     data: Array<any>,
@@ -34,7 +34,7 @@ function Waterfall({ data, col = 2, childRender, linkName = 'url'}: WaterfallPro
 
     useEffect(() => {
         if (curIdx < len - 1) {
-            if (curIdx < col) {
+            if (curIdx < col - 1) {
                 dataManager.setFirstRowData()
                 setCol(dataManager.getColData());
             } else {
