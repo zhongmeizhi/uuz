@@ -30,21 +30,21 @@
   },
   "dependencies": {
     "@types/hammerjs": "^2.0.36",
-    "@types/jest": "^24.0.23",
-    "@types/node": "^12.12.8",
-    "@types/react": "^16.9.11",
-    "@types/react-dom": "^16.9.4",
+    "@types/jest": "^24.9.0",
+    "@types/node": "^13.1.8",
+    "@types/react": "^16.9.19",
+    "@types/react-dom": "^16.9.5",
     "hammerjs": "^2.0.8",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "react-scripts": "3.0.1"
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-scripts": "3.3.0"
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^5.2.8",
-    "@storybook/addon-info": "^5.2.8",
-    "@storybook/addon-notes": "^5.2.8",
-    "@storybook/react": "^5.2.8",
-    "node-sass": "^4.13.0",
-    "typescript": "^3.7.2"
+    "@storybook/addon-actions": "^5.3.8",
+    "@storybook/addon-info": "^5.3.8",
+    "@storybook/addon-notes": "^5.3.8",
+    "@storybook/react": "^5.3.8",
+    "node-sass": "^4.13.1",
+    "typescript": "^3.7.5"
   }
 }
