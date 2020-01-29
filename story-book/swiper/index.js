@@ -2,7 +2,7 @@ import React from 'react';
 
 import Swiper, {SwiperItem} from '../../src/views/Swiper';
 
-function TestContent({val}) {
+function TestContent({val, children}) {
     return <div style={{
         height: '100%',
         // background: `rgb(33, 133, ${val*51})`,
@@ -10,7 +10,7 @@ function TestContent({val}) {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center'
-    }}>上下滑{val}</div>
+    }}>{children}{val}</div>
 }
 
 export default () => {
@@ -18,7 +18,7 @@ export default () => {
         <Swiper height={'200px'} direction="y">
             {
                 [1,2,3,4,5].map(val => <SwiperItem key={val}>
-                    <TestContent props={val}></TestContent>
+                    <TestContent val={val}>上下滑</TestContent>
                 </SwiperItem>)
             }
         </Swiper>
@@ -26,7 +26,7 @@ export default () => {
         <Swiper height={'200px'}>
             {
                 [1,2,3,4,5].map(val => <SwiperItem key={val}>
-                    <TestContent val={val}></TestContent>
+                    <TestContent val={val}>左右滑</TestContent>
                 </SwiperItem>)
             }
         </Swiper>
