@@ -4,14 +4,16 @@ export const Layout = styled.div`
 `
 
 export const ZHeader = styled.div`
-    position: sticky;
-    top: 0;
-    left: 0;
-    width: 100%;
-    text-align: center;
+    padding-left: 50px;
     line-height: 50px;
     border-bottom: 1px solid #108ee9;
     color: grey;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 6;
+    background: white;
     img {
         position: absolute;
         top: 9px;
@@ -19,6 +21,13 @@ export const ZHeader = styled.div`
         width: 32px;
         height: 32px;
     }
+    p {
+        font-size: 18px;
+    }
+`
+
+export const NavBody = styled.div`
+    padding-top: 50px;
 `
 
 export const ZBody = styled.div`

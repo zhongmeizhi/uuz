@@ -1,20 +1,19 @@
 import React from 'react';
+import { renderRoutes, matchRoutes } from "react-router-config";
 import { Link } from "react-router-dom";
 
-import { Layout, ZHeader, ZBody } from './content.style';
+import { Layout, ZHeader, NavBody } from './content.style';
 
-interface ContentProps {
-    children: React.ReactNode
-}
-
-export default function Content({children}: ContentProps) {
+export default function Content({route, location}: any) {
+    const branch = matchRoutes(route.routes, location.pathname);
+    const name = (branch && branch[0] && branch[0].route.name) || '';
     return <Layout>
         <ZHeader>
             <Link to="/"><img src={require('./house.svg')} alt="house"></img></Link>
-            <p>头部</p>
+            <p>{name}</p>
         </ZHeader>
-        <ZBody>
-            {children}
-        </ZBody>
+        <NavBody>
+            {renderRoutes(route.routes)}
+        </NavBody>
     </Layout>
 }

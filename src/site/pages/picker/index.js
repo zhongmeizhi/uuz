@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-const action = console.log
 
 import Picker from '../../../views/Picker';
 import PickerView from '../../../views/PickerView';

@@ -1,9 +1,9 @@
 import React from 'react';
-const action = console.log
 
 import Button from '../../../views/Button';
 import { dialog, alert, confirm } from '../../../views-show/dialog';
 
+const action = (val) => () => console.log(val)
 const Gap = () => <div style={{height: '8px'}}></div>
 
 export default  () => {

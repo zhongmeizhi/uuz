@@ -55,7 +55,10 @@ const isRegExp = (reg: any): reg is RegExp => {
     return '[object RegExp]' === _toString.call(reg)
 }
 
-// ignore this log
+// 首字母大写
+const upperCaseFirst = (str: string) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
 /* 
     参考 Vue 获取className的方式
@@ -150,6 +153,7 @@ export {
     isFalse,
     isObject,
     isPlainObject,
+    upperCaseFirst,
     getValOrDefault,
     cached,
     getClassName,
