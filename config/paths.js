@@ -84,7 +84,7 @@ module.exports = {
   proxySetup: resolveApp('src/setupProxy.js'),
   appNodeModules: resolveApp('node_modules'),
   publicUrl: './z-ui',
-  servedPath: './z-ui',
+  servedPath: '',
   // publicUrl: getPublicUrl(resolveApp('package.json')),
   // servedPath: getServedPath(resolveApp('package.json')),
 };
