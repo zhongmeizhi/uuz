@@ -36,19 +36,21 @@
                 top: 3px;
                 left: 2px;
                 transform: rotate(-45deg);
-                animation: checkAnm 0.3s forwards;
+                // animation: checkAnm 0.3s forwards;
+                border-bottom: 2px solid white;
+                border-left: 2px solid white;
             }
-            @keyframes checkAnm {
-                0% {
-                }
-                50% {
-                    border-left: 2px solid white;
-                }
-                100% {
-                    border-bottom: 2px solid white;
-                    border-left: 2px solid white;
-                }
-            }
+            // @keyframes checkAnm {
+            //     0% {
+            //     }
+            //     50% {
+            //         border-left: 2px solid white;
+            //     }
+            //     100% {
+            //         border-bottom: 2px solid white;
+            //         border-left: 2px solid white;
+            //     }
+            // }
         }
     }
     &.zui-check-disabled {

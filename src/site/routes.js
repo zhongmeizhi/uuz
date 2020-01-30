@@ -41,6 +41,8 @@ const navList = [
 
 const Home = function() {
 	return <ZBody>
+		<h1>Z-UI</h1>
+		<sub>一个 React + Hooks 写的UI库</sub>
 		<Gap>
 			{
 				navList.map(nav => <Link to={nav.path} key={nav.name} >
