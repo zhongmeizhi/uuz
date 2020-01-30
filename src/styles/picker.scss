@@ -28,7 +28,7 @@ $colPadding: $pickerHeight/2 - $itemLineHeight/2;
             top: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(#ffffffe6 0%, #ffffff99 42%, transparent 43%, transparent 56%, #ffffff99 57%, #ffffffe6 100%);
+            background: linear-gradient(#ffffffe6 0%, #ffffff99 40%, rgba(255,255,255,0) 43%, rgba(255,255,255,0) 56%, #ffffff99 57%, #ffffffe6 100%);
             z-index: 2;
         }
     }

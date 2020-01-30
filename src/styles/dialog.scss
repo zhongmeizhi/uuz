@@ -8,6 +8,7 @@
     .zui-dialog-mask {
         background: rgba(0, 0, 0, 0.4);
         height: 100%;
+        touch-action: none;
     }
     .zui-dialog-area {
         position: absolute;
