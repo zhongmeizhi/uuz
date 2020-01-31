@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 
-import SwiperMaster from '../controller/swiper';
+import SwiperControl from '../controller/swiper';
 import { getClassName, getValOrDefault } from '../utils/base';
 
 interface SwiperProps {
@@ -16,14 +16,14 @@ export default function Swiper ({
         direction = 'x', className
     }: SwiperProps) {
     const [curSwiperIdx, setCurTabIdx] = useState(0);
-    const [swiperMaster, setSwiperMaster] = useState();
+    const [swiperControl, setSwiperControl] = useState();
     const [swiperPoint, setSwiperPoint] = useState({ x: 0, y: 0});
     const [tansitionStyle, setTansitionStyle] = useState('');
 
     const refSwiper = useRef(null);
 
     useEffect(() => {
-        const instance = new SwiperMaster({
+        const instance = new SwiperControl({
             curIdx: 0,
             direction,
             len: children.length
@@ -36,7 +36,7 @@ export default function Swiper ({
             instance.setSwiperRange(refItem.offsetHeight);
         }
 
-        setSwiperMaster(instance);
+        setSwiperControl(instance);
     }, [])
 
     const swiperClassNames = {
@@ -50,18 +50,18 @@ export default function Swiper ({
     }
 
     const touchStartHandler = (event: React.TouchEvent<HTMLDivElement>) => {
-        swiperMaster.start(event);
+        swiperControl.start(event);
         setTansitionStyle('');
     }
 
     const touchMoveHandler = (event: React.TouchEvent<HTMLDivElement>) => {
-        const point = swiperMaster.move(event);
+        const point = swiperControl.move(event);
         setSwiperPoint(point);
     }
 
     const touchEndHander = (event: React.TouchEvent<HTMLDivElement>) => {
-        const point = swiperMaster.end(event);
-        setCurTabIdx(swiperMaster.getIndex());
+        const point = swiperControl.end(event);
+        setCurTabIdx(swiperControl.getIndex());
         setSwiperPoint(point);
         setTansitionStyle('all 0.3s');
     }

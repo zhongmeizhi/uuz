@@ -13,7 +13,7 @@ export const ZHeader = styled.div`
     left: 0;
     width: 100%;
     z-index: 6;
-    background: white;
+    background: #f5f5f9;
     img {
         position: absolute;
         top: 9px;

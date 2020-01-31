@@ -1,5 +1,5 @@
 
-class WaterfallManager {
+class WaterfallControl {
 
     data: Array<any>;
     // len: number;
@@ -57,4 +57,4 @@ class WaterfallManager {
     }
 }
 
-export default WaterfallManager;
+export default WaterfallControl;

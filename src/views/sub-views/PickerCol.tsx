@@ -1,4 +1,7 @@
-import React, { useState, TouchEvent } from 'react';
+import React, { useState, useEffect, TouchEvent, MouseEvent } from 'react';
+import PickerControl from '../../controller/picker';
+
+import EventControl from '../../controller/event';
 
 interface PickerColProps {
     list: Array<any>,
@@ -6,81 +9,55 @@ interface PickerColProps {
     onChange?: Function
 }
 
-type ValueType = string | number
+type ValueType = string | number;
+type PickerEvent = TouchEvent<HTMLDivElement> | MouseEvent<HTMLDivElement>;
 
-const LINE_HEIGHT = 26;
-
-// 写在function中的非useState的属性是不能被动态获取的
-// 可以写在function外部
 export default function PickerCol({list, value, onChange}: PickerColProps) {
 
-    // useState init时 需要传入函数，否则每次set都会执行
-    const [colStyle, setColStyle] = useState(() => initState(list, value))
-    const [curTouchY, setCurTouchY] = useState(0);
+    let colRef: HTMLDivElement | null;
 
-    function initState (list: Array<any>, value: ValueType): {translateY: number, transition: string} {
+    function initPickerControl (list: Array<any>, value: ValueType) {
         let index = list.findIndex(val => val.value === value);
         index = index === -1 ? 0 : index;
-        return {
-            translateY: - (index * LINE_HEIGHT),
-            transition: 'none',
-        }
+        return new PickerControl(index, list.length-1);
     }
 
-    const getFinallyTranslate = () => {
-        let adjustTranslate, adjustTranIdx;
-        const maxIdx = list.length - 1;
-        const curTransLateY = colStyle.translateY;
-        const maxTranslate = - maxIdx * LINE_HEIGHT;
+    const pickControl = initPickerControl(list, value);
+    const [colStyle, setColStyle] = useState(pickControl.colStyle)
 
-        if (curTransLateY > 0) {
-            adjustTranslate = 0;
-            adjustTranIdx = 0;
-        } else if (curTransLateY < maxTranslate) {
-            adjustTranslate = maxTranslate;
-            adjustTranIdx = maxIdx;
-        } else {
-            const curPickIdx = Math.abs(Math.round(curTransLateY / LINE_HEIGHT));
-            adjustTranslate = - curPickIdx * LINE_HEIGHT;
-            adjustTranIdx = curPickIdx;
-        }
-
-        return { adjustTranIdx, adjustTranslate };
+    const onStartHandler = (e: PickerEvent) => {
+        pickControl.onStart(e);
     }
 
-    const colTouchStartHandler = (e: TouchEvent<HTMLDivElement>) => {
-        setCurTouchY(e.touches[0].pageY);
-    }
-
-    const colTouchMoveHandler = (e: TouchEvent<HTMLDivElement>) => {
+    const onMoveHandler = (e: PickerEvent) => {
         e.stopPropagation();
-        e.nativeEvent.preventDefault();
-        const translateY = e.touches[0].pageY - curTouchY;
-        setCurTouchY(e.touches[0].pageY);
-        setColStyle({
-            translateY: translateY + colStyle.translateY,
-            transition: 'none'
-        })
+        e.preventDefault();
+        pickControl.onMove(e);
+        setColStyle(pickControl.colStyle);
     }
 
-    const colTouchEndHandler = (e: TouchEvent<HTMLDivElement>) => {
-        const { adjustTranIdx, adjustTranslate } = getFinallyTranslate();
+    const onEndHandler = (e: PickerEvent) => {
+        const adjustTranIdx = pickControl.onEnd();
+        setColStyle(pickControl.colStyle);
         const value = list[adjustTranIdx].value;
         if (typeof onChange === 'function') {
             onChange(value)
         }
-        setColStyle({
-            translateY: adjustTranslate,
-            transition: 'all 0.3s'
-        })
     }
+    
+    useEffect(() => {
+        const eventControl = new EventControl(colRef as HTMLDivElement);
+        eventControl.createEventList(onStartHandler, onMoveHandler, onEndHandler);
+        eventControl.listenerAllOfEle();
+        return () => {
+            eventControl.removeAllOfEle();
+        }
+    }, [])
 
     return <div className="zui-picker-col">
         <div
             className="zui-picker-col-mask"
-            onTouchStart={colTouchStartHandler}
-            onTouchMove={colTouchMoveHandler}
-            onTouchEnd={colTouchEndHandler}>
+            ref={ele => colRef = ele}>
         </div>
         <div
             className="zui-picker-col-area"

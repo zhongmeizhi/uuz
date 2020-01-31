@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { imgReady } from '../utils/base';
-import WaterfallManager from '../controller/waterfall';
+import WaterfallControl from '../controller/waterfall';
 
 interface WaterfallProps {
     data: Array<any>,
@@ -25,11 +25,11 @@ function Waterfall({ data, col = 2, childRender, linkName = 'url'}: WaterfallPro
     const initColData = Array(col).fill('col').map(() => []) as Array<Array<any>>;
     const [colData, setCol] = useState(initColData);
 
-    const slotManager = new WaterfallManager();
-    slotManager.setData(data);
-    slotManager.setCol(col);
+    const waterfallControl = new WaterfallControl();
+    waterfallControl.setData(data);
+    waterfallControl.setCol(col);
     
-    const [dataManager, setManager] = useState(slotManager);
+    const [dataManager, setManager] = useState(waterfallControl);
     const [curIdx, setCurIdx] = useState(0);
 
     useEffect(() => {

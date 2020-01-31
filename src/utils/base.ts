@@ -145,6 +145,20 @@ function imgReady(url: string, callback: Function, errorBack?: Function) {
     }, 18);
 }
 
+// passive 检测
+function passiveSupported(): boolean {
+    let passiveSupported = false;
+    try {
+        const options = Object.defineProperty({}, 'passive', {
+            get: () => {
+            passiveSupported = true;
+            },
+        });
+        window.addEventListener('test', null as any, options);
+    } catch (err) { }
+    return passiveSupported;
+}
+
 export {
     toRawType,
     isUndef,
@@ -153,6 +167,7 @@ export {
     isFalse,
     isObject,
     isPlainObject,
+    isRegExp,
     upperCaseFirst,
     getValOrDefault,
     cached,
@@ -160,5 +175,5 @@ export {
     typeCheck,
     singleton,
     imgReady,
-    isRegExp
+    passiveSupported
 }
