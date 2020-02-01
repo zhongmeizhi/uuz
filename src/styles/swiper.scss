@@ -14,6 +14,7 @@
         }
     }
     &.zui-swiper-x {
+        // touch-action: pan-y;
         .zui-swiper-nav-box {
             position: absolute;
             left: 0;
@@ -37,6 +38,7 @@
         }
     }
     &.zui-swiper-y {
+        touch-action: pan-x;
         .zui-swiper-body {
             flex-direction: column;
         }
