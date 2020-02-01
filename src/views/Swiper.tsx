@@ -2,6 +2,9 @@ import React, {useState, useEffect, useRef} from 'react';
 
 import SwiperControl from '../controller/swiper';
 import { getClassName, getValOrDefault } from '../utils/base';
+import EventControl from '../controller/event';
+
+type UseEvent = React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>;
 
 interface SwiperProps {
     children: React.ReactNodeArray,
@@ -12,32 +15,21 @@ interface SwiperProps {
 }
 
 export default function Swiper ({
-        children, width, height,
-        direction = 'x', className
-    }: SwiperProps) {
+            children, width, height,
+            direction = 'x', className
+        }: SwiperProps) {
+    
     const [curSwiperIdx, setCurTabIdx] = useState(0);
-    const [swiperControl, setSwiperControl] = useState();
     const [swiperPoint, setSwiperPoint] = useState({ x: 0, y: 0});
     const [tansitionStyle, setTansitionStyle] = useState('');
 
-    const refSwiper = useRef(null);
+    const swiperControl = new SwiperControl({
+        curIdx: 0,
+        direction,
+        len: children.length
+    });
 
-    useEffect(() => {
-        const instance = new SwiperControl({
-            curIdx: 0,
-            direction,
-            len: children.length
-        });
-
-        const refItem = refSwiper.current as any;
-        if (direction === 'x') {
-            instance.setSwiperRange(refItem.offsetWidth);
-        } else {
-            instance.setSwiperRange(refItem.offsetHeight);
-        }
-
-        setSwiperControl(instance);
-    }, [])
+    let refSwiper: HTMLDivElement | null;
 
     const swiperClassNames = {
         [className]: !!className,
@@ -49,28 +41,41 @@ export default function Swiper ({
         height: getValOrDefault(height, '')
     }
 
-    const touchStartHandler = (event: React.TouchEvent<HTMLDivElement>) => {
+    const onStartHander = (event: UseEvent) => {
         swiperControl.start(event);
         setTansitionStyle('');
     }
 
-    const touchMoveHandler = (event: React.TouchEvent<HTMLDivElement>) => {
+    const onMoveHander = (event: UseEvent) => {
         const point = swiperControl.move(event);
         setSwiperPoint(point);
     }
 
-    const touchEndHander = (event: React.TouchEvent<HTMLDivElement>) => {
-        const point = swiperControl.end(event);
+    const onEndHander = () => {
+        const point = swiperControl.end();
         setCurTabIdx(swiperControl.getIndex());
         setSwiperPoint(point);
         setTansitionStyle('all 0.3s');
     }
 
+    useEffect(() => {
+        if (direction === 'x') {
+            swiperControl.setSwiperRange(refSwiper!.offsetWidth);
+        } else {
+            swiperControl.setSwiperRange(refSwiper!.offsetHeight);
+        }
+
+        const eventControl = new EventControl(refSwiper as HTMLDivElement);
+        eventControl.createEventList(onStartHander, onMoveHander, onEndHander);
+        eventControl.listenerAllOfEle();
+
+        return () => {
+            eventControl.removeAllOfEle();
+        };
+    }, [])
+
     return <div className={'zui-swiper'.concat(getClassName(swiperClassNames))}
-        ref={refSwiper}
-        onTouchStart={touchStartHandler}
-        onTouchMove={touchMoveHandler}
-        onTouchEnd={touchEndHander}
+        ref={ele => refSwiper = ele}
         style={swiperStyle}>
         <div className="zui-swiper-body" style={{
             transform: `translate(${swiperPoint.x}px, ${swiperPoint.y}px)`,
@@ -85,21 +90,14 @@ export default function Swiper ({
     </div>
 }
 
-interface SwiperItemProps {
-    children: React.ReactNode
-}
-
-export function SwiperItem ({children}: SwiperItemProps): JSX.Element {
+Swiper.Item = ({children}: {children: React.ReactNode}): JSX.Element => {
     return <div className="zui-swiper-item">{children}</div>
 };
 
-interface SwiperNavProps {
-    len: number,
-    curActiveIdx: number
-}
-
-function SwiperNav({len, curActiveIdx}: SwiperNavProps): JSX.Element {
-
+function SwiperNav({len, curActiveIdx}: {
+            len: number,
+            curActiveIdx: number
+        }): JSX.Element {
     return <div className="zui-swiper-nav-box">
         {
             Array(len).fill('').map((val, idx) => 

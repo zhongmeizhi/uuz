@@ -16,9 +16,11 @@
     &.zui-swiper-x {
         .zui-swiper-nav-box {
             position: absolute;
-            left: 50%;
+            left: 0;
             bottom: 3px;
-            transform: translate(-50%, 0);
+            width: 100%;
+            display: flex;
+            justify-content: center;
             .zui-swiper-nav {
                 display: inline-block;
                 width: 5px;
@@ -40,12 +42,13 @@
         }
         .zui-swiper-nav-box {
             position: absolute;
-            left: auto;
             right: 3px;
-            top: 50%;
-            transform: translate(0, -50%);
-            width: 3px;
+            top: 0;
+            height: 100%;
             font-size: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             .zui-swiper-nav {
                 display: inline-block;
                 width: 3px;

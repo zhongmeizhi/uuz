@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Swiper, {SwiperItem} from '../../../views/Swiper';
+import Swiper from '../../../views/Swiper';
 
 function TestContent({val, children}) {
     return <div style={{
@@ -15,19 +15,19 @@ function TestContent({val, children}) {
 
 export default () => {
     return <div>
-        <Swiper height={'200px'} direction="y">
+        <Swiper height={'333px'} direction="y">
             {
-                [1,2,3,4,5].map(val => <SwiperItem key={val}>
+                [1,2,3,4,5].map(val => <Swiper.Item key={val}>
                     <TestContent val={val}>上下滑</TestContent>
-                </SwiperItem>)
+                </Swiper.Item>)
             }
         </Swiper>
         <br></br>
-        <Swiper height={'200px'}>
+        <Swiper height={'333px'}>
             {
-                [1,2,3,4,5].map(val => <SwiperItem key={val}>
+                [1,2,3,4,5].map(val => <Swiper.Item key={val}>
                     <TestContent val={val}>左右滑</TestContent>
-                </SwiperItem>)
+                </Swiper.Item>)
             }
         </Swiper>
     </div>

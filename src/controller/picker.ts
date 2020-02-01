@@ -25,9 +25,9 @@ class PickerControl {
         this.isAnm = false;
     }
 
-    getPageY(e: PickerEvent, touchType: string) {
+    getPageY(e: PickerEvent) {
         let pageY: number;
-        if (e.type === touchType) {
+        if (e.type.indexOf('touch') === 0) {
             pageY = (e as TouchEvent<HTMLDivElement>).touches[0].pageY;
         } else {
             pageY = (e as MouseEvent<HTMLDivElement>).pageY;
@@ -56,14 +56,14 @@ class PickerControl {
     }
 
     onStart(e: PickerEvent) {
-        this.curY = this.getPageY(e, 'touchstart');
+        this.curY = this.getPageY(e);
         this.oldY = this.colStyle.translateY;
         this.isAnm = true;
     }
 
     onMove(e: PickerEvent) {
         if (this.isAnm) {
-            const translateY = this.getPageY(e, 'touchmove') - this.curY;
+            const translateY = this.getPageY(e) - this.curY;
             this.colStyle = {
                 translateY: translateY + this.oldY,
                 transition: 'none'
