@@ -107,11 +107,9 @@ class MoveControl {
                 y: this.startPoint.y - point.pageY,
             }
             if (!this.lockDirection) {
-                event.preventDefault();
-                // 获取锁定方向
+                // event.preventDefault();
                 this.lockDirection = this._getLockDirection();
             } else if (this.direction === this.lockDirection) {
-                // 方向正确
                 event.preventDefault();
                 const dist = this.endPoint[this.direction] - this.distance[this.direction];
                 return Object.assign({x: 0, y: 0}, {[this.direction]: dist})

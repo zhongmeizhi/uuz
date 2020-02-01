@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect } from 'react';
 
 import SwiperControl from '../controller/swiper';
 import { getClassName, getValOrDefault } from '../utils/base';

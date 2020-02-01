@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
 export const Layout = styled.div`
+    max-width: 456px;
+    margin: auto;
 `
 
 export const ZHeader = styled.div`
