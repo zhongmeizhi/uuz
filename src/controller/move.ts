@@ -89,10 +89,14 @@ class MoveControl {
                 y: this.startPoint.y - point.pageY,
             }
             if (!this.lockDirection) {
-                // event.preventDefault();
+                // if (event.cancelable) {
+                //     event.preventDefault();
+                // }
                 this.lockDirection = this._getLockDirection();
             } else if (this.direction === this.lockDirection) {
-                event.preventDefault();
+                if (event.cancelable) {
+                    event.preventDefault();
+                }
                 return Object.assign({x: 0, y: 0}, {[this.direction]: this.getDist()})
             }
         }

@@ -4,6 +4,7 @@
     background: $primaryColor; /* 标准蓝色 */
     position: relative;
     height: 100%;
+    // touch-action: none;
     .zui-scroll-area {
         position: relative;
         height: 100%;
