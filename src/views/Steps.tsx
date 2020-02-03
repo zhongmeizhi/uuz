@@ -10,13 +10,13 @@ type StepType = {
 interface StepsProps {
     data: Array<StepType>,
     curStep: number,
-    row?: boolean
+    type: 'row' | 'col'
 }
 
-export default function Steps({data, curStep, row = true}: StepsProps) {
+export default function Steps({data, curStep, type = 'col' }: StepsProps) {
 
     const stepsClassName = {
-        'zui-steps-row': row
+        [`zui-steps-${type}`]: true
     }
 
     const getStepClassName = (idx: number) => {

@@ -1,4 +1,5 @@
 import { TouchEvent, MouseEvent } from 'react';
+import { getEventPoint } from '../utils/base';
 
 type PickerEvent = TouchEvent<HTMLDivElement> | MouseEvent<HTMLDivElement>;
 
@@ -25,16 +26,6 @@ class PickerControl {
         this.isAnm = false;
     }
 
-    getPageY(e: PickerEvent) {
-        let pageY: number;
-        if (e.type.indexOf('touch') === 0) {
-            pageY = (e as TouchEvent<HTMLDivElement>).touches[0].pageY;
-        } else {
-            pageY = (e as MouseEvent<HTMLDivElement>).pageY;
-        }
-        return pageY;
-    }
-
     getFinallyTranslate() {
         let adjustTranslate, adjustTranIdx;
         const curTransLateY = this.colStyle.translateY;
@@ -56,14 +47,14 @@ class PickerControl {
     }
 
     onStart(e: PickerEvent) {
-        this.curY = this.getPageY(e);
+        this.curY = getEventPoint(e).pageY;
         this.oldY = this.colStyle.translateY;
         this.isAnm = true;
     }
 
     onMove(e: PickerEvent) {
         if (this.isAnm) {
-            const translateY = this.getPageY(e) - this.curY;
+            const translateY = getEventPoint(e).pageY - this.curY;
             this.colStyle = {
                 translateY: translateY + this.oldY,
                 transition: 'none'

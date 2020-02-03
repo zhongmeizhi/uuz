@@ -29,7 +29,7 @@ function Waterfall({ data, col = 2, childRender, linkName = 'url'}: WaterfallPro
     waterfallControl.setData(data);
     waterfallControl.setCol(col);
     
-    const [dataManager, setManager] = useState(waterfallControl);
+    const [dataManager] = useState(waterfallControl);
     const [curIdx, setCurIdx] = useState(0);
 
     useEffect(() => {

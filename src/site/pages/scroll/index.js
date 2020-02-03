@@ -13,10 +13,12 @@ function TestReFresh() {
     const [num, setNum] = useState(50);
 
     const freshHandler = () => {
+        console.log('刷新')
         setNum(50)
     }
 
     const loadHandler = () => {
+        console.log('加载')
         setNum(num + 30);
     }
 

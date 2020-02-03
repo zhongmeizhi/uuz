@@ -30,6 +30,8 @@ export const ZHeader = styled.div`
 
 export const NavBody = styled.div`
     padding-top: 50px;
+    height: 100vh;
+    box-sizing: border-box;
 `
 
 export const ZBody = styled.div`

@@ -18,13 +18,15 @@ class SwiperControl extends MoveControl {
 
     swiperRange: number;
     justifyDistance: number;
+    len: number;
+    curIdx: number;
 
     constructor({curIdx = 0, direction = 'x', len, justifyDistance = 33}: SwiperControlProps) {
         super({
-            curIdx,
             direction,
-            len
         });
+        this.len = len;
+        this.curIdx = curIdx;
         this.justifyDistance = justifyDistance;
         this.swiperRange = 0;
     }
@@ -33,6 +35,10 @@ class SwiperControl extends MoveControl {
     // 所以宽高是动态获取的
     setSwiperRange(range: number) {
         this.swiperRange = range;
+    }
+
+    getIndex(): number {
+        return this.curIdx;
     }
 
     // 终止时位置调整

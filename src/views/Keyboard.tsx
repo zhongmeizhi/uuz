@@ -18,9 +18,9 @@ export default function Keyboard ({emitButton, header, onChange}: KeyboardProps)
         (typeof onChange === 'function') && onChange(keyList.join(''));
     }
 
-    const reset = () => {
-        setKeyList([] as Array<number>);
-    }
+    // const reset = () => {
+    //     setKeyList([] as Array<number>);
+    // }
 
     const keyClickHandler = (val: number) => () => {
         const keyListCopy = keyList.slice();

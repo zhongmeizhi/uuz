@@ -21,6 +21,6 @@ export default () => {
     return <div>
         <Steps data={data} curStep={3}></Steps>
         <br/>
-        <Steps data={data} row curStep={2}></Steps>
+        <Steps data={data} type="row" curStep={2}></Steps>
     </div>
 }

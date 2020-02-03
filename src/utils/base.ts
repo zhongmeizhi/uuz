@@ -159,6 +159,16 @@ function passiveSupported(): boolean {
     return passiveSupported;
 }
 
+function getEventPoint(e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>) {
+    let eventPoint: any;
+    if (e.type.indexOf('touch') === 0) {
+        eventPoint = (e as React.TouchEvent<HTMLDivElement>).touches[0];
+    } else {
+        eventPoint = (e as React.MouseEvent<HTMLDivElement>);
+    }
+    return eventPoint;
+}
+
 export {
     toRawType,
     isUndef,
@@ -175,5 +185,6 @@ export {
     typeCheck,
     singleton,
     imgReady,
-    passiveSupported
+    passiveSupported,
+    getEventPoint
 }

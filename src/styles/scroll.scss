@@ -3,14 +3,15 @@
     overflow: hidden;
     background: $primaryColor; /* 标准蓝色 */
     position: relative;
+    height: 100%;
     .zui-scroll-area {
         position: relative;
         height: 100%;
         overflow-y: auto;
         /*  扩宽空间 */
         transform: translate(0, -50px); 
-        // padding-bottom: 50px;
         margin-bottom: -50px;
+        padding-bottom: 50px;
         .zui-scroll {
             background: white;
         }
