@@ -9,11 +9,11 @@
         position: relative;
         height: 100%;
         overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
+        -webkit-overflow-scrolling: touch; // Safari 默认滚动卡顿
         /*  扩宽空间 */
-        // transform: translate(0, -50px); 
-        // margin-bottom: -50px;
-        // padding-bottom: 50px;
+        transform: translate(0, -50px); 
+        margin-bottom: -50px;
+        padding-bottom: 50px;
         .zui-scroll {
             background: white;
         }
