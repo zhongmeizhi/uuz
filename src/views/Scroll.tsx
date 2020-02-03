@@ -122,7 +122,7 @@ export default function Scroll(props: ReScrollProps) {
         style={freshAreaStyle}
       >
         {/* 刷新tip */}
-        <div className="zui-scroll-tip">{scrollTip}测试</div>
+        <div className="zui-scroll-tip">{scrollTip}</div>
         {/* 真正的内容 */}
         <div className="zui-scroll">
           {props.children}
