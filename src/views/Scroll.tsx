@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import EventControl from '../controller/event';
 import ScrollControl from '../controller/scroll';
 
+import Hammer from 'hammerjs';
+
 interface ReScrollProps {
   className?: String, // 刷新组件的 支持添加className
   freshDistance?: number, // 触发刷新需要的：下拉距离
@@ -20,7 +22,7 @@ export default function Scroll(props: ReScrollProps) {
   const [scrollControl] = useState(new ScrollControl());
   const [bindFlag, setBindFlag] = useState(0);
 
-  let refScrollArea = useRef(null);
+  let refScrollArea: HTMLDivElement | null;
   let refScrollBody = useRef(null);
 
   let freshBoxClassName = `zui-scroll-box ${props.className || ''}`;
@@ -60,7 +62,6 @@ export default function Scroll(props: ReScrollProps) {
       scrollControl.banRefresh()
     }
     scrollControl.start(event);
-    console.log('点击')
   }
 
   const onMoveHandler = (event: UseEvent): void => {
@@ -75,7 +76,6 @@ export default function Scroll(props: ReScrollProps) {
       const tip = scrollControl.markScrollTip();
       setScrollTip(tip);
     }
-    console.log(distanceY, '移动')
   }
 
   const onEndHandler = (): void => {
@@ -91,7 +91,6 @@ export default function Scroll(props: ReScrollProps) {
 
     if (typeof props.loadHandler === 'function') {
       const scrollEle = (refScrollBody.current as any);
-      console.log(bottleneck, 'bottleneck')
       if (scrollEle.scrollHeight < bottleneck + scrollEle.scrollTop) {
         props.loadHandler();
         setBindFlag(bindFlag + 1);
@@ -100,12 +99,12 @@ export default function Scroll(props: ReScrollProps) {
   }
 
   useEffect(() => {
-    setBottleneck((refScrollArea.current as any).offsetHeight + 500);
+    setBottleneck(refScrollArea!.offsetHeight + 500);
     setBindFlag(bindFlag + 1);
   }, [])
 
   useEffect(() => {
-    const eventControl = new EventControl(refScrollArea.current as any);
+    const eventControl = new EventControl(refScrollArea!);
     eventControl.createEventList(onStartHandler, onMoveHandler, onEndHandler);
     eventControl.listenerAllOfEle();
     return () => {
@@ -115,7 +114,7 @@ export default function Scroll(props: ReScrollProps) {
 
   return <div
     className={freshBoxClassName}
-    ref={refScrollArea}>
+    ref={ele => refScrollArea = ele}>
       {/* 滚动区域 */}
       <div
         className="zui-scroll-area"
@@ -123,7 +122,7 @@ export default function Scroll(props: ReScrollProps) {
         style={freshAreaStyle}
       >
         {/* 刷新tip */}
-        <div className="zui-scroll-tip">{scrollTip}</div>
+        <div className="zui-scroll-tip">{scrollTip}测试</div>
         {/* 真正的内容 */}
         <div className="zui-scroll">
           {props.children}

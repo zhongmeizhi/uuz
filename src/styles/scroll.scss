@@ -9,10 +9,11 @@
         position: relative;
         height: 100%;
         overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
         /*  扩宽空间 */
-        transform: translate(0, -50px); 
-        margin-bottom: -50px;
-        padding-bottom: 50px;
+        // transform: translate(0, -50px); 
+        // margin-bottom: -50px;
+        // padding-bottom: 50px;
         .zui-scroll {
             background: white;
         }
@@ -23,5 +24,9 @@
         background: $primaryColor; /* 标准蓝色 */
         text-align: center;
         color: white;
+
+        position: absolute;
+        top: -50px;
+        z-index: 333;
     }
 }
