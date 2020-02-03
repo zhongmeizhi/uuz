@@ -18,6 +18,7 @@ export default function Scroll(props: ReScrollProps) {
   const [freshAreaStyle, setScrollAreaStyle] = useState({transform: '', transition: ''});
   const [bottleneck, setBottleneck] = useState(0);
   const [scrollControl] = useState(new ScrollControl());
+  const [bindFlag, setBindFlag] = useState(0);
 
   let refScrollArea = useRef(null);
   let refScrollBody = useRef(null);
@@ -33,6 +34,7 @@ export default function Scroll(props: ReScrollProps) {
   
   const updateScroll = () => {
     props.freshHandler!();
+    setBindFlag(bindFlag + 1);
     setScrollAreaStyle({
       transform: `translate(0, 0)`,
       transition: 'transform 2s'
@@ -90,6 +92,7 @@ export default function Scroll(props: ReScrollProps) {
       const scrollEle = (refScrollBody.current as any);
       if (scrollEle.scrollHeight < bottleneck + scrollEle.scrollTop) {
         props.loadHandler();
+        setBindFlag(bindFlag + 1);
       }
       return;
     }
@@ -106,7 +109,7 @@ export default function Scroll(props: ReScrollProps) {
     return () => {
         eventControl.removeAllOfEle();
     }
-  })
+  }, [bindFlag])
 
   return <div
     className={freshBoxClassName}
