@@ -60,6 +60,7 @@ export default function Scroll(props: ReScrollProps) {
       scrollControl.banRefresh()
     }
     scrollControl.start(event);
+    console.log('点击')
   }
 
   const onMoveHandler = (event: UseEvent): void => {
@@ -73,8 +74,8 @@ export default function Scroll(props: ReScrollProps) {
       })
       const tip = scrollControl.markScrollTip();
       setScrollTip(tip);
-      return;
     }
+    console.log(distanceY, '移动')
   }
 
   const onEndHandler = (): void => {
@@ -90,16 +91,17 @@ export default function Scroll(props: ReScrollProps) {
 
     if (typeof props.loadHandler === 'function') {
       const scrollEle = (refScrollBody.current as any);
+      console.log(bottleneck, 'bottleneck')
       if (scrollEle.scrollHeight < bottleneck + scrollEle.scrollTop) {
         props.loadHandler();
         setBindFlag(bindFlag + 1);
       }
-      return;
     }
   }
 
   useEffect(() => {
     setBottleneck((refScrollArea.current as any).offsetHeight + 500);
+    setBindFlag(bindFlag + 1);
   }, [])
 
   useEffect(() => {

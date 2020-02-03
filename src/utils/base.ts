@@ -151,7 +151,7 @@ function passiveSupported(): boolean {
     try {
         const options = Object.defineProperty({}, 'passive', {
             get: () => {
-            passiveSupported = true;
+                return passiveSupported = true;
             },
         });
         window.addEventListener('test', null as any, options);
