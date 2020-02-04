@@ -1,4 +1,5 @@
 import { getEventPoint } from "../utils/base";
+import { passiveSupported } from "../utils/base";
 
 type Point = {
     x: number,
@@ -69,6 +70,22 @@ class MoveControl {
         return dist;
     }
 
+    preventDefault(event: UseEvent) {
+        if (event.cancelable) { // 是否可以取消默认事件
+            event.preventDefault();
+        }
+    }
+
+    freezeBody() {
+        const isPassiveSupported = passiveSupported();
+        const willPreventDefault = isPassiveSupported ? { passive: false } : false;
+        document.body.addEventListener('touchmove', (this.preventDefault as any), willPreventDefault);
+    }
+
+    unfreezeBody() {
+        document.body.removeEventListener('touchmove', (this.preventDefault as any));
+    }
+
     start(event: UseEvent): void {
         event.stopPropagation();
         this.isAnm = true;
@@ -94,7 +111,7 @@ class MoveControl {
                 // }
                 this.lockDirection = this._getLockDirection();
             } else if (this.direction === this.lockDirection) {
-                if (event.cancelable) {
+                if (event.cancelable) { // 是否可以取消默认事件
                     event.preventDefault();
                 }
                 return Object.assign({x: 0, y: 0}, {[this.direction]: this.getDist()})
