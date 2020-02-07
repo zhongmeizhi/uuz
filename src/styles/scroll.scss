@@ -2,7 +2,7 @@
 .zui-scroll-box {
     overflow: hidden;
     // background: $primaryColor; /* 标准蓝色 */
-    background-image: linear-gradient(#108ee9 49%, #108ee9 50%, grey 51%, grey);
+    background-image: linear-gradient(#108ee9 49%, #108ee9 50%, white 51%, white);
     position: relative;
     height: 100%;
     // touch-action: none;
@@ -28,6 +28,6 @@
     }
     .zui-scroll-load-tip {
         text-align: center;
-        line-height: 30px;
+        line-height: 26px;
     }
 }

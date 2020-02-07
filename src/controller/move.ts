@@ -65,26 +65,27 @@ class MoveControl {
         return lockDirection;
     }
 
-    getDist() {
+    // 移动过程中的移动距离 = 最后停留点 - 触摸点移动距离
+    getMoveDist() {
         const dist = this.endPoint[this.direction] - this.distance[this.direction];
         return dist;
     }
 
-    preventDefault(event: UseEvent) {
-        if (event.cancelable) { // 是否可以取消默认事件
-            event.preventDefault();
-        }
-    }
+    // preventDefault(event: UseEvent) {
+    //     if (event.cancelable) { // 是否可以取消默认事件
+    //         event.preventDefault();
+    //     }
+    // }
 
-    freezeBody() {
-        const isPassiveSupported = passiveSupported();
-        const willPreventDefault = isPassiveSupported ? { passive: false } : false;
-        document.body.addEventListener('touchmove', (this.preventDefault as any), willPreventDefault);
-    }
+    // freezeBody() {
+    //     const isPassiveSupported = passiveSupported();
+    //     const willPreventDefault = isPassiveSupported ? { passive: false } : false;
+    //     document.body.addEventListener('touchmove', (this.preventDefault as any), willPreventDefault);
+    // }
 
-    unfreezeBody() {
-        document.body.removeEventListener('touchmove', (this.preventDefault as any));
-    }
+    // unfreezeBody() {
+    //     document.body.removeEventListener('touchmove', (this.preventDefault as any));
+    // }
 
     start(event: UseEvent): void {
         event.stopPropagation();
@@ -97,6 +98,7 @@ class MoveControl {
         }
     }
 
+    // 移动时：获取移动距离
     move(event: UseEvent): Point {
         if (this.isAnm) {
             event.stopPropagation();
@@ -114,11 +116,14 @@ class MoveControl {
                 if (event.cancelable) { // 是否可以取消默认事件
                     event.preventDefault();
                 }
-                return Object.assign({x: 0, y: 0}, {[this.direction]: this.getDist()})
+                return Object.assign({x: 0, y: 0}, {[this.direction]: this.getMoveDist()})
             }
         }
         // 如果return movePoint 那么位置不变
-        return this.endPoint;
+        return {
+            x: 0,
+            y: 0
+        };
     }
 
     end(): Point {

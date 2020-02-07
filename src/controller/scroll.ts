@@ -14,6 +14,7 @@ class ScrollControl extends MoveControl {
     Refresh_Distance: number;
     distanceStatus?: DistanceStatus;
     isRefreshable: boolean;
+    beginTime?: number;
 
     constructor() {
         super({direction: 'y'});
@@ -22,11 +23,29 @@ class ScrollControl extends MoveControl {
     }
 
     _getFinalEndPonit(): Point {
-        this.distanceStatus = DistanceStatus.EMPTY;
         return {
             x: 0,
             y: 0
         };
+    }
+
+    markBeginTime() {
+        this.beginTime = Date.now();
+    }
+
+    _getTimeTotal(): number {
+        const endTime = Date.now();
+        const moveTime = endTime - this.beginTime!;
+        return moveTime;
+    }
+
+    getExpectMat(): number {
+        const distanceTotal = this.getMoveDist();
+        const moveTime = this._getTimeTotal();
+        // 速度 = 路程 / 时间
+        const speed = distanceTotal / moveTime;
+        // 计算期望缓冲距离
+        return speed * 234;
     }
 
     banRefresh() {
@@ -37,9 +56,13 @@ class ScrollControl extends MoveControl {
         this.isRefreshable = true;
     }
 
+    resetRefreshStatus() {
+        this.distanceStatus = DistanceStatus.EMPTY;
+    }
+
     markScrollTip(): string {
         let tip = '';
-        const dist = this.getDist();
+        const dist = this.getMoveDist();
         if (dist > this.Refresh_Distance) {
             this.distanceStatus = DistanceStatus.DONE;
             tip = '松开刷新';

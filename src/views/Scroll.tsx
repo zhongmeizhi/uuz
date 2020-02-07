@@ -23,14 +23,13 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
   Begin_Distance: number;
   End_Distance: number;
   oldDistance: number;
-  bottleneck: number;
-  beginTime: number;
+  scrollBottleneck: number;
 
   constructor(props: ReScrollProps) {
     super(props);
     this.freshBoxClassName = `zui-scroll-box ${props.className || ''}`;
     this.Begin_Distance = -50;
-    this.End_Distance = 30;
+    this.End_Distance = 26;
     this.scrollControl = new ScrollControl();
     this.freshStore = {
       'update': this.updateScroll,
@@ -38,8 +37,7 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
       'none': () => {}
     }
     this.oldDistance = 0;
-    this.bottleneck = 0;
-    this.beginTime = 0;
+    this.scrollBottleneck = 0;
     // state
     this.state = {
       transform: {
@@ -73,10 +71,31 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
     }, 300);
   }
 
-  getBottleneck = () => {
+  // 可滚动距离
+  getScrollBottleneck = () => {
     const body = this.refScrollBody!.offsetHeight;
     const box = this.refScrollArea!.offsetHeight;
     return  body - box + this.Begin_Distance;
+  }
+
+  //  滚动缓冲
+  scrollMat() {
+    const expectMat = this.scrollControl.getExpectMat();
+    let finalPonit = this.state.transform.distance + expectMat;
+    if (finalPonit > this.Begin_Distance) {
+      // 不能低于起点
+      finalPonit = this.Begin_Distance
+    } else if (finalPonit < -this.scrollBottleneck) {
+      // 不能超过终点
+      finalPonit = -this.scrollBottleneck;
+    }
+    
+    this.setState({
+      transform: {
+        distance: finalPonit,
+        time: 0.5
+      }
+    })
   }
 
   onStartHandler = (event: UseEvent): void => {
@@ -87,8 +106,8 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
     }
     this.scrollControl.start(event);
     this.oldDistance = this.state.transform.distance;
-    this.bottleneck = this.getBottleneck();
-    this.beginTime = Date.now();
+    this.scrollBottleneck = this.getScrollBottleneck();
+    this.scrollControl.markBeginTime();
   }
 
   onMoveHandler = (event: UseEvent) => {
@@ -98,18 +117,16 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
     // 下拉动画
     if (distanceY > 0 && this.scrollControl.isRefreshable) {
       const scrollTip = this.scrollControl.markScrollTip();
-      this.setState({
-        scrollTip
-      })
+      this.setState({ scrollTip })
     }
     const newDistance = this.oldDistance + distanceY;
     let finalDistance;
     if (newDistance > this.Begin_Distance && !this.scrollControl.isRefreshable) {
       // 顶点
       finalDistance = this.Begin_Distance;
-    } else if (this.bottleneck <= (-newDistance)) {
+    } else if (this.scrollBottleneck <= (-newDistance)) {
       // 终点
-      finalDistance = -this.bottleneck - this.End_Distance;
+      finalDistance = -this.scrollBottleneck - this.End_Distance;
     } else {
       if (distanceY > 0) {
         // 下拉刷新移动一半
@@ -127,22 +144,22 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
   }
 
   onEndHandler = (): void => {
+    this.scrollControl.end();
     // 需要刷新的时候执行 传入的刷新方法
     if (typeof this.props.freshHandler === 'function') {
       const status = this.scrollControl.getUpdateStatus();
       if (status !== 'none') {
         this.freshStore[status]();
-        this.scrollControl.end();
+        this.scrollControl.resetRefreshStatus();
         return;
       };
     }
 
-    const endTime = Date.now();
-    const moveTime = endTime - this.beginTime;
-    console.log(this.oldDistance, this.state.transform.distance)
+    // 滚动缓冲
+    this.scrollMat();
 
     if (typeof this.props.loadHandler === 'function') {
-      if (this.bottleneck <= (-this.state.transform.distance)) {
+      if (this.scrollBottleneck <= (-this.state.transform.distance)) {
         this.props.loadHandler();
       }
     }
@@ -204,7 +221,7 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
 
 //   const [scrollTip, setScrollTip] = useState('');
 //   const [transform, setTransform] = useState({distance: Begin_Distance, time: 0});
-//   const [bottleneck, setBottleneck] = useState(0);
+//   const [scrollBottleneck, setScrollBottleneck] = useState(0);
 //   const [scrollControl] = useState(new ScrollControl());
 //   const [bindFlag, setBindFlag] = useState(0);
 
@@ -286,8 +303,8 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
 
 //     if (typeof props.loadHandler === 'function') {
 //       const scrollEle = (refScrollBody.current as any);
-//       console.log(scrollEle.offsetHeight, bottleneck, (-transform.distance))
-//       if (scrollEle.offsetHeight <= bottleneck + (-transform.distance)) {
+//       console.log(scrollEle.offsetHeight, scrollBottleneck, (-transform.distance))
+//       if (scrollEle.offsetHeight <= scrollBottleneck + (-transform.distance)) {
 //         props.loadHandler();
 //         setBindFlag(bindFlag + 1);
 //       }
@@ -295,7 +312,7 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
 //   }
 
 //   useEffect(() => {
-//     setBottleneck(refScrollArea!.offsetHeight);
+//     setScrollBottleneck(refScrollArea!.offsetHeight);
 //     setBindFlag(bindFlag + 1);
 //   }, [])
 
