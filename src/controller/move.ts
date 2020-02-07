@@ -41,6 +41,12 @@ class MoveControl {
         throw Error('_getFinalEndPonit 需要被重写');
     }
 
+    // 起点重置项
+    _resetSomething() {
+        // 需要时重写
+        this.distance[this.direction] = 0;
+    }
+
     // 方向锁定
     _getLockDirection(): Direction | null {
         const absX = Math.abs(this.distance.x);
@@ -96,6 +102,7 @@ class MoveControl {
             x: point.pageX,
             y: point.pageY
         }
+        this._resetSomething();
     }
 
     // 移动时：获取移动距离
@@ -120,10 +127,7 @@ class MoveControl {
             }
         }
         // 如果return movePoint 那么位置不变
-        return {
-            x: 0,
-            y: 0
-        };
+        return this.endPoint;
     }
 
     end(): Point {

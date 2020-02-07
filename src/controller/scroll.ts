@@ -45,7 +45,8 @@ class ScrollControl extends MoveControl {
         // 速度 = 路程 / 时间
         const speed = distanceTotal / moveTime;
         // 计算期望缓冲距离
-        return speed * 234;
+        const mat = speed * 234;
+        return mat;
     }
 
     banRefresh() {

@@ -24,13 +24,14 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
   End_Distance: number;
   oldDistance: number;
   scrollBottleneck: number;
+  // scrolling: boolean;
 
   constructor(props: ReScrollProps) {
     super(props);
     this.freshBoxClassName = `zui-scroll-box ${props.className || ''}`;
     this.Begin_Distance = -50;
     this.End_Distance = 26;
-    this.scrollControl = new ScrollControl();
+    this.scrollControl = new ScrollControl(); // 滚动控制器只返回距离和状态，不操作dom
     this.freshStore = {
       'update': this.updateScroll,
       'reset': this.hideScrollTip,
@@ -38,6 +39,7 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
     }
     this.oldDistance = 0;
     this.scrollBottleneck = 0;
+    // this.scrolling = false
     // state
     this.state = {
       transform: {
@@ -59,6 +61,7 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
 
   updateScroll = () => {
     this.props.freshHandler!();
+    // this.scrolling = true;
     this.setState({
       scrollTip: '刷新完成>>>',
       transform: {
@@ -79,32 +82,34 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
   }
 
   //  滚动缓冲
-  scrollMat() {
+  scrollMat = () => {
     const expectMat = this.scrollControl.getExpectMat();
-    let finalPonit = this.state.transform.distance + expectMat;
-    if (finalPonit > this.Begin_Distance) {
-      // 不能低于起点
-      finalPonit = this.Begin_Distance
-    } else if (finalPonit < -this.scrollBottleneck) {
-      // 不能超过终点
-      finalPonit = -this.scrollBottleneck;
-    }
-    
-    this.setState({
-      transform: {
-        distance: finalPonit,
-        time: 0.5
+    if (expectMat) {
+      // this.scrolling = true;
+      let finalPonit = this.state.transform.distance + expectMat;
+      if (finalPonit > this.Begin_Distance) {
+        // 不能低于起点
+        finalPonit = this.Begin_Distance
+      } else if (finalPonit < -this.scrollBottleneck) {
+        // 不能超过终点
+        finalPonit = -this.scrollBottleneck;
       }
-    })
+      this.setState({
+        transform: {
+          distance: finalPonit,
+          time: 0.5
+        }
+      })
+    }
   }
 
   onStartHandler = (event: UseEvent): void => {
+    this.scrollControl.start(event);
     if (this.state.transform.distance === this.Begin_Distance) {
       this.scrollControl.canRefresh()
     } else {
       this.scrollControl.banRefresh()
     }
-    this.scrollControl.start(event);
     this.oldDistance = this.state.transform.distance;
     this.scrollBottleneck = this.getScrollBottleneck();
     this.scrollControl.markBeginTime();
@@ -165,6 +170,10 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
     }
   }
 
+  // transitionEndHandler = () => {
+  //   this.scrolling = false;
+  // }
+
   componentDidMount() {
     this.eventControl = new EventControl(this.refScrollArea!);
     this.eventControl.createEventList(this.onStartHandler, this.onMoveHandler, this.onEndHandler);
@@ -178,6 +187,7 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
   render() {
     return <div
       className={this.freshBoxClassName}
+      // onTransitionEnd={this.transitionEndHandler}
       ref={ele => this.refScrollArea = ele}>
         {/* 滚动区域 */}
         <div
