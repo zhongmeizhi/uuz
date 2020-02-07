@@ -104,6 +104,12 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
   }
 
   onStartHandler = (event: UseEvent): void => {
+    this.setState({
+      transform: {
+        distance: this.state.transform.distance,
+        time: 0
+      }
+    })
     this.scrollControl.start(event);
     if (this.state.transform.distance === this.Begin_Distance) {
       this.scrollControl.canRefresh()
