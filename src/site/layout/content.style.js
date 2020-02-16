@@ -12,8 +12,11 @@ export const ZHeader = styled.div`
     color: grey;
     position: fixed;
     top: 0;
-    left: 0;
     width: 100%;
+    max-width: 456px;
+    box-sizing: border-box;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 6;
     background: #f5f5f9;
     img {

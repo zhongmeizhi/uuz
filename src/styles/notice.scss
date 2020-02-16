@@ -1,0 +1,20 @@
+.zui-notice {
+    font-size: 14px;
+    color: #f76a24;
+    background: #fefcec;
+    line-height: 36px;
+    padding: 0 15px;
+    display: flex;
+    .zui-notice-icon {
+        width: 15px;
+        line-height: 36px;
+        margin-right: 4px;
+    }
+    .zui-notice-box {
+        flex: 1;
+        overflow: hidden;
+        .zui-notice-item {
+            white-space: nowrap;
+        }
+    }
+}

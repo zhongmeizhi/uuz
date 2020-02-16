@@ -35,6 +35,7 @@ const navList = [
 	createNav('步骤条', 'step'),
 	createNav('滑块', 'swiper'),
 	createNav('开关', 'switch'),
+	createNav('通知栏', 'notice'),
 	createNav('标签栏', 'tabs'),
 	createNav('瀑布流', 'waterfall'),
 ]
