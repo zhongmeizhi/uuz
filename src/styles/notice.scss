@@ -13,8 +13,10 @@
     .zui-notice-box {
         flex: 1;
         overflow: hidden;
+        white-space: nowrap;
         .zui-notice-item {
             white-space: nowrap;
+            display: inline-block;
         }
     }
 }
