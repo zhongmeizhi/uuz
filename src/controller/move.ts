@@ -77,24 +77,7 @@ class MoveControl {
         return dist;
     }
 
-    // preventDefault(event: UseEvent) {
-    //     if (event.cancelable) { // 是否可以取消默认事件
-    //         event.preventDefault();
-    //     }
-    // }
-
-    // freezeBody() {
-    //     const isPassiveSupported = passiveSupported();
-    //     const willPreventDefault = isPassiveSupported ? { passive: false } : false;
-    //     document.body.addEventListener('touchmove', (this.preventDefault as any), willPreventDefault);
-    // }
-
-    // unfreezeBody() {
-    //     document.body.removeEventListener('touchmove', (this.preventDefault as any));
-    // }
-
     start(event: UseEvent): void {
-        event.stopPropagation();
         this.isAnm = true;
         const point = getEventPoint(event);
         this.lockDirection = null;
@@ -108,21 +91,18 @@ class MoveControl {
     // 移动时：获取移动距离
     move(event: UseEvent): Point {
         if (this.isAnm) {
-            event.stopPropagation();
             const point = getEventPoint(event);
             this.distance = {
                 x: this.startPoint.x - point.pageX,
                 y: this.startPoint.y - point.pageY,
             }
             if (!this.lockDirection) {
-                // if (event.cancelable) {
-                //     event.preventDefault();
-                // }
                 this.lockDirection = this._getLockDirection();
-            } else if (this.direction === this.lockDirection) {
-                if (event.cancelable) { // 是否可以取消默认事件
+                if (this.direction === 'y' && event.preventDefault) {
                     event.preventDefault();
-                }
+                } 
+            } else if (this.direction === this.lockDirection) {
+                event.preventDefault && event.preventDefault();
                 return Object.assign({x: 0, y: 0}, {[this.direction]: this.getMoveDist()})
             }
         }

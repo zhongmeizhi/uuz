@@ -16,13 +16,18 @@ class EventControl {
     }
 
     createEventList(start: Function, move: Function, end: Function) {
-        this.eventList =  {
-            touchstart: start,
-            mousedown: start,
-            touchmove: move,
-            mousemove: move,
-            touchend: end,
-            mouseup: end,
+        if ('ontouchstart' in window) {
+            this.eventList =  {
+                touchstart: start,
+                touchmove: move,
+                touchend: end,
+            }
+        } else {
+            this.eventList =  {
+                mousedown: start,
+                mousemove: move,
+                mouseup: end,
+            }
         }
     }
 

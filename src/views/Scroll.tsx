@@ -15,7 +15,7 @@ type UseEvent = React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivEleme
 
 export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
   freshBoxClassName: string;
-  refScrollArea?: HTMLDivElement | null;
+  refScrollWarp?: HTMLDivElement | null;
   refScrollBody?: HTMLDivElement | null;
   eventControl?: EventControl;
   scrollControl: ScrollControl;
@@ -77,7 +77,7 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
   // 可滚动距离
   getScrollBottleneck = () => {
     const body = this.refScrollBody!.offsetHeight;
-    const box = this.refScrollArea!.offsetHeight;
+    const box = this.refScrollWarp!.offsetHeight;
     return  body - box + this.Begin_Distance;
   }
 
@@ -111,14 +111,11 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
       }
     })
     this.scrollControl.start(event);
-    if (this.state.transform.distance === this.Begin_Distance) {
-      this.scrollControl.canRefresh()
-    } else {
-      this.scrollControl.banRefresh()
-    }
+    const isRefreshAble = this.state.transform.distance === this.Begin_Distance;
+    this.scrollControl.setRefreshAble(isRefreshAble);
+    
     this.oldDistance = this.state.transform.distance;
     this.scrollBottleneck = this.getScrollBottleneck();
-    this.scrollControl.markBeginTime();
   }
 
   onMoveHandler = (event: UseEvent) => {
@@ -132,15 +129,13 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
     }
     const newDistance = this.oldDistance + distanceY;
     let finalDistance;
-    if (newDistance > this.Begin_Distance && !this.scrollControl.isRefreshable) {
-      // 顶点
+    if (!this.scrollControl.isRefreshable &&
+        newDistance > this.Begin_Distance) { // 顶点
       finalDistance = this.Begin_Distance;
-    } else if (this.scrollBottleneck <= (-newDistance)) {
-      // 终点
+    } else if (this.scrollBottleneck <= (-newDistance)) { // 终点
       finalDistance = -this.scrollBottleneck - this.End_Distance;
     } else {
-      if (distanceY > 0) {
-        // 下拉刷新移动一半
+      if (distanceY > 0) { // 下拉刷新移动一半
         finalDistance = this.oldDistance + distanceY/2;
       } else {
         finalDistance = newDistance;
@@ -181,7 +176,7 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
   // }
 
   componentDidMount() {
-    this.eventControl = new EventControl(this.refScrollArea!);
+    this.eventControl = new EventControl(this.refScrollWarp!);
     this.eventControl.createEventList(this.onStartHandler, this.onMoveHandler, this.onEndHandler);
     this.eventControl.listenerAllOfEle();
   }
@@ -194,7 +189,7 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
     return <div
       className={this.freshBoxClassName}
       // onTransitionEnd={this.transitionEndHandler}
-      ref={ele => this.refScrollArea = ele}>
+      ref={ele => this.refScrollWarp = ele}>
         {/* 滚动区域 */}
         <div
           className="zui-scroll-area"
@@ -241,7 +236,7 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
 //   const [scrollControl] = useState(new ScrollControl());
 //   const [bindFlag, setBindFlag] = useState(0);
 
-//   let refScrollArea: HTMLDivElement | null;
+//   let refScrollWarp: HTMLDivElement | null;
 //   let refScrollBody = useRef(null);
 
 //   let freshBoxClassName = `zui-scroll-box ${props.className || ''}`;
@@ -328,12 +323,12 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
 //   }
 
 //   useEffect(() => {
-//     setScrollBottleneck(refScrollArea!.offsetHeight);
+//     setScrollBottleneck(refScrollWarp!.offsetHeight);
 //     setBindFlag(bindFlag + 1);
 //   }, [])
 
 //   useEffect(() => {
-//     const eventControl = new EventControl(refScrollArea!);
+//     const eventControl = new EventControl(refScrollWarp!);
 //     eventControl.createEventList(onStartHandler, onMoveHandler, onEndHandler);
 //     eventControl.listenerAllOfEle();
 //     return () => {
@@ -343,7 +338,7 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
 
 //   return <div
 //     className={freshBoxClassName}
-//     ref={ele => refScrollArea = ele}>
+//     ref={ele => refScrollWarp = ele}>
 //       {/* 滚动区域 */}
 //       <div
 //         className="zui-scroll-area"

@@ -29,7 +29,12 @@ class ScrollControl extends MoveControl {
         };
     }
 
-    markBeginTime() {
+    _resetSomething() {
+        this._markBeginTime();
+        this.distance[this.direction] = 0;
+    }
+
+    _markBeginTime() {
         this.beginTime = Date.now();
     }
 
@@ -49,12 +54,8 @@ class ScrollControl extends MoveControl {
         return mat;
     }
 
-    banRefresh() {
-        this.isRefreshable = false;
-    }
-
-    canRefresh() {
-        this.isRefreshable = true;
+    setRefreshAble(isRefreshable: boolean) {
+        this.isRefreshable = isRefreshable;
     }
 
     resetRefreshStatus() {
