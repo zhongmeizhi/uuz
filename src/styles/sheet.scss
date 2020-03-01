@@ -11,12 +11,14 @@
         height: 100%;
     }
     .zui-sheet-area {
-        position: absolute;
+        position: fixed;
         bottom: 0;
         width: 100%;
         background: white;
         z-index: 3;
         transition: all 0.3s;
+        padding-bottom: constant(safe-area-inset-bottom);
+        padding-bottom: env(safe-area-inset-bottom);
         .zui-sheet-header {
             line-height: 38px;
             display: flex;

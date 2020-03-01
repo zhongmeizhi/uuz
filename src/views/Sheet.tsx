@@ -1,5 +1,7 @@
-import React, { useState, ReactNode, MouseEvent } from 'react';
+import React, { useState, ReactNode, MouseEvent, useEffect } from 'react';
 import Transition from './Transition';
+
+import { ShowSomething } from '../views-show/dialog';
 
 interface SheetProps {
     children: ReactNode,
@@ -12,6 +14,7 @@ interface SheetProps {
 
 export default  function Sheet(props: SheetProps) {
     const [isShow, setIsShow] = useState(false);
+    const [showSomething] = useState(new ShowSomething());
 
     const modalHandler = () => {
         setIsShow(false);
@@ -30,9 +33,20 @@ export default  function Sheet(props: SheetProps) {
         closeSheet();
     }
 
-    
-    return <>
-        <div onClick={() => setIsShow(true)}>{props.button}</div>
+    const preventHandler = (e: React.TouchEvent<HTMLElement>) => {
+        console.log(e.preventDefault, 11111)
+        e.preventDefault && e.preventDefault();
+    }
+
+    useEffect(() => {
+        showSomething.renderElement(SheetContent);
+    });
+
+    useEffect(() => {
+        return () => showSomething.destroy();
+    }, [])
+
+    const SheetContent = (
         <Transition name="zui-sheet" isShow={isShow}>
             <div className='zui-sheet-box'>
                 <div className="zui-sheet-mask" onClick={modalHandler}></div>
@@ -55,5 +69,9 @@ export default  function Sheet(props: SheetProps) {
                 </div>
             </div>
         </Transition>
+    )
+    
+    return <>
+        <div onClick={() => setIsShow(true)}>{props.button}</div>
     </>
 }

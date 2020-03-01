@@ -79,6 +79,9 @@ class ShowConfirm extends ShowSomething {
 /*
     导出
  */
+export {
+    ShowSomething
+};
 export const dialog = new ShowDialog();
 export const alert = new ShowAlert();
 export const confirm = new ShowConfirm();
