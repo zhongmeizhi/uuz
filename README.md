@@ -36,9 +36,10 @@
 * [x] Checkbox
 * [x] Switch
 * [x] Keyboard
+* [x] Notice
 * [ ] Progress
-* [x] Transition // 动画组件
 * [ ] List
+* [x] Transition // 动画组件
 * [x] Swiper // 滑块
 * [x] Waterfall // 瀑布流
 

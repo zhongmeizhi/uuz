@@ -1,59 +1,80 @@
 import React, { useState, useRef, useEffect } from 'react'
-
 import { ReactComponent as NoticeSvg } from '../static/notice.svg'
+import { getClassName } from '../utils/base';
 
 interface NoticeProps {
-    text: string,
-    scroll: boolean
+	className?: string,
+	text: string,
+	isScroll: boolean,
+	speed: number,
+	suffix?: React.ReactNode
 }
 
-export default function Notice({text, scroll = true} : NoticeProps) {
+export default function Notice({ className = '', text, isScroll = true, speed = 18, suffix }: NoticeProps) {
 
-    const [translateX, setTranslateX] = useState(0);
-    const [refWidth, setWidth] = useState();
-    const refItem = useRef(null);
+	const [translateX, setTranslateX] = useState(0);
+	const [scrollStore, setScrollStore] = useState({width: 0, isCopy: false});
+	const refNotice = useRef(null);
+	const refItem = useRef(null);
 
-    let intervalHandler: number;
+	let intervalHandler: NodeJS.Timeout;
+	const gapWidth = 66;
 
-    function step() {
-        if (refWidth === -translateX) {
-            setTranslateX(0);
-        } else {
-            setTranslateX(translateX - 1);
-        }
-        intervalHandler = window.requestAnimationFrame(step);
-        // intervalHandler = setTimeout(step, 120);
+	const noticeClassNames = {
+        [className]: !!className,
+        [`zui-notice-quiet`]: !isScroll
     }
-      
-    useEffect(() => {
-        if (scroll) {
-            setWidth((refItem.current as any).offsetWidth);
 
-            intervalHandler = window.requestAnimationFrame(step);
-            // setTimeout(step, 120);
-        }
-        return () => {
-            intervalHandler && window.cancelAnimationFrame(intervalHandler)
-        };
-    }, [translateX])
+	function run() {
+		if (scrollStore.width <= -translateX) {
+			setTranslateX(0);
+		} else {
+			setTranslateX(translateX - 1);
+		}
+	}
+	
+	useEffect(() => {
+		if (scrollStore.isCopy) {
+			intervalHandler = setTimeout(run, speed);
+		}
+	}, [translateX])
 
-    return <div className="zui-notice">
-        <div className="zui-notice-icon">
-            <NoticeSvg
-                width="15px"
-                height="auto"
-                fill="red"
-            ></NoticeSvg>
-        </div>
-        <div className="zui-notice-box">
-            <div style={{transform: `translateX(${translateX}px)`}}>
-                <div className="zui-notice-item" ref={refItem}>
-                    {text}
-                </div>
-                <div className="zui-notice-item">
-                    {text}
-                </div>
-            </div>
-        </div>
-    </div>
+	useEffect(() => {
+		if (isScroll) {
+			const itemWidth = (refItem.current as any).offsetWidth;
+			const NoticeWidth = (refNotice.current as any).offsetWidth;
+			setScrollStore({
+				width: itemWidth + gapWidth,
+				isCopy: itemWidth > NoticeWidth
+			});
+			setTranslateX(1);
+		}
+		return () => {
+			intervalHandler && clearTimeout(intervalHandler)
+		};
+	}, [])
+
+	return <div className={"zui-notice".concat(getClassName(noticeClassNames))}>
+		<NoticeSvg
+			className="zui-notice-icon"
+			width="15px"
+			height="36px"
+			fill="red"
+		></NoticeSvg>
+		<div className="zui-notice-box" ref={refNotice}>
+			<div style={{ transform: `translateX(${translateX}px)` }}>
+				<div
+					ref={refItem}
+					className="zui-notice-item"
+				>{text}</div>
+				{
+					scrollStore.isCopy ? <>
+						<div className="zui-notice-item" style={{width: `${gapWidth}px`}}></div>
+						<div className="zui-notice-item">{text}</div>
+					</> : null
+				}
+			</div>
+		</div>
+		{suffix}
+	</div>
 }
