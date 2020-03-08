@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import WaterfallControl from '../controller/waterfall';
 
-interface WaterfallProps {
+import { imgReady } from '../utils/base';
+import TrickleControl from '../controller/trickle';
+
+interface TrickleProps {
     data: Array<any>,
     col: number,
     childRender: any
@@ -13,10 +15,8 @@ interface WaterfallProps {
     1. 限制图片宽高
     2. 已知图片宽高
     3. 等待图片加载获取宽高
-
-    
 */
-function Waterfall({ data, col = 2, childRender}: WaterfallProps) {
+function Trickle({ data, col = 2, childRender }: TrickleProps) {
 
     let refFlag: Array<HTMLDivElement | any> = [];
     
@@ -24,7 +24,7 @@ function Waterfall({ data, col = 2, childRender}: WaterfallProps) {
     const initColData = Array(col).fill('col').map(() => []) as Array<Array<any>>;
     const [colData, setCol] = useState(initColData);
 
-    const waterfallControl = new WaterfallControl();
+    const waterfallControl = new TrickleControl();
     waterfallControl.setData(data);
     waterfallControl.setCol(col);
     
@@ -32,16 +32,18 @@ function Waterfall({ data, col = 2, childRender}: WaterfallProps) {
     const [curIdx, setCurIdx] = useState(0);
 
     useEffect(() => {
-        const colWidth = refFlag[0].offsetWidth;
-        // 通过列的宽度去折合计算图片的宽高
-        waterfallControl.setColWidth(colWidth);
-    }, [])
-
-    useEffect(() => {
         if (curIdx < len - 1) {
-            dataManager.pushDataToLowCol(refFlag);
-            setCol(dataManager.getColData());
-            setCurIdx(dataManager.getCurIdx());
+            if (curIdx < col - 1) {
+                dataManager.setFirstRowData()
+                setCol(dataManager.getColData());
+            } else {
+                dataManager.pushDataToLowCol(refFlag);
+                setCol(dataManager.getColData());
+            }
+            const dataIdx = dataManager.getCurIdx();
+            imgReady(data[dataIdx].url, () => {
+                setCurIdx(dataIdx);
+            })
         }
     }, [curIdx])
 
@@ -56,10 +58,6 @@ function Waterfall({ data, col = 2, childRender}: WaterfallProps) {
                     val.map((sub, subIdx) => <div key={`${idx}-${subIdx}`}
                         className="zui-waterfall-item">
                         <img
-                            style={{
-                                width: sub.width + 'px',
-                                height: sub.height + 'px'
-                            }}
                             className="zui-waterfall-img"
                             src={sub.url}
                         />
@@ -77,4 +75,4 @@ function Waterfall({ data, col = 2, childRender}: WaterfallProps) {
     </div>
 }
 
-export default Waterfall;
+export default Trickle;

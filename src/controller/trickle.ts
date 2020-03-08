@@ -1,12 +1,11 @@
 
-class WaterfallControl {
+class TrickleControl {
 
     data: Array<any>;
     // len: number;
     colData: Array<Array<any>>;
     col: number;
     curIdx: number;
-    colWidth: number;
 
     constructor() {
         this.data = [];
@@ -14,7 +13,6 @@ class WaterfallControl {
         this.colData = [];
         this.col = 0;
         this.curIdx = 0;
-        this.colWidth = 0;
     }
 
     getColData() {
@@ -23,10 +21,6 @@ class WaterfallControl {
 
     getCurIdx(): number {
         return this.curIdx;
-    }
-
-    setColWidth(width: number) {
-        this.colWidth = width;
     }
 
     setCol(col: number) {
@@ -42,6 +36,13 @@ class WaterfallControl {
         this.curIdx += num; 
     }
 
+    setFirstRowData() {
+        this.colData = this.data.slice(0, this.col).map(val => [val]);
+        if (this.colData.length) {
+            this.curIdx = this.colData.length - 1;
+        }
+    }
+
     _findLowCol(elements: Array<HTMLDivElement>) {
         const heightList = elements.map(ele => ele.offsetTop);
         const miniHeight = Math.min(...heightList);
@@ -49,26 +50,11 @@ class WaterfallControl {
         return targetIdx;
     }
 
-    _formatSize(width: number, height: number) {
-        const rate = this.colWidth / width;
-        return {
-            width: this.colWidth,
-            height: height * rate
-        }
-    }
-
     pushDataToLowCol(elements: Array<HTMLDivElement>) {
         const targetIdx = this._findLowCol(elements);
         this.addCurIdx();
-        if (!this.colData[targetIdx]) {
-            this.colData = this.data.slice(0, this.col).map(val => []);
-        }
-        let target = this.data[this.curIdx];
-        const size = this._formatSize(target.width, target.height);
-        target.width = size.width;
-        target.height = size.height;
-        this.colData[targetIdx].push(target);
+        this.colData[targetIdx].push(this.data[this.curIdx]);
     }
 }
 
-export default WaterfallControl;
+export default TrickleControl;

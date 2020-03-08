@@ -1,26 +1,31 @@
 import React from 'react';
 import Waterfall from '../../../views/Waterfall'
 
-const data = Array(21).fill('data').map((val, idx) => {
-    return {
-        url: `https://zhongmeizhi.github.io/static/test/${20-idx}.jpg`,
-        name: `瀑布流`,
-        desc: `${idx}`
-    }
-})
+import data from './data.js'
 
 
 function SubBody(props) {
     return <div>
-        <img className="test-waterfall-img" alt="瀑布流"
-            src={props.url}></img>
-        <p className="zui-waterfall-txt">{props.name}</p>
-        <p className="zui-waterfall-txt">{props.desc}</p>
+        <p className="zui-waterfall-txt">{props.txt}</p>
     </div>
 }
 
 export default () => {
+
+    function getSize(url) {
+        const sizeReg = url.match(/__(\d{1,8})\*(\d{1,8})./)
+        return {
+            width: Number(sizeReg[1]),
+            height: Number(sizeReg[2]),
+        }
+    }
+
+    const formatData = data.map(val => {
+        const size = getSize(val.url)
+        return Object.assign({}, val, size)
+    })
+
     return <div>
-        <Waterfall data={data} col={3} childRender={SubBody}></Waterfall>
+        <Waterfall data={formatData} col={3} childRender={SubBody}></Waterfall>
     </div>
 }

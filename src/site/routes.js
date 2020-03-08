@@ -38,6 +38,7 @@ const navList = [
 	createNav('通知栏', 'notice'),
 	createNav('标签栏', 'tabs'),
 	createNav('瀑布流', 'waterfall'),
+	createNav('未知瀑布流', 'trickle'),
 ]
 
 const Home = function() {
