@@ -8,7 +8,13 @@ import { Layout } from './layout/content.style';
 import '../styles/index.scss';
 import './test.scss';
 
+import { dialog } from '../views-show/dialog';
+import EnterTip from './layout/EnterTip';
+
 function App() {
+
+	dialog.show(<EnterTip></EnterTip>)
+
 	return (
 		<HashRouter>
 			<Layout>

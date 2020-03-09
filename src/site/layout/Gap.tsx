@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface GapProps {
-    children: React.ReactNodeArray
+    children: React.ReactNodeArray | any
 }
 
 export default ({children}: GapProps) => React.Children.map(children, (child) => {

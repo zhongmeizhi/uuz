@@ -17,3 +17,17 @@ body {
     text-align: center;
     font-size: 16px;
 }
+
+.test-enter-tip-box {
+    h3 {
+        text-align: center;
+    }
+    .test-tip-item {
+        margin-top: 10px;
+        color: #8c8989;
+        line-height: 25px;
+        .test-tip-strong {
+            color: red;
+        }
+    }
+}

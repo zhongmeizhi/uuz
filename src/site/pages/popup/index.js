@@ -3,12 +3,14 @@ import React from 'react';
 import Button from '../../../views/Button';
 import { dialog, alert, confirm } from '../../../views-show/dialog';
 
+import EnterTip from '../../layout/EnterTip';
+
 const action = (val) => () => console.log(val)
 const Gap = () => <div style={{height: '8px'}}></div>
 
 export default  () => {
     const openDialog = () => {
-        dialog.show(<div>xxxx<br></br>这里是内容</div>);
+        dialog.show(<EnterTip></EnterTip>);
     }
     
     const openAlert = () => {

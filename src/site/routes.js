@@ -1,11 +1,7 @@
 import React, { lazy, Suspense } from 'react';
-import { Redirect, Link } from "react-router-dom";
-
+import { Redirect } from "react-router-dom";
 import Content from './layout/Content';
-import { ZBody } from './layout/content.style';
-import Gap from './layout/Gap';
-import Button from '../views/Button'
-
+import Home from './layout/Home';
 import { upperCaseFirst } from '../utils/base'
 
 const SuspenseComponent = (Component) => (props) => {
@@ -27,40 +23,26 @@ const createNav = function(name, path) {
 const navList = [
 	createNav('按钮', 'button'),
 	createNav('勾选框', 'checkbox'),
-	createNav('键盘', 'keyboard'),
-	createNav('选择器', 'picker'),
-	createNav('弹窗、确认框', 'popup'),
-	createNav('滚动组件', 'scroll'),
-	createNav('底部弹窗', 'sheet'),
-	createNav('步骤条', 'step'),
-	createNav('滑块', 'swiper'),
 	createNav('开关', 'switch'),
-	createNav('通知栏', 'notice'),
 	createNav('标签栏', 'tabs'),
+	createNav('弹窗、确认框', 'popup'),
+	createNav('底部弹窗', 'sheet'),
+	createNav('选择器', 'picker'),
+	createNav('通知栏', 'notice'),
+	createNav('步骤条', 'step'),
+	createNav('键盘', 'keyboard'),
+	createNav('滑块', 'swiper'),
+	createNav('滚动组件', 'scroll'),
 	createNav('瀑布流', 'waterfall'),
 	createNav('未知瀑布流', 'trickle'),
 ]
-
-const Home = function() {
-	return <ZBody>
-		<h1>Z-UI</h1>
-		<sub>一个 React + Hooks 写的UI库</sub>
-		<Gap>
-			{
-				navList.map(nav => <Link to={nav.path} key={nav.name} >
-					<Button type="raw">{nav.name}</Button>
-				</Link>)
-			}
-		</Gap>
-	</ZBody>
-}
 
 export default [
 	{
 		name: '首页',
 		path: '/',
 		exact: true,
-		component: Home,
+		component: () => Home(navList),
 	},
 	{
 		name: '组件',
