@@ -33,11 +33,6 @@ export default  function Sheet(props: SheetProps) {
         closeSheet();
     }
 
-    const preventHandler = (e: React.TouchEvent<HTMLElement>) => {
-        console.log(e.preventDefault, 11111)
-        e.preventDefault && e.preventDefault();
-    }
-
     useEffect(() => {
         showSomething.renderElement(SheetContent);
     });

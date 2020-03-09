@@ -1,5 +1,4 @@
 import { getEventPoint } from "../utils/base";
-import { passiveSupported } from "../utils/base";
 
 type Point = {
     x: number,

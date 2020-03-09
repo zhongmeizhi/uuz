@@ -12,29 +12,22 @@ export default function Transition({name, isShow, children, time = 300}: Transit
     const initName = name || '';
 
     const [transitionName, setName] = useState('');
-    const [isConShow, setConShow] = useState(false);
+    const [isConShow, setConShow] = useState(isShow);
 
     useEffect(() => {
         if (isShow) {
-            setConShow(true);
+            setConShow(isShow);
             setTimeout(() => {
                 setName(`${initName}--in`);
-            }, 34); // 下两帧
-        }
-        return () => {
-            // 当销毁时 设置 class 为 out
-            if (!isConShow && isShow) {
-                setName(`${initName}--out`);
-                // 正常关闭
-                setTimeout(() => {
-                    setConShow(false);
-                    setName('');
-                }, time);
-                // TODO
-                // 也可以通过 transitionEnd 来计算结束时间
-                // 但是如果没有设置动画效果那么怎么办？
-                // 如何判断是否有动画效果？
-            }
+            }, 18); // 下一帧 > 16.67
+        } else {
+            console.log('out')
+            setName(`${initName}--out`);
+            // 正常关闭
+            setTimeout(() => {
+                setName('');
+                setConShow(false);
+            }, time);
         }
     }, [isShow])
 

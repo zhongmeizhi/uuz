@@ -6,6 +6,7 @@
     width: 100vw;
     height: 100vh;
     z-index: 6;
+    touch-action: none;
     .zui-sheet-mask {
         background: rgba(0, 0, 0, 0.4);
         height: 100%;
