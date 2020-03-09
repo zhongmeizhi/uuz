@@ -10,7 +10,7 @@ class EventControl {
     constructor(ele: HTMLDivElement) {
         this.eventList = {};
         const isPassiveSupported = passiveSupported();
-        this.willPreventDefault = isPassiveSupported ? { passive: false } : false;
+        this.willPreventDefault = isPassiveSupported ? { passive: false, capture: false } : false;
         this.willNotPreventDefault = isPassiveSupported ? { passive: true } : false;
         this.$ele = ele;
     }
