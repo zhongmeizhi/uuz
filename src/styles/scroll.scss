@@ -26,8 +26,10 @@
         text-align: center;
         color: white;
     }
-    .zui-scroll-load-tip {
-        text-align: center;
-        line-height: 26px;
+    .zui-load-tip {
+        position: fixed;
+        left: 50%;
+        bottom: 10px;
+        margin-left: -40px;
     }
 }

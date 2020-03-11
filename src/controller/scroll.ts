@@ -15,11 +15,13 @@ class ScrollControl extends MoveControl {
     distanceStatus?: DistanceStatus;
     isRefreshable: boolean;
     beginTime?: number;
+    matLimit: number;
 
     constructor() {
         super({direction: 'y'});
         this.Refresh_Distance = 90;
         this.isRefreshable = true;
+        this.matLimit = 0.7;
     }
 
     _getFinalEndPonit(): Point {
@@ -49,8 +51,11 @@ class ScrollControl extends MoveControl {
         const moveTime = this._getTimeTotal();
         // 速度 = 路程 / 时间
         const speed = distanceTotal / moveTime;
+        if (speed < this.matLimit && speed > -this.matLimit) {
+            return 0
+        }
         // 计算期望缓冲距离
-        const mat = speed * 234;
+        const mat = speed * 456;
         return mat;
     }
 

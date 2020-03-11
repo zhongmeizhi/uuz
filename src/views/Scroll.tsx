@@ -1,6 +1,7 @@
 import React from 'react';
 import EventControl from '../controller/event';
 import ScrollControl from '../controller/scroll';
+import MarbleLoading from './MarbleLoading';
 
 interface ReScrollProps {
   className?: String, // 刷新组件的 支持添加className
@@ -46,7 +47,8 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
         distance: this.Begin_Distance,
         time: 0
       },
-      scrollTip: ''
+      scrollTip: '',
+      isLoading: false
     }
   }
 
@@ -72,6 +74,19 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
     setTimeout(() => {
       this.hideScrollTip()
     }, 300);
+  }
+
+  loadAnm = () => {
+    if (!this.state.isLoading) {
+      this.setState({
+        isLoading: true,
+      })
+      setTimeout(() => {
+        this.setState({
+          isLoading: false,
+        })
+      }, 500)
+    }
   }
 
   // 可滚动距离
@@ -167,6 +182,7 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
     if (typeof this.props.loadHandler === 'function') {
       if (this.scrollBottleneck <= (-this.state.transform.distance)) {
         this.props.loadHandler();
+        this.loadAnm();
       }
     }
   }
@@ -196,7 +212,7 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
           ref={ele => this.refScrollBody = ele}
           style={{
             transform: `translate(0, ${this.state.transform.distance}px)`,
-            transition: `transform ${this.state.transform.time}s`
+            transition: `transform ${this.state.transform.time}s ease-out`
           }}
         >
           {/* 刷新tip */}
@@ -205,155 +221,12 @@ export default  class Scroll extends React.PureComponent<ReScrollProps, any> {
           <div className="zui-scroll">
             {this.props.children}
           </div>
-          <div className="zui-scroll-load-tip">加载更多内容</div>
         </div>
+        {
+          this.state.isLoading ?
+            <MarbleLoading className="zui-load-tip"></MarbleLoading>
+            : null
+        }
       </div>
   }
 }
-
-// import React, { useState, useEffect, useRef } from 'react';
-// import EventControl from '../controller/event';
-// import ScrollControl from '../controller/scroll';
-
-// interface ReScrollProps {
-//   className?: String, // 刷新组件的 支持添加className
-//   freshDistance?: number, // 触发刷新需要的：下拉距离
-//   loadDistance?: number, // 触发加载需要的：距离最底部距离
-//   freshHandler: Function | undefined, // 刷新执行的函数
-//   loadHandler: Function | undefined // 加载执行的函数
-//   children?: React.ReactNode
-// }
-
-// type UseEvent = React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>;
-
-// export default function Scroll(props: ReScrollProps) {
-
-//   const Begin_Distance = -50;
-
-//   const [scrollTip, setScrollTip] = useState('');
-//   const [transform, setTransform] = useState({distance: Begin_Distance, time: 0});
-//   const [scrollBottleneck, setScrollBottleneck] = useState(0);
-//   const [scrollControl] = useState(new ScrollControl());
-//   const [bindFlag, setBindFlag] = useState(0);
-
-//   let refScrollWarp: HTMLDivElement | null;
-//   let refScrollBody = useRef(null);
-
-//   let freshBoxClassName = `zui-scroll-box ${props.className || ''}`;
-  
-//   const hideScrollTip = (): void => {
-//     setTransform({
-//       distance: Begin_Distance,
-//       time: 0.5
-//     })
-//   }
-  
-//   const updateScroll = () => {
-//     props.freshHandler!();
-//     setTransform({
-//       distance: 0,
-//       time: 2
-//     })
-//     setScrollTip('刷新中 >>>');
-//     setTimeout(() => {
-//       hideScrollTip()
-//       setBindFlag(bindFlag + 1);
-//     }, 300);
-//   }
-
-//   const freshStore = {
-//     'update': updateScroll,
-//     'reset': hideScrollTip,
-//     'none': () => {}
-//   }
-
-//   const onStartHandler = (event: UseEvent): void => {
-//     if (transform.distance === Begin_Distance) {
-//       scrollControl.canRefresh()
-//     } else {
-//       scrollControl.banRefresh()
-//     }
-//     scrollControl.start(event);
-//     console.log('开始')
-//   }
-
-//   const onMoveHandler = (event: UseEvent) => {
-//     event.preventDefault();
-//     const point = scrollControl.move(event);
-//     const distanceY = point.y;
-//     // 下拉动画
-//     if (distanceY > 0 && scrollControl.isRefreshable) {
-//       const tip = scrollControl.markScrollTip();
-//       setScrollTip(tip);
-//     }
-
-//     const newDistance = transform.distance + distanceY;
-//     if (newDistance > Begin_Distance && !scrollControl.isRefreshable) {
-//       setTransform({
-//         distance: Begin_Distance,
-//         time: 0
-//       })
-//     } else {
-//       setTransform({
-//         distance: transform.distance + distanceY,
-//         time: 0
-//       })
-//     }
-//   }
-
-//   const onEndHandler = (): void => {
-//     // 需要刷新的时候执行 传入的刷新方法
-//     if (typeof props.freshHandler === 'function') {
-//       const status = scrollControl.getUpdateStatus();
-//       if (status !== 'none') {
-//         freshStore[status]();
-//         scrollControl.end();
-//         return;
-//       };
-//     }
-
-//     if (typeof props.loadHandler === 'function') {
-//       const scrollEle = (refScrollBody.current as any);
-//       console.log(scrollEle.offsetHeight, scrollBottleneck, (-transform.distance))
-//       if (scrollEle.offsetHeight <= scrollBottleneck + (-transform.distance)) {
-//         props.loadHandler();
-//         setBindFlag(bindFlag + 1);
-//       }
-//     }
-//   }
-
-//   useEffect(() => {
-//     setScrollBottleneck(refScrollWarp!.offsetHeight);
-//     setBindFlag(bindFlag + 1);
-//   }, [])
-
-//   useEffect(() => {
-//     const eventControl = new EventControl(refScrollWarp!);
-//     eventControl.createEventList(onStartHandler, onMoveHandler, onEndHandler);
-//     eventControl.listenerAllOfEle();
-//     return () => {
-//         eventControl.removeAllOfEle();
-//     }
-//   }, [bindFlag])
-
-//   return <div
-//     className={freshBoxClassName}
-//     ref={ele => refScrollWarp = ele}>
-//       {/* 滚动区域 */}
-//       <div
-//         className="zui-scroll-area"
-//         ref={refScrollBody}
-//         style={{
-//           transform: `translate(0, ${transform.distance}px)`,
-//           transition: `transform ${transform.time}s`
-//         }}
-//       >
-//         {/* 刷新tip */}
-//         <div className="zui-scroll-tip">{scrollTip}</div>
-//         {/* 真正的内容 */}
-//         <div className="zui-scroll">
-//           {props.children}
-//         </div>
-//       </div>
-//     </div>
-// }
