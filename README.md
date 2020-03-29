@@ -5,12 +5,15 @@
 
 定位：
 * 移动端 UI 库
+* 兼容 `IOS` 和 `Android`，`Hybrid` 和 `Wap`
+* `touch` 事件兼容 PC端
 * 采用 `React Hook` + `.tsx` + `sass`
 * 使用 `px` 为单位
-* 使用 `hammer` 手势（将会重写一遍）
 * 测试 && API文档使用`.js` 
-* 不应该使用 `cssModule`
+* API文档布局使用了部分 `styled`
+* 使用 `hammer` 手势（将会重写一遍）
 * 后期可能使用 `FastClick`
+* UI库不使用 `cssModule`
 * 不打算发布到 npm
 
 
