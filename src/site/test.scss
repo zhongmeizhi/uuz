@@ -11,6 +11,10 @@ body {
     -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
+html {
+    user-select: none;
+}
+
 .test-value-box {
     height: 40px;
     line-height: 40px;

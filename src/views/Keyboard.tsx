@@ -1,47 +1,42 @@
 import React, {useState} from 'react';
 import Button from './Button';
-import Sheet from './Sheet';
-import { ReactComponent as Arrow } from '../static/arrow.svg';
+import Close from './sub-views/Close';
 
 interface KeyboardProps {
-    emitButton: React.ReactNode,
-    header: React.ReactNode,
-    onChange?: Function
+    onClick: Function
 }
 
-export default function Keyboard ({emitButton, header, onChange}: KeyboardProps) {
+export default function Keyboard ({onClick = () => {}}: KeyboardProps) {
 
-    const [keyList, setKeyList] = useState([] as Array<number>);
+    const [keyList, setKeyList] = useState([] as Array<string>);
 
-    const changeKeyList = (keyList: Array<number>) => {
-        setKeyList(keyList);
-        (typeof onChange === 'function') && onChange(keyList.join(''));
+    const emitClick = (key: string) => {
+        typeof onClick === 'function' && onClick(key);
     }
 
-    // const reset = () => {
-    //     setKeyList([] as Array<number>);
-    // }
-
-    const keyClickHandler = (val: number) => () => {
+    const keyClickHandler = (val: string) => () => {
         const keyListCopy = keyList.slice();
         keyListCopy.push(val);
-        changeKeyList(keyListCopy);
+        setKeyList(keyListCopy);
+        emitClick(val);
     }
 
-    const removeKeyHandler = () => {
+    const removeKeyHandler = (val: string) => () => {
         const keyListCopy = keyList.slice();
         keyListCopy.pop();
-        changeKeyList(keyListCopy);
+        setKeyList(keyListCopy);
+        emitClick(val);
     }
 
-    return <Sheet button={emitButton} header={header} canModalClose>
-        <div className={"zui-keyboard"}>
-            {[1,2,3,4,5,6,7,8,9].map(val => <Button type="raw" className="zui-key" onClick={keyClickHandler(val)} key={val}>{val}</Button>)}
-            <div className="zui-key"></div>
-            <Button type="raw" className="zui-key" onClick={keyClickHandler(0)}>0</Button>
-            <Button type="raw" className="zui-key zui-key-del" onClick={removeKeyHandler}><Arrow className="zui-key-arrow"></Arrow></Button>
-        </div>
-    </Sheet>
+    const ensureHandler = (val: string) => () => {
+        emitClick(val);
+    }
 
+    return <div className={"zui-keyboard"}>
+        {['1','2','3','4','5','6','7','8','9'].map(val => <Button type="raw" className="zui-key" onClick={keyClickHandler(val)} key={val}>{val}</Button>)}
+        <Button type="raw" className="zui-key zui-key-del" onClick={removeKeyHandler('del')}><Close className="zui-key-arrow"></Close></Button>
+        <Button type="raw" className="zui-key" onClick={keyClickHandler('0')}>0</Button>
+        <Button className="zui-key" onClick={ensureHandler('ensure')}>确定</Button>
+    </div>
 }
 
