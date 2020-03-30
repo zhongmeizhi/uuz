@@ -15,9 +15,9 @@
         position: fixed;
         bottom: 0;
         width: 100%;
-        background: white;
         z-index: 3;
         transition: all 0.3s;
+        // border-radius: 16px 16px 0 0;
         padding-bottom: constant(safe-area-inset-bottom);
         padding-bottom: env(safe-area-inset-bottom);
         .zui-sheet-header {
@@ -27,10 +27,12 @@
             justify-content: space-between;
             padding: 0 16px;
             background: $thinGrey;
+            border-radius: 16px 16px 0 0;
             @include line-bottom;
         }
         .zui-sheet-body {
             height: calc(100% - 38px);
+            background: white;
             overflow-y: auto;
             position: relative;
         }
