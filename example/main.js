@@ -1,20 +1,3 @@
-<h1 align="center">UUZ</h1>
-
-<p align="center">一个 mini-vue3 框架</p>
-
-### 0.1.0
-
-日常维护中，更多内容敬请期待。
-
-目前进度
-
-* [x] reactive
-* [x] ref
-* [x] computed
-
-### Example
-
-```js
 import { mount, reactive, ref, computed } from '../src/index.js'
 
 const App = {
@@ -51,5 +34,3 @@ const App = {
 }
 
 mount(App, document.body)
-
-```
