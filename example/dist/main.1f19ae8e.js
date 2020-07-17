@@ -117,22 +117,103 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"../src/index.js":[function(require,module,exports) {
+})({"../src/utils/base.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.mount = mount;
+exports.isStuff = exports.isText = exports.isStr = exports.isFn = exports.isArr = void 0;
+var isArr = Array.isArray;
+exports.isArr = isArr;
+
+var isFn = function isFn(fn) {
+  return typeof fn === 'function';
+};
+
+exports.isFn = isFn;
+
+var isStr = function isStr(v) {
+  return typeof v === 'string';
+};
+
+exports.isStr = isStr;
+
+var isText = function isText(v) {
+  return typeof v === 'string' || typeof v === 'number';
+};
+
+exports.isText = isText;
+
+var isStuff = function isStuff(v) {
+  return v !== null && v !== false && v !== true;
+};
+
+exports.isStuff = isStuff;
+},{}],"../src/core/h.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.createElement = void 0;
+
+var _base = require("../utils/base.js");
+
+var createElement = function createElement(type, attrs) {
+  var _ref;
+
+  var props = attrs || {};
+  var key = props.key || null;
+  var ref = props.ref || null;
+  delete props.key;
+  delete props.ref;
+
+  for (var _len = arguments.length, children = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+    children[_key - 2] = arguments[_key];
+  }
+
+  var childrenElement = (_ref = []).concat.apply(_ref, children).reduce(function (list, child) {
+    if ((0, _base.isStuff)(child)) {
+      var vnode = (0, _base.isText)(child) ? createText(child) : child;
+      list.push(vnode);
+    }
+
+    return list;
+  }, []);
+
+  props.children = childrenElement;
+  return {
+    type: type,
+    props: props,
+    key: key,
+    ref: ref
+  };
+};
+
+exports.createElement = createElement;
+
+var createText = function createText(text) {
+  return {
+    type: 'text',
+    props: {
+      children: [],
+      content: text
+    }
+  };
+};
+},{"../utils/base.js":"../src/utils/base.js"}],"../src/core/reactive.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports.reactive = reactive;
 exports.ref = ref;
+exports.effect = effect;
 exports.computed = computed;
 var targetMap = new WeakMap();
 var activeEffect;
-
-function update(el, instance) {
-  el.innerHTML = instance.render();
-}
 
 function effect(fn) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -148,6 +229,7 @@ function effect(fn) {
     _effect();
   }
 
+  _effect.active = true;
   _effect.options = options;
   return _effect;
 }
@@ -188,14 +270,6 @@ function scheduleRun(effect) {
   } else {
     effect();
   }
-}
-
-function mount(instance, el) {
-  effect(function () {
-    instance.$data && update(el, instance);
-  });
-  instance.$data = instance.setup();
-  update(el, instance);
 }
 
 function reactive(target) {
@@ -257,36 +331,290 @@ function computed(fn) {
 
   };
 }
-},{}],"main.js":[function(require,module,exports) {
+},{}],"../src/core/dom.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.templateRender = templateRender;
+exports.render = render;
+
+var _base = require("../utils/base.js");
+
+var _reactive = require("./reactive");
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var cursor = 0;
+var effectHooks = [];
+
+function templateRender(instance, dom) {
+  (0, _reactive.effect)(function () {
+    instance.$data && innerDom(dom, instance);
+  });
+  instance.$data = instance.setup();
+  innerDom(instance, dom);
+}
+
+function innerDom(instance, dom) {
+  dom.innerHTML = instance.render();
+}
+
+function render(vnode, dom) {
+  var oldDom = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : dom.firstChild;
+  diff(vnode, dom, oldDom);
+}
+
+var diff = function diff(vnode, dom, oldDom) {
+  // 获得在创建元素是的vnode
+  var oldVnode = oldDom && oldDom.vnode;
+
+  if (!oldDom) {
+    mount(vnode, dom, oldDom);
+  } else if ((0, _base.isFn)(vnode.type)) {
+    diffComponent(vnode, null, dom, oldDom);
+  } else if (oldVnode && oldVnode.type === vnode.type) {
+    diffElement(oldDom, vnode, oldVnode);
+  } else {
+    // TODO: 
+    console.log('不值得比较了');
+  }
+};
+
+var diffComponent = function diffComponent(vnode, oldVnode, dom, oldDom) {
+  if (!oldVnode) {
+    mount(vnode, dom, oldDom);
+  }
+};
+
+var diffElement = function diffElement(oldDom, vnode, oldVnode) {
+  if (oldVnode.type === 'text') {
+    updateTextNode(oldDom, vnode, oldVnode);
+  } else {
+    updateElement(oldDom, vnode, oldVnode);
+  }
+
+  oldDom.vnode = vnode;
+  vnode.props.children.forEach(function (child, i) {
+    // children:只包含元素节点
+    // childNodes:包含所有类型的节点
+    // 这时需要在h函数中剔除undefined元素
+    diff(child, oldDom, oldDom.childNodes[i]);
+  }); // 试图剔除多余节点 childNodes
+
+  var oldChildNodes = oldDom.childNodes;
+  var oldMaxIndex = oldChildNodes.length - 1;
+  var vnodeMaxIndex = vnode.props.children.length - 1; // 剔除多余节点
+
+  if (oldMaxIndex > vnodeMaxIndex) {
+    // 从后面开始删除，保证index顺序
+    for (var i = oldMaxIndex; i > vnodeMaxIndex; i--) {
+      unmountNode(oldDom, oldChildNodes[i]);
+    }
+  }
+};
+
+var mount = function mount(vnode, dom, oldDom) {
+  if ((0, _base.isFn)(vnode.type)) {
+    return mountComponent(vnode, dom, oldDom);
+  } else {
+    console.log(vnode, 'mount vnode');
+    return mountElement(vnode, dom, oldDom);
+  }
+};
+
+var mountComponent = function mountComponent(vnode, dom, oldDom) {
+  // resetHook(vnode, dom, oldDom);
+  var nextVnode = vnode;
+
+  while ((0, _base.isFn)(nextVnode.type)) {
+    nextVnode = nextVnode.type(vnode.props || {});
+  }
+
+  return mount(nextVnode, dom, oldDom);
+};
+
+var mountElement = function mountElement(vnode, dom, oldDom, parent) {
+  /*
+    在 h 函数中已经将数组扁平化
+    在处理 map 等jsx 的时候不需要再通过再次判断数组递归
+  */
+  var newDom = null;
+  var nextSibiling = oldDom && oldDom.nextSibiling;
+
+  if (vnode.type === 'text') {
+    newDom = document.createTextNode(vnode.props.content);
+  } else {
+    newDom = document.createElement(vnode.type);
+    updateElement(newDom, vnode);
+  } // 生成元素的的时候顺便造一颗vnode树
+
+
+  newDom.vnode = vnode;
+
+  if (oldDom) {
+    unmountNode(parent, oldDom);
+  }
+
+  if (nextSibiling) {
+    dom.insertBefore(newDom, nextSibiling);
+  } else {
+    dom.appendChild(newDom);
+  }
+
+  vnode.props.children.forEach(function (child) {
+    mount(child, newDom);
+  });
+};
+
+var updateElement = function updateElement(dom, newVnode) {
+  var oldVnode = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var newProps = newVnode.props || {};
+  var oldProps = oldVnode.props || {}; // 将新旧属性同时比较以减少遍历次数
+
+  for (var name in _objectSpread(_objectSpread({}, oldProps), newProps)) {
+    var oldValue = oldProps[name];
+    var newValue = newProps[name];
+
+    if (oldValue == newValue || name === 'children') {} else if (name === 'style') {// TODO: style
+    } else if (name === 'className') {
+      dom.setAttribute('class', newValue);
+    } else if (name.startsWith('on')) {
+      var eventName = name.slice(2).toLowerCase();
+      if (oldValue) dom.removeEventListener(eventName, oldValue, false);
+      dom.addEventListener(eventName, newValue, false);
+    } else if (newValue == null || newValue === false) {
+      dom.removeAttribute(name);
+    } else {
+      dom.setAttribute(name, newValue);
+    }
+  }
+};
+
+var updateTextNode = function updateTextNode(dom, newVnode) {
+  var oldVnode = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+  if (newVnode.props.content !== oldVnode.props.content) {
+    dom.textContent = newVnode.props.content;
+  }
+
+  dom.vnode = newVnode;
+};
+
+var unmountNode = function unmountNode(dom, child) {
+  child.remove();
+};
+},{"../utils/base.js":"../src/utils/base.js","./reactive":"../src/core/reactive.js"}],"../src/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "createElement", {
+  enumerable: true,
+  get: function () {
+    return _h.createElement;
+  }
+});
+Object.defineProperty(exports, "templateRender", {
+  enumerable: true,
+  get: function () {
+    return _dom.templateRender;
+  }
+});
+Object.defineProperty(exports, "render", {
+  enumerable: true,
+  get: function () {
+    return _dom.render;
+  }
+});
+Object.defineProperty(exports, "reactive", {
+  enumerable: true,
+  get: function () {
+    return _reactive.reactive;
+  }
+});
+Object.defineProperty(exports, "ref", {
+  enumerable: true,
+  get: function () {
+    return _reactive.ref;
+  }
+});
+Object.defineProperty(exports, "computed", {
+  enumerable: true,
+  get: function () {
+    return _reactive.computed;
+  }
+});
+
+var _h = require("./core/h.js");
+
+var _dom = require("./core/dom.js");
+
+var _reactive = require("./core/reactive.js");
+},{"./core/h.js":"../src/core/h.js","./core/dom.js":"../src/core/dom.js","./core/reactive.js":"../src/core/reactive.js"}],"main.js":[function(require,module,exports) {
 "use strict";
 
 var _index = require("../src/index.js");
 
-var App = {
-  $data: null,
-  setup: function setup() {
-    var count = (0, _index.reactive)({
-      num: 0
-    });
-    var num = (0, _index.ref)(233);
-    setInterval(function () {
-      count.num += 1;
-      num.value += 1;
-    }, 1000);
-    var name = (0, _index.computed)(function () {
-      return count.num + 'Mokou';
-    });
-    return {
-      count: count,
-      num: num,
-      name: name
-    };
-  },
-  render: function render() {
-    return "<div>\n      <button>".concat(this.$data.count.num, "</button>\n      <span>").concat(this.$data.num, "</span>\n      <div>\n        <span>").concat(this.$data.name.value, "</span>\n      </div>\n    </div>");
-  }
-};
-(0, _index.mount)(App, document.body);
+// const setupApp = {
+//   $data: null,
+//   setup () {
+//     let count = reactive({ num: 0 })
+//     let num = ref(233);
+//     setInterval(() => {
+//       count.num += 1;
+//       num.value += 1;
+//     }, 1000);
+//     let name = computed(() => {
+//       return count.num + 'Mokou'
+//     })
+//     return {
+//       count,
+//       num,
+//       name
+//     };
+//   },
+//   render() {
+//     return `<div>
+//       <button>${this.$data.count.num}</button>
+//       <span>${this.$data.num.value}</span>
+//       <div>
+//         <span>${this.$data.name.value}</span>
+//       </div>
+//     </div>`
+//   }
+// }
+// templateRender(setupApp, document.querySelector('#setup'));
+function TestItem() {
+  return (0, _index.createElement)("div", {
+    className: "test"
+  }, "test");
+}
+
+function JsxApp() {
+  var count = (0, _index.reactive)({
+    num: 0
+  });
+  var num = (0, _index.ref)(233);
+
+  var addCount = function addCount() {
+    count.num += 1;
+  };
+
+  return (0, _index.createElement)("div", {
+    className: "abc"
+  }, (0, _index.createElement)("button", {
+    onclick: addCount
+  }, count.num), (0, _index.createElement)(TestItem, null), num.value);
+}
+
+(0, _index.render)((0, _index.createElement)(JsxApp, null), document.querySelector('#functional'));
 },{"../src/index.js":"../src/index.js"}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -315,7 +643,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61431" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52425" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

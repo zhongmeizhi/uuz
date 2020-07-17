@@ -6,11 +6,14 @@
 
 日常维护中，更多内容敬请期待。
 
+项目 rfc 请看[源码日记](https://github.com/zhongmeizhi/fed-note)
+
 目前进度
 
 * [x] reactive
 * [x] ref
 * [x] computed
+* [ ] jsx or template
 
 ### Example
 

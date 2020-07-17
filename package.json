@@ -4,10 +4,11 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "parcel example/index.html --out-dir example-dist",
+    "dev": "parcel example/index.html --out-dir example/dist",
     "build": "rollup -c"
   },
   "devDependencies": {
+    "@babel/core": "^7.10.5",
     "parcel": "^1.12.4",
     "rollup": "^2.21.0"
   },
