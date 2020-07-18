@@ -228,8 +228,11 @@ function effect(fn) {
   if (!options.lazy) {
     _effect();
   }
+  /* 
+    options 比如：scheduler
+  */
 
-  _effect.active = true;
+
   _effect.options = options;
   return _effect;
 }
@@ -265,8 +268,10 @@ function trigger(target, key) {
 }
 
 function scheduleRun(effect) {
+  console.log(effect.options, 'ops');
+
   if (effect.options.scheduler !== void 0) {
-    effect.options.scheduler();
+    effect.options.scheduler(effect);
   } else {
     effect();
   }
@@ -313,23 +318,31 @@ function ref(target) {
 function computed(fn) {
   var dirty = true;
   var value;
+
+  var _computed;
+
   var runner = effect(fn, {
     lazy: true,
-    scheduler: function scheduler() {
-      dirty = true;
+    scheduler: function scheduler(e) {
+      if (!dirty) {
+        dirty = true;
+        trigger(_computed, 'value');
+      }
     }
   });
-  return {
+  _computed = {
     get value() {
       if (dirty) {
-        dirty = false;
         value = runner();
+        dirty = false;
       }
 
+      track(_computed, 'value');
       return value;
     }
 
   };
+  return _computed;
 }
 },{}],"../src/core/dom.js":[function(require,module,exports) {
 "use strict";
@@ -337,8 +350,8 @@ function computed(fn) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.templateRender = templateRender;
 exports.render = render;
+exports.createApp = void 0;
 
 var _base = require("../utils/base.js");
 
@@ -350,24 +363,27 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var cursor = 0;
-var effectHooks = [];
+var createApp = function createApp(rootComponent) {
+  var app = {
+    mount: function mount(rootDom) {
+      render(rootComponent, rootDom);
+    }
+  };
+  return app;
+};
 
-function templateRender(instance, dom) {
+exports.createApp = createApp;
+
+function render(instance, dom, oldDom) {
   (0, _reactive.effect)(function () {
-    instance.$data && innerDom(dom, instance);
+    if (!instance.active) {
+      instance.$data = instance.setup();
+      instance.active = true;
+    }
+
+    var vnode = instance.render();
+    diff(vnode, dom, oldDom || dom.firstChild);
   });
-  instance.$data = instance.setup();
-  innerDom(instance, dom);
-}
-
-function innerDom(instance, dom) {
-  dom.innerHTML = instance.render();
-}
-
-function render(vnode, dom) {
-  var oldDom = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : dom.firstChild;
-  diff(vnode, dom, oldDom);
 }
 
 var diff = function diff(vnode, dom, oldDom) {
@@ -423,7 +439,6 @@ var mount = function mount(vnode, dom, oldDom) {
   if ((0, _base.isFn)(vnode.type)) {
     return mountComponent(vnode, dom, oldDom);
   } else {
-    console.log(vnode, 'mount vnode');
     return mountElement(vnode, dom, oldDom);
   }
 };
@@ -515,107 +530,106 @@ var unmountNode = function unmountNode(dom, child) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "createElement", {
-  enumerable: true,
-  get: function () {
-    return _h.createElement;
-  }
-});
-Object.defineProperty(exports, "templateRender", {
-  enumerable: true,
-  get: function () {
-    return _dom.templateRender;
-  }
-});
-Object.defineProperty(exports, "render", {
-  enumerable: true,
-  get: function () {
-    return _dom.render;
-  }
-});
-Object.defineProperty(exports, "reactive", {
-  enumerable: true,
-  get: function () {
-    return _reactive.reactive;
-  }
-});
-Object.defineProperty(exports, "ref", {
-  enumerable: true,
-  get: function () {
-    return _reactive.ref;
-  }
-});
-Object.defineProperty(exports, "computed", {
-  enumerable: true,
-  get: function () {
-    return _reactive.computed;
-  }
-});
 
 var _h = require("./core/h.js");
 
+Object.keys(_h).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _h[key];
+    }
+  });
+});
+
 var _dom = require("./core/dom.js");
 
+Object.keys(_dom).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _dom[key];
+    }
+  });
+});
+
 var _reactive = require("./core/reactive.js");
-},{"./core/h.js":"../src/core/h.js","./core/dom.js":"../src/core/dom.js","./core/reactive.js":"../src/core/reactive.js"}],"main.js":[function(require,module,exports) {
+
+Object.keys(_reactive).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _reactive[key];
+    }
+  });
+});
+},{"./core/h.js":"../src/core/h.js","./core/dom.js":"../src/core/dom.js","./core/reactive.js":"../src/core/reactive.js"}],"src/demo-computed.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _index = require("../../src/index.js");
+
+var _default = {
+  setup: function setup() {
+    var count = (0, _index.reactive)({
+      num: 10
+    });
+    var num = (0, _index.ref)(20);
+    var sum = (0, _index.computed)(function () {
+      return count.num + num.value + '!';
+    });
+
+    var addCount = function addCount() {
+      count.num += 10;
+    };
+
+    var addNum = function addNum() {
+      num.value += 10;
+    };
+
+    return {
+      count: count,
+      num: num,
+      sum: sum,
+      addCount: addCount,
+      addNum: addNum
+    };
+  },
+  render: function render() {
+    return (0, _index.createElement)("div", {
+      className: "abc"
+    }, (0, _index.createElement)("div", null, (0, _index.createElement)("button", {
+      onclick: this.$data.addCount.bind(this)
+    }, this.$data.count.num), (0, _index.createElement)("span", null, "+"), (0, _index.createElement)("button", {
+      onclick: this.$data.addNum.bind(this)
+    }, this.$data.num.value)), (0, _index.createElement)("div", null, "\u5408\u8BA1", this.$data.sum.value));
+  }
+};
+exports.default = _default;
+},{"../../src/index.js":"../src/index.js"}],"main.js":[function(require,module,exports) {
 "use strict";
 
 var _index = require("../src/index.js");
 
-// const setupApp = {
-//   $data: null,
-//   setup () {
-//     let count = reactive({ num: 0 })
-//     let num = ref(233);
-//     setInterval(() => {
-//       count.num += 1;
-//       num.value += 1;
-//     }, 1000);
-//     let name = computed(() => {
-//       return count.num + 'Mokou'
-//     })
-//     return {
-//       count,
-//       num,
-//       name
-//     };
-//   },
-//   render() {
-//     return `<div>
-//       <button>${this.$data.count.num}</button>
-//       <span>${this.$data.num.value}</span>
-//       <div>
-//         <span>${this.$data.name.value}</span>
-//       </div>
-//     </div>`
-//   }
-// }
-// templateRender(setupApp, document.querySelector('#setup'));
-function TestItem() {
-  return (0, _index.createElement)("div", {
-    className: "test"
-  }, "test");
-}
+var _demoComputed = _interopRequireDefault(require("./src/demo-computed"));
 
-function JsxApp() {
-  var count = (0, _index.reactive)({
-    num: 0
-  });
-  var num = (0, _index.ref)(233);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-  var addCount = function addCount() {
-    count.num += 1;
-  };
-
-  return (0, _index.createElement)("div", {
-    className: "abc"
-  }, (0, _index.createElement)("button", {
-    onclick: addCount
-  }, count.num), (0, _index.createElement)(TestItem, null), num.value);
-}
-
-(0, _index.render)((0, _index.createElement)(JsxApp, null), document.querySelector('#functional'));
-},{"../src/index.js":"../src/index.js"}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+// demo-ref
+// import App from './src/demo-ref';
+// demo-reactive
+// import App from './src/demo-reactive';
+// demo-computed
+var ele = document.querySelector('#app');
+(0, _index.createApp)(_demoComputed.default).mount(ele);
+},{"../src/index.js":"../src/index.js","./src/demo-computed":"src/demo-computed.js"}],"../node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -643,7 +657,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52425" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49774" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

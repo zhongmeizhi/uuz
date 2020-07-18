@@ -1,23 +1,24 @@
 import { isFn } from '../utils/base.js';
-import { effect } from './reactive'
+import { effect } from './reactive';
 
-let cursor = 0;
-let effectHooks = [];
+const createApp = (rootComponent) => {
+  const app = {
+    mount(rootDom) {
+      render(rootComponent, rootDom);
+    },
+  };
+  return app;
+};
 
-function templateRender(instance, dom) {
+function render(instance, dom, oldDom) {
   effect(function() {
-    instance.$data && innerDom(dom, instance);
+    if (!instance.active) {
+      instance.$data = instance.setup();
+      instance.active = true;
+    }
+    let vnode = instance.render();
+    diff(vnode, dom, oldDom || dom.firstChild);
   })
-  instance.$data = instance.setup();
-  innerDom(instance, dom);
-}
-
-function innerDom(instance, dom) {
-  dom.innerHTML = instance.render();
-}
-
-function render(vnode, dom, oldDom = dom.firstChild) {
-  diff(vnode, dom, oldDom);
 }
 
 const diff = (vnode, dom, oldDom) => {
@@ -74,7 +75,6 @@ const mount = (vnode, dom, oldDom) => {
   if (isFn(vnode.type)) {
     return mountComponent(vnode, dom, oldDom);
   } else {
-    console.log(vnode, 'mount vnode')
     return mountElement(vnode, dom, oldDom);
   }
 }
@@ -160,6 +160,6 @@ const unmountNode = (dom, child) => {
 }
 
 export {
-  templateRender,
+  createApp,
   render
 }

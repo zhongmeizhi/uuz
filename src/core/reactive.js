@@ -11,7 +11,9 @@ function effect(fn, options = {}) {
   if (!options.lazy) {
     _effect();
   }
-  _effect.active = true;
+  /* 
+    options 比如：scheduler
+  */
   _effect.options = options;
   return _effect;
 }
@@ -39,8 +41,9 @@ function trigger(target, key) {
 }
 
 function scheduleRun(effect) {
+  console.log(effect.options, 'ops')
   if (effect.options.scheduler !== void 0) {
-    effect.options.scheduler();
+    effect.options.scheduler(effect);
   } else {
     effect();
   }
@@ -86,22 +89,29 @@ function ref(target) {
 function computed(fn) {
   let dirty = true;
   let value;
+  let _computed;
 
   const runner = effect(fn, {
     lazy: true,
-    scheduler: () => {
-      dirty = true;
+    scheduler: (e) => {
+      if (!dirty) {
+        dirty = true;
+        trigger(_computed, 'value');
+      }
     }
   });
-  return {
+  
+  _computed = {
     get value() {
       if (dirty) {
-        dirty = false;
         value = runner();
+        dirty = false;
       }
+      track(_computed, 'value');
       return value;
     }
-  };
+  }
+  return _computed;
 }
 
 
