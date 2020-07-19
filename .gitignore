@@ -5,6 +5,9 @@
 /.pnp
 .pnp.js
 
+/example/dist
+/.cache
+
 # testing
 /coverage
 
