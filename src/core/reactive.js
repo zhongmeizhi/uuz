@@ -41,7 +41,6 @@ function trigger(target, key) {
 }
 
 function scheduleRun(effect) {
-  console.log(effect.options, 'ops')
   if (effect.options.scheduler !== void 0) {
     effect.options.scheduler(effect);
   } else {

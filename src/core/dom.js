@@ -16,7 +16,8 @@ function render(instance, dom, oldDom) {
       instance.$data = instance.setup();
       instance.active = true;
     }
-    let vnode = instance.render();
+    let vnode = instance.render(instance.$data);
+    // const vnode = instance.type();
     diff(vnode, dom, oldDom || dom.firstChild);
   })
 }

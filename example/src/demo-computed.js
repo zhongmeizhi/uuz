@@ -24,15 +24,15 @@ export default {
       addNum
     }
   },
-  render() {
+  render(state) {
     return (
       <div className="abc">
         <div>
-          <button onclick={this.$data.addCount.bind(this)}>{this.$data.count.num}</button>
+          <button onclick={state.addCount.bind(this)}>{state.count.num}</button>
           <span>+</span>
-          <button onclick={this.$data.addNum.bind(this)}>{this.$data.num.value}</button>
+          <button onclick={state.addNum.bind(this)}>{state.num.value}</button>
         </div>
-        <div>合计{this.$data.sum.value}</div>
+        <div>合计{state.sum.value}</div>
       </div>
     )
   }

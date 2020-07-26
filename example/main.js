@@ -1,4 +1,4 @@
-import { createApp } from '../src/index.js';
+import { createApp, createElement } from '../src/index.js';
 
 // demo-ref
 // import App from './src/demo-ref';
@@ -12,3 +12,4 @@ import App from './src/demo-computed';
 
 const ele = document.querySelector('#app');
 createApp(App).mount(ele);
+// createApp(<App></App>).mount(ele);
