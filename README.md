@@ -12,7 +12,7 @@
 
 example：通过 `demo.uuz` 实现双向绑定
 
-```uuz
+```vue
 <template>
   <div class="abc" @click="addCount">
     {{count.num}}
