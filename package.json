@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "parcel example/index.html --out-dir example/dist",
+    "waste": "parcel example/index.html --out-dir src/example/dist",
+    "dev": "rollup --config rollup.config.dev.js --watch",
     "build": "rollup -c"
   },
   "devDependencies": {

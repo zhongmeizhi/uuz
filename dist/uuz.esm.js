@@ -3,6 +3,7 @@ const isText = v => typeof v === 'string' || typeof v === 'number';
 const isStuff = v => v !== null && v !== false && v !== true;
 
 const createElement = function (type, attrs, ...children) {
+  console.log(type, attrs, children, 'xxx');
   let props = attrs || {};
   let key = props.key || null;
   let ref = props.ref || null;
@@ -85,8 +86,6 @@ function trigger(target, key) {
 }
 
 function scheduleRun(effect) {
-  console.log(effect.options, 'ops');
-
   if (effect.options.scheduler !== void 0) {
     effect.options.scheduler(effect);
   } else {
@@ -181,7 +180,8 @@ function render(instance, dom, oldDom) {
       instance.active = true;
     }
 
-    let vnode = instance.render();
+    let vnode = instance.render(instance.$data); // const vnode = instance.type();
+
     diff(vnode, dom, oldDom || dom.firstChild);
   });
 }

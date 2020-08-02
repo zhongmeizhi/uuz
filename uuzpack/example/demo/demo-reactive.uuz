@@ -1,0 +1,24 @@
+<template>
+  <div className="abc">
+    111
+  </div>
+</template>
+
+<script>
+import { reactive } from '../uuz.esm.js';
+
+export default {
+  setup() {
+    let count = reactive({ num: 10 })
+
+    const addCount = () => {
+      count.num += 10;
+    }
+
+    return {
+      count,
+      addCount
+    }
+  }
+}
+</script>

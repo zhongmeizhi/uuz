@@ -1,43 +1,34 @@
-import { isStuff, isText } from '../utils/base.js';
+import { ShapeFlags, getShapeFlag } from "../utils/base.js";
 
-const createElement = function (type, attrs, ...children) {
-  console.log(type, attrs, children, 'xxx')
-  let props = attrs || {};
-  let key = props.key || null
-  let ref = props.ref || null
+const createVNode = function (type, props = null, children = null, patchFlag = 0, dynamicProps = null, isBlockNode = false) {
+	const vnode = {
+		el: null,
+		component: null,
+		key: (props && props.key) || null,
+		type,
+		props,
+		children,
+		shapeFlag: getShapeFlag(type),
+	};
 
-  delete props.key
-  delete props.ref
-
-  const childrenElement = [].concat(...children).reduce((list, child) => {
-    if (isStuff(child)) {
-      const vnode = isText(child) ? createText(child) : child;
-      list.push(vnode);
-    }
-    return list;
-  }, [])
-
-  props.children = childrenElement;
-  return { type, props, key, ref };
+	if (Array.isArray(children)) {
+		vnode.shapeFlag |= ShapeFlags.ARRAY_CHILDREN;
+	} else if (typeof children === "string") {
+		vnode.shapeFlag |= ShapeFlags.TEXT_CHILDREN;
+	}
+	return vnode;
 }
 
-const createText = (text) => {
-  return {
-    type: 'text',
-    props: {
-      children: [],
-      content: text,
-    }
-  }
+const openBlock = (...args) => {
+	console.log(args, 'openBlock');
 }
 
-/* 
-  在vue3中没有了 createElement取而代之的是 createBlock 和 createVNode
-
-  createBlock主要比createVNode多生成一个dynamicChildren
-*/
-
+const createBlock = (...args) => {
+	console.log(args, 'createBlock');
+}
 
 export {
-  createElement
+	createVNode,
+	openBlock,
+	createBlock
 }

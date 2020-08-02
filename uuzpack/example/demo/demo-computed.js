@@ -1,4 +1,4 @@
-import { reactive, ref, computed, createElement } from '../../src/index.js'
+import { reactive, ref, computed, createElement } from '../uuz.esm.js';
 
 export default {
   setup() {

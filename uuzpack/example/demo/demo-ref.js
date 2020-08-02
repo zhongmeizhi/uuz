@@ -1,4 +1,4 @@
-import { createElement, ref } from '../../src/index.js';
+import { createElement, ref } from '../uuz.esm.js';
 
 export default {
   setup() {
