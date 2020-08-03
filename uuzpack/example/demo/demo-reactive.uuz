@@ -1,6 +1,6 @@
 <template>
-  <div className="abc">
-    111
+  <div class="abc" @click="addCount">
+    {{count.num}}
   </div>
 </template>
 

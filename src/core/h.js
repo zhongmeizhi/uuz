@@ -1,6 +1,9 @@
-import { ShapeFlags, getShapeFlag } from "../utils/base.js";
+import { ShapeFlags, getShapeFlag, Text, isObject } from "../utils/base.js";
 
-const createVNode = function (type, props = null, children = null, patchFlag = 0, dynamicProps = null, isBlockNode = false) {
+const blockStack = [];
+let currentBlock = null;
+
+function createVNode(type, props = null, children = null, patchFlag = 0, dynamicProps = null, isBlockNode = false) {
 	const vnode = {
 		el: null,
 		component: null,
@@ -19,16 +22,44 @@ const createVNode = function (type, props = null, children = null, patchFlag = 0
 	return vnode;
 }
 
-const openBlock = (...args) => {
-	console.log(args, 'openBlock');
+// TODO:
+const openBlock = (disableTracking = false) => {
+	blockStack.push((currentBlock = disableTracking ? null : []));
 }
 
-const createBlock = (...args) => {
-	console.log(args, 'createBlock');
+// TODO:
+function createBlock(type, props, children, patchFlag, dynamicProps) {
+	 /* isBlock: prevent a block from tracking itself */
+	const vnode = createVNode(type, props, children, patchFlag, dynamicProps, true);
+	// save current block children on the block vnode
+	vnode.dynamicChildren = currentBlock || EMPTY_ARR;
+	// close block
+	blockStack.pop();
+	currentBlock = blockStack[blockStack.length - 1] || null;
+	// a block is always going to be patched, so track it as a child of its
+	// parent block
+	if (currentBlock) {
+		currentBlock.push(vnode);
+	}
+	return vnode;
 }
+
+function createTextVNode(text = ' ', flag = 0) {
+  return createVNode(Text, null, text, flag);
+}
+
+const toDisplayString = (val) => {
+  return val == null
+    ? ''
+    : isObject(val)
+      ? JSON.stringify(val, replacer, 2)
+      : String(val);
+};
 
 export {
 	createVNode,
 	openBlock,
-	createBlock
+	createBlock,
+	createTextVNode,
+	toDisplayString
 }
