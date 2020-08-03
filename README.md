@@ -2,51 +2,25 @@
 
 <p align="center">一个 mini-vue3 框架</p>
 
-### 0.1.0
-
 日常维护中，更多内容敬请期待。
 
 项目 rfc 请看[源码日记](https://github.com/zhongmeizhi/fed-note)
 
-目前进度
+### 0.2.0 版本
 
-* [x] reactive
-* [x] ref
-* [x] computed
-* [x] jsx
+由 `uuzpack` 驱动，支持文件格式 `.uuz`
 
-### ref
+example：通过 `demo.uuz` 实现双向绑定
 
-```js
-import { createElement, ref } from '../../src/index.js';
+```uuz
+<template>
+  <div class="abc" @click="addCount">
+    {{count.num}}
+  </div>
+</template>
 
-export default {
-  setup() {
-    let num = ref(20);
-
-    const addNum = () => {
-      num.value += 10
-    }
-
-    return {
-      num,
-      addNum
-    }
-  },
-  render() {
-    return (
-      <div className="abc">
-        <button onclick={this.$data.addNum.bind(this)}>{this.$data.num.value}</button>
-      </div>
-    )
-  }
-}
-```
-
-### reactive
-
-```js
-import { createElement, reactive } from '../../src/index.js';
+<script>
+import { reactive } from '../uuz.esm.js';
 
 export default {
   setup() {
@@ -60,18 +34,21 @@ export default {
       count,
       addCount
     }
-  },
-  render() {
-    return (
-      <div className="abc">
-        <button onclick={this.$data.addCount.bind(this)}>{this.$data.count.num}</button>
-      </div>
-    )
   }
 }
+</script>
 ```
 
-### computed
+### 0.1.0 版本
+
+目前进度
+
+* [x] reactive
+* [x] ref
+* [x] computed
+* [x] jsx
+
+example
 
 ```js
 import { reactive, ref, computed, createElement } from '../../src/index.js'
