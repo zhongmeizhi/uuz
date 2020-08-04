@@ -2,13 +2,21 @@
 
 <p align="center">一个 mini-vue3 框架</p>
 
-日常维护中，更多内容敬请期待。
+### 简介
+
+`uuz`拥有`vue3`核心功能。仅4.4kb大小。
+
+`uuz`驱动器是`uuzpack`，主要参考的是vite源码和@蜗牛老湿的原理解析
+
+支持本库名称作为文件后缀如 `demo.uuz`。
 
 项目 rfc 请看[源码日记](https://github.com/zhongmeizhi/fed-note)
 
-### 0.2.0 版本
+期待老铁们陪我结对编程。
 
-由 `uuzpack` 驱动，支持文件格式 `.uuz`
+## 0.2.0 版本
+
+由 `uuzpack` 驱动，通过解析 `.uuz` 实现 sfc，函数名向`vue3`靠拢。
 
 example：通过 `demo.uuz` 实现双向绑定
 
@@ -39,9 +47,9 @@ export default {
 </script>
 ```
 
-### 0.1.0 版本
+## 0.1.0 版本
 
-目前进度
+0.1.0版本采用的是`babel-react`实现jsx，并完成了数据绑定功能
 
 * [x] reactive
 * [x] ref

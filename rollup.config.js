@@ -10,7 +10,11 @@ export default {
       name: 'uuz',
       sourcemap: true,
       plugins: [
-        terser()
+        terser({
+          compress: {
+            pure_funcs: ['console.log'] // 去掉console.log函数
+          }
+        })
       ]
     },
     {

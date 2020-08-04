@@ -1,9 +1,11 @@
-import { ShapeFlags, getShapeFlag, Text, isObject } from "../utils/base.js";
+import { ShapeFlags, getShapeFlag, Text, isObject, isArr } from "../utils/base.js";
 
 const blockStack = [];
 let currentBlock = null;
+const EMPTY_ARR = [];
 
 function createVNode(type, props = null, children = null, patchFlag = 0, dynamicProps = null, isBlockNode = false) {
+	// TODO: Block相关
 	const vnode = {
 		el: null,
 		component: null,
@@ -14,7 +16,7 @@ function createVNode(type, props = null, children = null, patchFlag = 0, dynamic
 		shapeFlag: getShapeFlag(type),
 	};
 
-	if (Array.isArray(children)) {
+	if (isArr(children)) {
 		vnode.shapeFlag |= ShapeFlags.ARRAY_CHILDREN;
 	} else if (typeof children === "string") {
 		vnode.shapeFlag |= ShapeFlags.TEXT_CHILDREN;
@@ -44,7 +46,7 @@ function createBlock(type, props, children, patchFlag, dynamicProps) {
 	return vnode;
 }
 
-function createTextVNode(text = ' ', flag = 0) {
+function createTextVNode(text = '', flag = 0) {
   return createVNode(Text, null, text, flag);
 }
 
