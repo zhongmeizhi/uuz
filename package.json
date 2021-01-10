@@ -4,9 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "rollup --config rollup.config.dev.js --watch",
-    "plugin": "rollup --config rollup.config.plugin.js --watch",
-    "runtime": "rollup --config rollup.config.runtime.js --watch",
+    "dev": "npm-run-all --parallel dev:*",
+    "dev:core": "rollup --config rollup.config.dev.js --watch",
+    "dev:plugin": "rollup --config rollup.config.plugin.js --watch",
+    "dev:runtime": "rollup --config rollup.config.runtime.js --watch",
     "build": "rollup -c"
   },
   "devDependencies": {
@@ -17,10 +18,11 @@
     "rollup-plugin-terser": "^6.1.0"
   },
   "dependencies": {
-    "@babel/generator": "^7.13.9",
     "@babel/helper-builder-react-jsx": "^7.12.13",
     "@babel/helper-plugin-utils": "^7.13.0",
     "@babel/types": "^7.13.13",
-    "@rollup/plugin-alias": "^3.1.2"
+    "@rollup/plugin-alias": "^3.1.2",
+    "@timohausmann/quadtree-js": "^1.2.4",
+    "npm-run-all": "^4.1.5"
   }
 }

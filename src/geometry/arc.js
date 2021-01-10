@@ -6,19 +6,17 @@ class Arc extends Geometry {
   }
 
   render(ctx) {
+    const geometry = new Path2D();
     this.paint(
       ctx,
       () => {
-        const geometry = new Path2D();
         geometry.arc(
           this.core.x,
           this.core.y,
           this.core.radius,
-          0,
-          2 * Math.PI
-          // this.core.startAngle,
-          // this.core.endAngle,
-          // this.core.counterclockwise
+          this.core.startAngle || 0,
+          this.core.endAngle || 2 * Math.PI,
+          !!this.core.counterclockwise
         )
         return geometry;
       }

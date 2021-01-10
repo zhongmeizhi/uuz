@@ -5,16 +5,19 @@ class Line extends Geometry {
     super(core, style);
   }
 
-  render(ctx) {
+  render() {
+    const geometry = new Path2D();
     this.paint(
       ctx,
-      ctx.rect.bind(
-        ctx,
-        this.core.x,
-        this.core.y,
-        this.core.width,
-        this.core.height
-      )
+      () => {
+        geometry.rect(
+          this.core.x,
+          this.core.y,
+          this.core.width,
+          this.core.height
+        )
+        return geometry;
+      }
     );
   }
 }

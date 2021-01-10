@@ -1,19 +1,9 @@
-const content = {
-  eventPools: {
-    click: [],
-    mouseenter: [],
-    mouseleave: []
-  },
-
-  pushEvent(key, event) {
-    this.eventPools[key].push(event);
-  }
-
-};
-
-// import Camera from '@/camera'
+import '@timohausmann/quadtree-js';
 
 class Scene {
+  /**
+   * @param  {} eleSelector
+   */
   constructor(eleSelector) {
     const ele = document.querySelector(eleSelector);
 
@@ -21,66 +11,76 @@ class Scene {
       throw new Error('不能找到匹配的dom元素');
     }
 
-    this.initState(ele);
-    this.initEvents(ele);
+    this.initState(ele); // this.initEvents(ele);
   }
+  /**
+   * @param  {} ele
+   */
+
 
   initState(ele) {
     this.ctx = ele.getContext('2d');
     this.dpr = window.devicePixelRatio || 1;
     const width = ele.width;
-    const height = ele.height; // TODO: 锯齿和isPointInPath
-    // ele.style.width = width + 'px';
-    // ele.style.height = height + 'px';
-    // ele.width = width * this.dpr;
-    // ele.height = height * this.dpr;
-    // this.ctx.scale(this.dpr, this.dpr);
+    const height = ele.height; // 抗锯齿和 isPointInPath 无法兼容。。。
 
+    ele.style.width = width + 'px';
+    ele.style.height = height + 'px';
+    ele.width = width * this.dpr;
+    ele.height = height * this.dpr;
+    this.ctx.scale(this.dpr, this.dpr);
     this.width = width;
     this.height = height;
-    this.dom = ele;
-    this.geometryList = [];
+    this.dom = ele; // this.geometryList = [];
+
     this.ctx.save();
   }
 
-  initEvents(ele) {
-    // TODO: 事件抽离，加入四叉树网格
-    const eventPools = content.eventPools; // FIXME: 实例数据刷新后事件没有更新
+  initGrid() {
+    this.grid = new {
+      width: this.width,
+      height: this.height,
+      blur: 8
+    }();
+  } // initEvents(ele) {
+  //   this.eventPools = {
+  //     click: [],
+  //     mouseenter: [],
+  //     mouseleave: []
+  //   };
+  //   // TODO: 事件抽离，加入四叉树网格
+  //   const eventPools = content.eventPools;
+  //   // FIXME: 实例数据刷新后事件没有更新
+  //   ele.addEventListener('click', (e) => {
+  //     eventPools.click.forEach(({geometry, event}) => {
+  //       if (this.ctx.isPointInPath(geometry, e.offsetX, e.offsetY)) {
+  //         event(e);
+  //       }
+  //     })
+  //   })
+  //   ele.addEventListener('mousemove', (e) => {
+  //     eventPools.mouseenter.forEach(({geometry, event}) => {
+  //       if (!geometry.isMouseenter && this.ctx.isPointInPath(geometry, e.offsetX, e.offsetY)) {
+  //         event(e);
+  //         geometry.isMouseenter = true;
+  //       }
+  //     })
+  //     eventPools.mouseleave.forEach(({geometry, event}) => {
+  //       if (geometry.isMouseenter && !this.ctx.isPointInPath(geometry, e.offsetX, e.offsetY)) {
+  //         event(e);
+  //         geometry.isMouseenter = false;
+  //       }
+  //     })
+  //   })
+  // }
 
-    ele.addEventListener('click', e => {
-      eventPools.click.forEach(({
-        geometry,
-        event
-      }) => {
-        if (this.ctx.isPointInPath(geometry, e.offsetX, e.offsetY)) {
-          event(e);
-        }
-      });
-    });
-    ele.addEventListener('mousemove', e => {
-      eventPools.mouseenter.forEach(({
-        geometry,
-        event
-      }) => {
-        if (!geometry.isMouseenter && this.ctx.isPointInPath(geometry, e.offsetX, e.offsetY)) {
-          event(e);
-          geometry.isMouseenter = true;
-        }
-      });
-      eventPools.mouseleave.forEach(({
-        geometry,
-        event
-      }) => {
-        if (geometry.isMouseenter && !this.ctx.isPointInPath(geometry, e.offsetX, e.offsetY)) {
-          event(e);
-          geometry.isMouseenter = false;
-        }
-      });
-    });
-  }
+  /**
+   * @param  {} geometry
+   */
+
 
   add(geometry) {
-    this.geometryList.push(geometry);
+    geometry.mount(this); // this.geometryList.push(geometry);
   }
 
   clear() {
@@ -88,10 +88,9 @@ class Scene {
   }
 
   update() {
-    this.clear();
-    this.geometryList.forEach(geometry => {
-      geometry.render(this.ctx);
-    });
+    this.clear(); // this.geometryList.forEach(geometry => {
+    //   geometry.render(this.ctx, this.eventPools)
+    // })
   }
 
 }
@@ -124,6 +123,19 @@ const styleMap = {
 
 };
 
+const content = {
+  eventPools: {
+    click: [],
+    mouseenter: [],
+    mouseleave: []
+  },
+
+  pushEvent(key, event) {
+    this.eventPools[key].push(event);
+  }
+
+};
+
 class Geometry {
   constructor(core = {}, style = {}, events = {}) {
     this.core = core;
@@ -146,6 +158,10 @@ class Geometry {
 
     this.isInitEvent = true;
   }
+  /**
+   * @param  {} ctx
+   */
+
 
   setStyles(ctx) {
     for (let k of Object.keys(this.style)) {
@@ -170,6 +186,15 @@ class Geometry {
     }
   }
 
+  mount(scene) {
+    this.scene = scene;
+  }
+
+  update() {} // TODO: 等diff完成
+
+
+  destroy() {}
+
 }
 
 class Rect extends Geometry {
@@ -182,8 +207,8 @@ class Rect extends Geometry {
   }
 
   render(ctx) {
+    const geometry = new Path2D();
     this.paint(ctx, () => {
-      const geometry = new Path2D();
       geometry.rect(this.core.x, this.core.y, this.core.width, this.core.height);
       return geometry;
     });
@@ -201,12 +226,9 @@ class Arc extends Geometry {
   }
 
   render(ctx) {
+    const geometry = new Path2D();
     this.paint(ctx, () => {
-      const geometry = new Path2D();
-      geometry.arc(this.core.x, this.core.y, this.core.radius, 0, 2 * Math.PI // this.core.startAngle,
-      // this.core.endAngle,
-      // this.core.counterclockwise
-      );
+      geometry.arc(this.core.x, this.core.y, this.core.radius, this.core.startAngle || 0, this.core.endAngle || 2 * Math.PI, !!this.core.counterclockwise);
       return geometry;
     });
   }

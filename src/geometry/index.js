@@ -21,7 +21,10 @@ class Geometry {
     }
     this.isInitEvent = true;
   }
-
+  
+  /**
+   * @param  {} ctx
+   */
   setStyles(ctx) {
     for (let k of Object.keys(this.style)) {
       const exec = styleMap[k];
@@ -42,6 +45,18 @@ class Geometry {
       ctx.closePath();
       ctx.restore();
     }
+  }
+
+  mount(scene) {
+    this.scene = scene;
+  }
+
+  update() {
+
+  }
+
+  // TODO: 等diff完成
+  destroy() {
   }
 }
 
