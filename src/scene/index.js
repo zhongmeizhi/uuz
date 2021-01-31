@@ -47,16 +47,11 @@ class Scene {
    */
   inject(renderer) {
     this.renderer = renderer;
+    this.dpr = this.renderer.dpr;
     this.renderer.updateList.push(...this.mesh.quadTree.objects);
     this.initEvents();
   }
 
-  update() {
-    if (!this.renderer) {
-      throw new Error('Scene need Renderer')
-    }
-    this.renderer.update();
-  }
 }
 
 export default Scene;

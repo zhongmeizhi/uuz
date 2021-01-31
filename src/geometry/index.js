@@ -1,5 +1,4 @@
 import styleMap from "./styleMap.js";
-import content from "@/content";
 
 class Geometry {
   constructor(core = {}, style = {}, events = {}) {
@@ -19,8 +18,17 @@ class Geometry {
     }
   }
 
+  // 抗锯齿和 isPointInPath 需要校验点击位置
   clickHandler(event) {
-    this.events.click(this, event)
+    if (
+      this.scene.renderer.ctx.isPointInPath(
+        this.geometry,
+        event.offsetX * this.scene.dpr,
+        event.offsetY * this.scene.dpr
+      )
+    ) {
+      this.events.click(this, event);
+    }
   }
 
   paint(render) {
@@ -36,8 +44,22 @@ class Geometry {
     }
   }
 
+  trace() {
+    const traceList = ['core', 'style', 'events'];
+    traceList.forEach(str => {
+      this[str] = new Proxy(this[str], {
+        set: (target, prop, value) => {
+          target[prop] = value;
+          this.scene.renderer.updateList.push(this)
+          return true;
+        }
+      })
+    })
+  }
+
   inject(scene) {
     this.scene = scene;
+    this.trace();
   }
 }
 

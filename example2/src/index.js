@@ -20,11 +20,13 @@ const arc = new uuz.Arc({
   },
   events: {
     click(geometry) {
-      if (geometry.mk) {
-        geometry.style.background = this.mk;
-        geometry.mk = null
+      if (geometry.bg) {
+        geometry.style.background = geometry.bg;
+        geometry.core.x -= 100;
+        geometry.bg = null
       } else {
-        geometry.mk = geometry.style.background || 'black';
+        geometry.bg = geometry.style.background;
+        geometry.core.x += 100;
         geometry.style.background = "#ffff00";
       }
     },
@@ -51,17 +53,9 @@ kLineData.forEach(val => {
 
 renderer.render(scene);
 
-function move() {
-  const kLine = kLineData.slice(-1)[0];
-  const dis = (0.5 - Math.random()) * 5
-  kLine.core.height += dis;
-  kLine.core.y -= dis;
-}
+// function run() {
+//   renderer.update()
+//   requestAnimationFrame(run);
+// }
 
-function run() {
-  move()
-  renderer.update()
-  requestAnimationFrame(run);
-}
-
-requestAnimationFrame(run);
+// requestAnimationFrame(run);

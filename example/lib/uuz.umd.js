@@ -4,6 +4,10 @@
   (global = global || self, global.uuz = factory());
 }(this, (function () { 'use strict';
 
+  function nextTick(fn) {
+    return Promise.resolve().then(fn.bind(null));
+  }
+
   class Renderer {
     /**
      * @param  {string} eleSelector
@@ -15,34 +19,30 @@
         throw new Error("不能找到匹配的dom元素");
       }
 
-      this.initCanvas(ele);
+      this.ctx = ele.getContext("2d");
+      this.element = ele;
       this.updateList = [];
+      this.antiAliasing(ele);
     }
     /**
      * @param  {HTMLElement} ele
      */
 
 
-    initCanvas(ele) {
-      this.ctx = ele.getContext("2d");
+    antiAliasing(ele) {
       this.dpr = window.devicePixelRatio || 1;
-      const width = ele.width;
-      const height = ele.height; // 抗锯齿和 isPointInPath 无法兼容。。。
-
-      ele.style.width = width + "px";
-      ele.style.height = height + "px";
-      ele.width = width * this.dpr;
-      ele.height = height * this.dpr;
+      this.width = ele.width;
+      this.height = ele.height;
+      ele.style.width = this.width + "px";
+      ele.style.height = this.height + "px";
+      ele.width = this.width * this.dpr;
+      ele.height = this.height * this.dpr;
       this.ctx.scale(this.dpr, this.dpr);
-      this.width = width;
-      this.height = height;
-      this.element = ele;
       this.ctx.save();
     }
 
     clear() {
-      this.ctx.clearRect(0, 0, this.width, this.height);
-      this.updateList = [];
+      this.ctx.clearRect(0, 0, this.width, this.height); // this.updateList.length = 0;
     }
     /**
      * @param  {Scene} scene
@@ -52,12 +52,24 @@
     render(scene) {
       scene.inject(this);
       this.update();
-    }
+      this.updateList = new Proxy(this.updateList, {
+        set: (target, prop, value) => {
+          target[prop] = value;
+          nextTick(() => {
+            this.clear();
+            this.update();
+          });
+          return true;
+        }
+      });
+    } // TODO: 局部更新
+
 
     update() {
+      console.log('更新');
       this.updateList.forEach(item => {
         item.render();
-      });
+      }); // this.updateList.length = 0;
     } // TODO: 根据网格动态裁剪
 
 
@@ -257,22 +269,19 @@
 
   const defaultMeshConfig = {
     width: 300,
-    height: 150,
-    blur: 4
+    height: 150
   };
 
   class Mesh {
     /**
      * @param  {} {width
-     * @param  {} height
-     * @param  {} blur}=defaultMeshConfig
+     * @param  {} height}=defaultMeshConfig
      */
     constructor({
       width,
       height,
       blur
     } = defaultMeshConfig) {
-      this.blur = blur;
       this.quadTree = new QuadTree({
         x: 0,
         y: 0,
@@ -301,12 +310,12 @@
      */
 
 
-    queryMouse(mouseX, mouseY) {
+    queryMouse(mouseX, mouseY, blur = 4) {
       return this.quadTree.retrieve({
         x: mouseX,
         y: mouseY,
-        width: this.blur,
-        height: this.blur
+        width: blur,
+        height: blur
       });
     }
 
@@ -359,16 +368,9 @@
 
     inject(renderer) {
       this.renderer = renderer;
+      this.dpr = this.renderer.dpr;
       this.renderer.updateList.push(...this.mesh.quadTree.objects);
       this.initEvents();
-    }
-
-    update() {
-      if (!this.renderer) {
-        throw new Error('Scene need Renderer');
-      }
-
-      this.renderer.update();
     }
 
   }
@@ -418,10 +420,13 @@
           exec(this.scene.renderer.ctx, this.style[k]);
         }
       }
-    }
+    } // 抗锯齿和 isPointInPath 需要校验点击位置
+
 
     clickHandler(event) {
-      this.events.click(this, event);
+      if (this.scene.renderer.ctx.isPointInPath(this.geometry, event.offsetX * this.scene.dpr, event.offsetY * this.scene.dpr)) {
+        this.events.click(this, event);
+      }
     }
 
     paint(render) {
@@ -438,8 +443,22 @@
       }
     }
 
+    trace() {
+      const traceList = ['core', 'style', 'events'];
+      traceList.forEach(str => {
+        this[str] = new Proxy(this[str], {
+          set: (target, prop, value) => {
+            target[prop] = value;
+            this.scene.renderer.updateList.push(this);
+            return true;
+          }
+        });
+      });
+    }
+
     inject(scene) {
       this.scene = scene;
+      this.trace();
     }
 
   }

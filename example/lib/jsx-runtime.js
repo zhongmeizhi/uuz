@@ -206,22 +206,19 @@
 
 	const defaultMeshConfig = {
 	  width: 300,
-	  height: 150,
-	  blur: 4
+	  height: 150
 	};
 
 	class Mesh {
 	  /**
 	   * @param  {} {width
-	   * @param  {} height
-	   * @param  {} blur}=defaultMeshConfig
+	   * @param  {} height}=defaultMeshConfig
 	   */
 	  constructor({
 	    width,
 	    height,
 	    blur
 	  } = defaultMeshConfig) {
-	    this.blur = blur;
 	    this.quadTree = new QuadTree({
 	      x: 0,
 	      y: 0,
@@ -250,12 +247,12 @@
 	   */
 
 
-	  queryMouse(mouseX, mouseY) {
+	  queryMouse(mouseX, mouseY, blur = 4) {
 	    return this.quadTree.retrieve({
 	      x: mouseX,
 	      y: mouseY,
-	      width: this.blur,
-	      height: this.blur
+	      width: blur,
+	      height: blur
 	    });
 	  }
 
@@ -308,16 +305,9 @@
 
 	  inject(renderer) {
 	    this.renderer = renderer;
+	    this.dpr = this.renderer.dpr;
 	    this.renderer.updateList.push(...this.mesh.quadTree.objects);
 	    this.initEvents();
-	  }
-
-	  update() {
-	    if (!this.renderer) {
-	      throw new Error('Scene need Renderer');
-	    }
-
-	    this.renderer.update();
 	  }
 
 	}
