@@ -1,20 +1,25 @@
 {
   "name": "uuz",
-  "version": "0.2.0",
+  "version": "0.0.1",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "waste": "parcel example/index.html --out-dir src/example/dist",
     "dev": "rollup --config rollup.config.dev.js --watch",
+    "plugin": "rollup --config rollup.config.plugin.js --watch",
+    "runtime": "rollup --config rollup.config.runtime.js --watch",
     "build": "rollup -c"
   },
   "devDependencies": {
     "@babel/core": "^7.10.5",
-    "parcel": "^1.12.4",
-    "rollup": "^2.21.0"
+    "@babel/plugin-syntax-jsx": "^7.12.13",
+    "@rollup/plugin-babel": "^5.1.0",
+    "rollup": "^2.21.0",
+    "rollup-plugin-terser": "^6.1.0"
   },
   "dependencies": {
-    "@rollup/plugin-babel": "^5.1.0",
-    "rollup-plugin-terser": "^6.1.0"
+    "@babel/generator": "^7.13.9",
+    "@babel/helper-builder-react-jsx": "^7.12.13",
+    "@babel/helper-plugin-utils": "^7.13.0",
+    "@babel/types": "^7.13.13"
   }
 }

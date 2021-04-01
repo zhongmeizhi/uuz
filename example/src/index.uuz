@@ -1,0 +1,35 @@
+import uuz from '../lib/uuz.umd'
+
+class Screen {
+  constructor(data) {
+    console.log(this, data)
+  }
+}
+
+class Arc {
+  constructor(data) {
+    console.log(this, data)
+  }
+}
+
+class Reat {
+  constructor(data) {
+    console.log(this, data)
+  }
+}
+
+const clickHandler = () => {
+
+}
+
+export default (data) => (
+  <Screen name="Screen">
+    {
+      [1].map(val => {
+        const arc = data.arc;
+        return <Arc name="Arc" style={{x: arc.x, y: arc.y}}></Arc>
+      })
+    }
+    <Reat name="Reat" event={{click: clickHandler}}></Reat>
+  </Screen>
+)

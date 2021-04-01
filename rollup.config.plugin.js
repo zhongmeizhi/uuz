@@ -1,12 +1,12 @@
 import babel from '@rollup/plugin-babel';
 
 const config = {
-  input: 'src/index.js',
+  input: 'src/plugins/babel-plugin-uuz-jsx.js',
   output: [
     {
       format: 'umd',
-      file: 'example/lib/uuz.umd.js',
-      name: 'uuz',
+      file: 'example/lib/uuz-jsx.js',
+      name: 'uuz-jsx',
       sourcemap: false,
     },
   ],
