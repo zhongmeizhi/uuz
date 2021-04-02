@@ -14,5 +14,5 @@ const config = {
 		babel({ babelHelpers: 'bundled' })
 	]
 };
- 
+
 export default config;

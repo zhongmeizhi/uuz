@@ -1,7 +1,13 @@
-import h from './core/h'
+import Scene from './scene/index'
+import Rect from './geometry/rect'
+import Arc from './geometry/arc'
+import Group from './scene/group'
 
 const uuz = {
-  h
+  Scene,
+  Rect,
+  Arc,
+  Group
 }
 
 export default uuz;

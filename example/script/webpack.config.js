@@ -10,7 +10,8 @@ function resolve(dir) {
 module.exports = {
 	entry: './src/index.js',
 	output: {
-		filename: '[name].[hash:8].js',
+		// filename: '[name].[hash:8].js',
+		filename: '[name].js',
 		path: resolve('dist'),
 		publicPath: '/'
 	},

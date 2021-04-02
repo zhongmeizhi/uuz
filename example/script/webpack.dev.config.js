@@ -6,6 +6,7 @@ function resolve(dir) {
 	return path.resolve(__dirname, '..', dir)
 }
 
+// TODO:
 module.exports = {
 	entry: './src/index.js',
 	output: {

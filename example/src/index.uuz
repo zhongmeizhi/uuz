@@ -1,35 +1,75 @@
-import uuz from '../lib/uuz.umd'
+import uuz from "uuz/jsx-runtime";
+import { Arc, Rect } from "uuz/uuz.umd.js";
+import kLineData from "./data";
 
-class Screen {
-  constructor(data) {
-    console.log(this, data)
-  }
-}
-
-class Arc {
-  constructor(data) {
-    console.log(this, data)
-  }
-}
-
-class Reat {
-  constructor(data) {
-    console.log(this, data)
-  }
-}
-
-const clickHandler = () => {
-
-}
-
-export default (data) => (
-  <Screen name="Screen">
-    {
-      [1].map(val => {
-        const arc = data.arc;
-        return <Arc name="Arc" style={{x: arc.x, y: arc.y}}></Arc>
-      })
-    }
-    <Reat name="Reat" event={{click: clickHandler}}></Reat>
-  </Screen>
-)
+export default () => {
+  return (
+    <>
+      {kLineData.map((kLine) => {
+        return (
+          <Rect
+            core={kLine.core}
+            style={kLine.style}
+            events={{
+              mouseenter(e, ctx) {
+                this.mk = kLine.style.background || "black";
+                kLine.style.background = "#ffff00";
+              },
+              mouseleave(e, ctx) {
+                kLine.style.background = this.mk;
+                this.mk = null;
+              },
+            }}
+          />
+        );
+      })}
+      <Arc
+        core={{
+          x: 100,
+          y: 75,
+          radius: 30,
+        }}
+        style={{
+          opacity: 0.6,
+          boxShadow: "red 2 3 3",
+          background: "#79B83D",
+        }}
+        events={{
+          click(e, ctx) {
+            if (this.mk) {
+              this.style.background = this.mk;
+              this.mk = null;
+            } else {
+              this.mk = this.style.background || "black";
+              this.style.background = "#ffff00";
+            }
+          },
+        }}
+      >
+        <Arc
+          core={{
+            x: 150,
+            y: 75,
+            radius: 30,
+          }}
+          style={{
+            opacity: 0.6,
+            boxShadow: "red 2 3 3",
+            background: "#79B83D",
+          }}
+          events={{
+            click(e, ctx) {
+              if (this.mk) {
+                this.style.background = this.mk;
+                this.mk = null;
+              } else {
+                this.mk = this.style.background || "black";
+                this.style.background = "#ffff00";
+              }
+            },
+          }}
+        />
+      </Arc>
+    </>
+  );
+};

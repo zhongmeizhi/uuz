@@ -14,7 +14,7 @@ const DEFAULT = {
   importSource: "uuz",
   runtime: "automatic",
   pragma: "uuz.h",
-  pragmaFrag: "uuz.h",
+  pragmaFrag: "uuz.fragment",
 };
 
 const JSX_SOURCE_ANNOTATION_REGEX = /\*?\s*@jsxImportSource\s+([^\s]+)/;
