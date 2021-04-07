@@ -1,18 +1,18 @@
-import QuadTree from "@timohausmann/quadtree-js";
+import QuadTree from "@/mesh/quadTree.js";
 
-const defaultGridConfig = {
+const defaultMeshConfig = {
   width: 300,
   height: 150,
-  blur: 8,
+  blur: 4,
 };
 
-class Grid {
+class Mesh {
   /**
    * @param  {} {width
    * @param  {} height
-   * @param  {} blur}=defaultGridConfig
+   * @param  {} blur}=defaultMeshConfig
    */
-  constructor({ width, height, blur } = defaultGridConfig) {
+  constructor({ width, height, blur } = defaultMeshConfig) {
     this.blur = blur;
     this.quadTree = new QuadTree({
       x: 0,
@@ -49,4 +49,4 @@ class Grid {
   }
 }
 
-export default Grid;
+export default Mesh;

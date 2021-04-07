@@ -241,11 +241,6 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@timohausmann/quadtree-js@^1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@timohausmann/quadtree-js/-/quadtree-js-1.2.4.tgz#d66abcb6acf2293592135e1fee07b8bbfe72f4ca"
-  integrity sha512-klCMFHh1ooZhpAPBwa8hq/ek6KwwfDWo7vxbtatejfdOFVlWE5PFWv+R6RzWT1JNYJhynuZCDTzgTkP4Wg2T5w==
-
 "@types/estree@0.0.39":
   version "0.0.39"
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.39.tgz#e177e699ee1b8c22d23174caaa7422644389509f"

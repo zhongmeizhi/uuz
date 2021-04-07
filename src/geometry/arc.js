@@ -5,10 +5,9 @@ class Arc extends Geometry {
     super(core, style, events);
   }
 
-  render(ctx) {
+  render() {
     const geometry = new Path2D();
     this.paint(
-      ctx,
       () => {
         geometry.arc(
           this.core.x,

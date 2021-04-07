@@ -7,56 +7,37 @@ class Geometry {
     this.style = style;
     this.events = events;
     this.geometry = null;
-    this.isInitEvent = false;
   }
 
-  setEventHandler() {
-    if (this.isInitEvent) return;
-    if (typeof this.events !== "object") return;
-    for (let k of Object.keys(this.events)) {
-      content.pushEvent(k, {
-        geometry: this.geometry,
-        event: this.events[k].bind(this),
-      });
-    }
-    this.isInitEvent = true;
-  }
-  
-  /**
-   * @param  {} ctx
-   */
-  setStyles(ctx) {
+  // TODO: 需要性能优化
+  setStyles() {
     for (let k of Object.keys(this.style)) {
       const exec = styleMap[k];
       if (exec) {
-        exec(ctx, this.style[k]);
+        exec(this.scene.renderer.ctx, this.style[k]);
       }
     }
   }
 
-  paint(ctx, render) {
+  clickHandler(event) {
+    this.events.click(this, event)
+  }
+
+  paint(render) {
+    const ctx = this.scene.renderer.ctx;
     if (ctx && typeof render === "function") {
       ctx.save();
       ctx.beginPath();
-      this.setStyles(ctx);
+      this.setStyles();
       this.geometry = render();
-      this.setEventHandler();
       ctx.fill(this.geometry);
       ctx.closePath();
       ctx.restore();
     }
   }
 
-  mount(scene) {
+  inject(scene) {
     this.scene = scene;
-  }
-
-  update() {
-
-  }
-
-  // TODO: 等diff完成
-  destroy() {
   }
 }
 

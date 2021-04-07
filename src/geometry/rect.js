@@ -5,10 +5,9 @@ class Rect extends Geometry {
     super(core, style, events);
   }
 
-  render(ctx) {
+  render() {
     const geometry = new Path2D();
     this.paint(
-      ctx,
       () => {
         geometry.rect(
           this.core.x,
