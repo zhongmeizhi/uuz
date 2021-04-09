@@ -17,6 +17,79 @@
 	  return props.children;
 	}
 
+	class Renderer {
+	  /**
+	   * @param  {string} eleSelector
+	   */
+	  constructor(eleSelector) {
+	    const ele = document.querySelector(eleSelector);
+
+	    if (!ele) {
+	      throw new Error("不能找到匹配的dom元素");
+	    }
+
+	    this.ctx = ele.getContext("2d");
+	    this.element = ele;
+	    this.antiAliasing(ele);
+	  }
+	  /**
+	   * @param  {HTMLElement} ele
+	   */
+
+
+	  antiAliasing(ele) {
+	    this.dpr = window.devicePixelRatio || 1;
+	    this.width = ele.width;
+	    this.height = ele.height;
+	    ele.style.width = this.width + "px";
+	    ele.style.height = this.height + "px";
+	    ele.width = this.width * this.dpr;
+	    ele.height = this.height * this.dpr;
+	    this.ctx.scale(this.dpr, this.dpr);
+	    this.ctx.save();
+	  }
+
+	  clear() {
+	    this.ctx.clearRect(0, 0, this.width, this.height);
+	  }
+	  /**
+	   * @param  {Scene} scene
+	   */
+
+
+	  render(scene) {
+	    scene.inject(this);
+	    this.scene = scene;
+	    this.update();
+	    return this;
+	  }
+
+	  update() {
+	    if (this.scene.dirtySet.size) {
+	      console.log('更新');
+	      this.scene.update();
+	    }
+	  }
+	  /**
+	   * @param  {Function} callback
+	   */
+
+
+	  animation(callback) {
+	    const run = () => {
+	      if (typeof callback === "function") {
+	        callback.call(null, this);
+	      }
+
+	      this.update();
+	      window.requestAnimationFrame(run);
+	    };
+
+	    window.requestAnimationFrame(run);
+	  }
+
+	}
+
 	/**
 	 * fork by https://github.com/timohausmann/QuadTree-js.git
 
@@ -260,7 +333,7 @@
 	class Scene {
 	  constructor({
 	    style
-	  }) {
+	  } = {}) {
 	    // TODO: 添加 Scene 的样式
 	    this.initMesh();
 	    this.dirtySet = new Set();
@@ -336,10 +409,10 @@
 
 	}
 
-	function traverseGeometry(screen, item) {
+	function traverseGeometry(scene, item) {
 	  if (Array.isArray(item)) {
 	    item.forEach(sub => {
-	      traverseGeometry(screen, sub);
+	      traverseGeometry(scene, sub);
 	    });
 	  } else {
 	    const {
@@ -351,12 +424,12 @@
 	    } = item;
 
 	    if (Component) {
-	      screen.add(new Component(val));
+	      scene.add(new Component(val));
 	    }
 
 	    if (children) {
 	      children.forEach(sub => {
-	        traverseGeometry(screen, sub);
+	        traverseGeometry(scene, sub);
 	      });
 	    }
 	  }
@@ -365,16 +438,12 @@
 	function mount(root, {
 	  props
 	}) {
-	  const screen = new Scene(root);
+	  const renderer = new Renderer(root);
+	  const scene = new Scene(props);
 	  props.children.forEach(item => {
-	    traverseGeometry(screen, item);
+	    traverseGeometry(scene, item);
 	  });
-	  screen.update(); // function run() {
-	  //   screen.update();
-	  //   requestAnimationFrame(run)
-	  // }
-	  // requestAnimationFrame(run)
-	  // return screen;
+	  renderer.render(scene).animation();
 	}
 
 	const jsx = h;

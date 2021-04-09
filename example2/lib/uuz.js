@@ -314,7 +314,7 @@ class Mesh {
 class Scene {
   constructor({
     style
-  }) {
+  } = {}) {
     // TODO: 添加 Scene 的样式
     this.initMesh();
     this.dirtySet = new Set();

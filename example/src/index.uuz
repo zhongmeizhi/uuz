@@ -11,11 +11,11 @@ export default () => {
             core={kLine.core}
             style={kLine.style}
             events={{
-              mouseenter(e, ctx) {
+              mouseenter(geometry) {
                 this.mk = kLine.style.background || "black";
                 kLine.style.background = "#ffff00";
               },
-              mouseleave(e, ctx) {
+              mouseleave(geometry) {
                 kLine.style.background = this.mk;
                 this.mk = null;
               },
@@ -35,41 +35,19 @@ export default () => {
           background: "#79B83D",
         }}
         events={{
-          click(e, ctx) {
-            if (this.mk) {
-              this.style.background = this.mk;
-              this.mk = null;
+          click(geometry) {
+            if (geometry.bg) {
+              geometry.style.background = geometry.bg;
+              geometry.core.x -= 100;
+              geometry.bg = null;
             } else {
-              this.mk = this.style.background || "black";
-              this.style.background = "#ffff00";
+              geometry.bg = geometry.style.background;
+              geometry.core.x += 100;
+              geometry.style.background = "#ffff00";
             }
           },
         }}
-      >
-        <Arc
-          core={{
-            x: 150,
-            y: 75,
-            radius: 30,
-          }}
-          style={{
-            opacity: 0.6,
-            boxShadow: "red 2 3 3",
-            background: "#79B83D",
-          }}
-          events={{
-            click(e, ctx) {
-              if (this.mk) {
-                this.style.background = this.mk;
-                this.mk = null;
-              } else {
-                this.mk = this.style.background || "black";
-                this.style.background = "#ffff00";
-              }
-            },
-          }}
-        />
-      </Arc>
+      />
     </>
   );
 };

@@ -1,33 +1,29 @@
-import Screen from '../scene/index.js';
+import Renderer from '../renderer/index.js';
+import Scene from '../scene/index.js';
 
-function traverseGeometry(screen, item) {
+function traverseGeometry(scene, item) {
   if (Array.isArray(item)) {
     item.forEach(sub => {
-      traverseGeometry(screen, sub)
+      traverseGeometry(scene, sub)
     })
   } else {
     const { Component, props: { children, ...val } = {}} = item;
     if (Component) {
-      screen.add(new Component(val));
+      scene.add(new Component(val));
     }
     if (children) {
       children.forEach(sub => {
-        traverseGeometry(screen, sub)
+        traverseGeometry(scene, sub)
       })
     }
   }
 }
 
 export default function mount(root, {props}) {
-  const screen = new Screen(root);
+  const renderer = new Renderer(root)
+  const scene = new Scene(props);
   props.children.forEach(item => {
-    traverseGeometry(screen, item);
+    traverseGeometry(scene, item);
   })
-  screen.update();
-  // function run() {
-  //   screen.update();
-  //   requestAnimationFrame(run)
-  // }
-  // requestAnimationFrame(run)
-  // return screen;
+  renderer.render(scene).animation()
 }
