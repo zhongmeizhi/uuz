@@ -1,16 +1,17 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin'); //通过 npm 安装
 const webpack = require('webpack');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const path = require('path')
 
 function resolve(dir) {
 	return path.resolve(__dirname, '..', dir)
 }
 
-// TODO:
 module.exports = {
 	entry: './src/index.js',
 	output: {
-		filename: '[name].[hash:8].js',
+		// filename: '[name].[hash:8].js',
+		filename: '[name].js',
 		path: resolve('dist'),
 		publicPath: '/'
 	},
@@ -18,13 +19,17 @@ module.exports = {
 		extensions: ['.js', '.json'],
 		alias: {
 			'@': resolve('src'),
+			'uuz': resolve('lib')
 		}
 	},
   mode: "development",
+	optimization: {
+		minimizer: []
+	},
 	module: {
 		rules: [
 			{
-				test: /\.uuz/,
+				test: /(\.uuz)|(\.jsx)/,
 				exclude: /(node_modules|bower_components)/,
         use: {
           loader: 'babel-loader',
@@ -40,6 +45,7 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.ProgressPlugin(),
+		new CleanWebpackPlugin(),
 		new HtmlWebpackPlugin({ template: resolve('index.html') })
 	]
 };
