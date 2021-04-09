@@ -10,7 +10,7 @@ class Mesh {
    * @param  {} {width
    * @param  {} height}=defaultMeshConfig
    */
-  constructor({ width, height, blur } = defaultMeshConfig) {
+  constructor({ width, height } = defaultMeshConfig) {
     this.quadTree = new QuadTree({
       x: 0,
       y: 0,

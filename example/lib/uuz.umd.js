@@ -4,10 +4,6 @@
   (global = global || self, global.uuz = factory());
 }(this, (function () { 'use strict';
 
-  function nextTick(fn) {
-    return Promise.resolve().then(fn.bind(null));
-  }
-
   class Renderer {
     /**
      * @param  {string} eleSelector
@@ -21,7 +17,6 @@
 
       this.ctx = ele.getContext("2d");
       this.element = ele;
-      this.updateList = [];
       this.antiAliasing(ele);
     }
     /**
@@ -42,7 +37,7 @@
     }
 
     clear() {
-      this.ctx.clearRect(0, 0, this.width, this.height); // this.updateList.length = 0;
+      this.ctx.clearRect(0, 0, this.width, this.height);
     }
     /**
      * @param  {Scene} scene
@@ -51,31 +46,33 @@
 
     render(scene) {
       scene.inject(this);
+      this.scene = scene;
       this.update();
-      this.updateList = new Proxy(this.updateList, {
-        set: (target, prop, value) => {
-          target[prop] = value;
-          nextTick(() => {
-            this.clear();
-            this.update();
-          });
-          return true;
-        }
-      });
-    } // TODO: 局部更新
-
+      return this;
+    }
 
     update() {
-      console.log('更新');
-      this.updateList.forEach(item => {
-        item.render();
-      }); // this.updateList.length = 0;
-    } // TODO: 根据网格动态裁剪
+      if (this.scene.dirtySet.size) {
+        console.log('更新');
+        this.scene.update();
+      }
+    }
+    /**
+     * @param  {Function} callback
+     */
 
 
-    clip() {// this.ctx.rect(60,20,200,120);
-      // this.ctx.clip();
-      // this.ctx.update();
+    animation(callback) {
+      const run = () => {
+        if (typeof callback === "function") {
+          callback.call(null, this);
+        }
+
+        this.update();
+        window.requestAnimationFrame(run);
+      };
+
+      window.requestAnimationFrame(run);
     }
 
   }
@@ -279,8 +276,7 @@
      */
     constructor({
       width,
-      height,
-      blur
+      height
     } = defaultMeshConfig) {
       this.quadTree = new QuadTree({
         x: 0,
@@ -327,6 +323,7 @@
     }) {
       // TODO: 添加 Scene 的样式
       this.initMesh();
+      this.dirtySet = new Set();
     }
 
     initMesh() {
@@ -343,11 +340,20 @@
       this.renderer.element.addEventListener("click", event => {
         const broadPhaseResult = this.mesh.queryMouse(event.offsetX, event.offsetY);
         broadPhaseResult.forEach(geometry => {
-          if (geometry.events && typeof geometry.events.click === "function") {
+          if (geometry.events && typeof geometry.events.click === "function" && this.isPointInPath(geometry, event)) {
             geometry.clickHandler(event);
           }
         });
       });
+    }
+    /**
+     * @param  {Geometry} geometry
+     * @param  {MouseEvent} event
+     */
+
+
+    isPointInPath(geometry, event) {
+      return this.renderer.ctx.isPointInPath(geometry.path, event.offsetX * this.renderer.dpr, event.offsetY * this.renderer.dpr);
     }
     /**
      * @param  {Geometry} geometry
@@ -357,6 +363,23 @@
     add(geometry) {
       geometry.inject(this);
       this.mesh.insert(geometry);
+      this.dirtySet.add(geometry);
+    } // TODO: 开启局部更新
+
+
+    update() {
+      this.dirtySet.forEach(item => {
+        this.clip(item);
+        item.render();
+      });
+      this.dirtySet.clear();
+    } // TODO: 根据网格动态裁剪
+
+
+    clip(item) {
+      console.log(item, "item"); // this.renderer.ctx.clip();
+      // this.renderer.clear();
+      // this.renderer.ctx.restore();
     } // TODO:
 
 
@@ -368,8 +391,6 @@
 
     inject(renderer) {
       this.renderer = renderer;
-      this.dpr = this.renderer.dpr;
-      this.renderer.updateList.push(...this.mesh.quadTree.objects);
       this.initEvents();
     }
 
@@ -405,10 +426,31 @@
 
   class Geometry {
     constructor(core = {}, style = {}, events = {}) {
-      this.core = core;
-      this.style = style;
-      this.events = events;
-      this.geometry = null;
+      this.core = this.trace(core);
+      this.style = this.trace(style);
+      this.events = this.trace(events);
+      this.scene = null;
+      this.path = null;
+      this.dirty = false; // this.oldData = {}
+    }
+    /**
+     * @param  {Object} item
+     */
+
+
+    trace(item) {
+      return new Proxy(item, {
+        set: (target, prop, value) => {
+          target[prop] = value;
+
+          if (!this.dirty) {
+            this.scene.dirtySet.add(this);
+          }
+
+          this.dirty = true;
+          return true;
+        }
+      });
     } // TODO: 需要性能优化
 
 
@@ -420,45 +462,34 @@
           exec(this.scene.renderer.ctx, this.style[k]);
         }
       }
-    } // 抗锯齿和 isPointInPath 需要校验点击位置
+    }
+    /**
+     * ps: 抗锯齿和 isPointInPath 需要校验点击位置
+     * @param  {MouseEvent} event
+     */
 
 
     clickHandler(event) {
-      if (this.scene.renderer.ctx.isPointInPath(this.geometry, event.offsetX * this.scene.dpr, event.offsetY * this.scene.dpr)) {
-        this.events.click(this, event);
-      }
+      this.events.click(this, event);
     }
 
     paint(render) {
+      this.dirty = false;
       const ctx = this.scene.renderer.ctx;
 
       if (ctx && typeof render === "function") {
         ctx.save();
         ctx.beginPath();
         this.setStyles();
-        this.geometry = render();
-        ctx.fill(this.geometry);
+        this.path = render();
+        ctx.fill(this.path);
         ctx.closePath();
         ctx.restore();
       }
     }
 
-    trace() {
-      const traceList = ['core', 'style', 'events'];
-      traceList.forEach(str => {
-        this[str] = new Proxy(this[str], {
-          set: (target, prop, value) => {
-            target[prop] = value;
-            this.scene.renderer.updateList.push(this);
-            return true;
-          }
-        });
-      });
-    }
-
     inject(scene) {
       this.scene = scene;
-      this.trace();
     }
 
   }

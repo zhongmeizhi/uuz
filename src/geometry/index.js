@@ -2,10 +2,29 @@ import styleMap from "./styleMap.js";
 
 class Geometry {
   constructor(core = {}, style = {}, events = {}) {
-    this.core = core;
-    this.style = style;
-    this.events = events;
-    this.geometry = null;
+    this.core = this.trace(core);
+    this.style = this.trace(style);
+    this.events = this.trace(events);
+    this.scene = null;
+    this.path = null;
+    this.dirty = false;
+    // this.oldData = {}
+  }
+
+  /**
+   * @param  {Object} item
+   */
+  trace(item) {
+    return new Proxy(item, {
+      set: (target, prop, value) => {
+        target[prop] = value;
+        if (!this.dirty) {
+          this.scene.dirtySet.add(this);
+        }
+        this.dirty = true;
+        return true;
+      }
+    })
   }
 
   // TODO: 需要性能优化
@@ -18,48 +37,30 @@ class Geometry {
     }
   }
 
-  // 抗锯齿和 isPointInPath 需要校验点击位置
+  /**
+   * ps: 抗锯齿和 isPointInPath 需要校验点击位置
+   * @param  {MouseEvent} event
+   */
   clickHandler(event) {
-    if (
-      this.scene.renderer.ctx.isPointInPath(
-        this.geometry,
-        event.offsetX * this.scene.dpr,
-        event.offsetY * this.scene.dpr
-      )
-    ) {
-      this.events.click(this, event);
-    }
+    this.events.click(this, event);
   }
-
+  
   paint(render) {
+    this.dirty = false;
     const ctx = this.scene.renderer.ctx;
     if (ctx && typeof render === "function") {
       ctx.save();
       ctx.beginPath();
       this.setStyles();
-      this.geometry = render();
-      ctx.fill(this.geometry);
+      this.path = render();
+      ctx.fill(this.path);
       ctx.closePath();
       ctx.restore();
     }
   }
 
-  trace() {
-    const traceList = ['core', 'style', 'events'];
-    traceList.forEach(str => {
-      this[str] = new Proxy(this[str], {
-        set: (target, prop, value) => {
-          target[prop] = value;
-          this.scene.renderer.updateList.push(this)
-          return true;
-        }
-      })
-    })
-  }
-
   inject(scene) {
     this.scene = scene;
-    this.trace();
   }
 }
 

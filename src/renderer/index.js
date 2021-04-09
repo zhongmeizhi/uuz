@@ -1,5 +1,3 @@
-import { nextTick } from '@/utils/base.js';
-
 class Renderer {
   /**
    * @param  {string} eleSelector
@@ -11,7 +9,6 @@ class Renderer {
     }
     this.ctx = ele.getContext("2d");
     this.element = ele;
-    this.updateList = [];
     this.antiAliasing(ele);
   }
 
@@ -32,41 +29,37 @@ class Renderer {
 
   clear() {
     this.ctx.clearRect(0, 0, this.width, this.height);
-    // this.updateList.length = 0;
   }
 
   /**
    * @param  {Scene} scene
    */
   render(scene) {
-    scene.inject(this)
+    scene.inject(this);
+    this.scene = scene;
     this.update();
-    this.updateList = new Proxy(this.updateList, {
-      set: (target, prop, value) => {
-        target[prop] = value;
-        nextTick(() => {
-          this.clear();
-          this.update();
-        })
-        return true;
-      }
-    });
+    return this;
   }
 
-  // TODO: 局部更新
   update() {
-    console.log('更新')
-    this.updateList.forEach(item => {
-      item.render();
-    })
-    // this.updateList.length = 0;
+    if (this.scene.dirtySet.size) {
+      console.log('更新')
+      this.scene.update();
+    }
   }
 
-  // TODO: 根据网格动态裁剪
-  clip() {
-    // this.ctx.rect(60,20,200,120);
-    // this.ctx.clip();
-    // this.ctx.update();
+  /**
+   * @param  {Function} callback
+   */
+  animation(callback) {
+    const run = () => {
+      if (typeof callback === "function") {
+        callback.call(null, this);
+      }
+      this.update();
+      window.requestAnimationFrame(run);
+    }
+    window.requestAnimationFrame(run);
   }
 }
 
