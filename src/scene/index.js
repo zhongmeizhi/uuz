@@ -2,18 +2,29 @@ import Mesh from "@/mesh";
 class Scene {
   constructor({ style } = {}) {
     // TODO: 添加 Scene 的样式
-    this.initMesh();
+    this._initMesh();
     this.dirtySet = new Set();
   }
 
-  initMesh() {
+  _initMesh() {
     this.mesh = new Mesh({
       x: 0,
       y: 0,
-      blur: 4,
       width: this.width,
       height: this.height,
     });
+  }
+
+  /**
+   * @param  {Geometry} geometry
+   * @param  {MouseEvent} event
+   */
+  _isPointInPath(geometry, event) {
+    return this.renderer.ctx.isPointInPath(
+      geometry.path,
+      event.offsetX * this.renderer.dpr,
+      event.offsetY * this.renderer.dpr
+    );
   }
 
   initEvents() {
@@ -26,9 +37,9 @@ class Scene {
         if (
           geometry.events &&
           typeof geometry.events.click === "function" &&
-          this.isPointInPath(geometry, event)
+          this._isPointInPath(geometry, event)
         ) {
-          geometry.clickHandler(event);
+          geometry._clickHandler(event);
         }
       });
     });
@@ -36,21 +47,9 @@ class Scene {
 
   /**
    * @param  {Geometry} geometry
-   * @param  {MouseEvent} event
-   */
-  isPointInPath(geometry, event) {
-    return this.renderer.ctx.isPointInPath(
-      geometry.path,
-      event.offsetX * this.renderer.dpr,
-      event.offsetY * this.renderer.dpr
-    );
-  }
-
-  /**
-   * @param  {Geometry} geometry
    */
   add(geometry) {
-    geometry.inject(this);
+    geometry._inject(this);
     this.mesh.insert(geometry);
     this.dirtySet.add(geometry);
   }
@@ -64,6 +63,10 @@ class Scene {
     this.dirtySet.clear();
   }
 
+  forceUpdate() {
+    this.mesh.objects.forEach(item => item.render());
+  }
+
   // TODO: 根据网格动态裁剪
   clip(item) {
     console.log(item, "item");
@@ -73,12 +76,12 @@ class Scene {
   }
 
   // TODO:
-  remove(geometry) {}
+  remove(geometry) { }
 
   /**
    * @param  {Renderer} renderer
    */
-  inject(renderer) {
+  _inject(renderer) {
     this.renderer = renderer;
     this.initEvents();
   }

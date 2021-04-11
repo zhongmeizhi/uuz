@@ -9,13 +9,13 @@ class Renderer {
     }
     this.ctx = ele.getContext("2d");
     this.element = ele;
-    this.antiAliasing(ele);
+    this._antiAliasing(ele);
   }
 
   /**
    * @param  {HTMLElement} ele
    */
-  antiAliasing(ele) {
+  _antiAliasing(ele) {
     this.dpr = window.devicePixelRatio || 1;
     this.width = ele.width;
     this.height = ele.height;
@@ -35,17 +35,20 @@ class Renderer {
    * @param  {Scene} scene
    */
   render(scene) {
-    scene.inject(this);
+    scene._inject(this);
     this.scene = scene;
     this.update();
     return this;
   }
 
   update() {
-    if (this.scene.dirtySet.size) {
-      console.log('更新')
-      this.scene.update();
-    }
+    this.clear();
+    this.scene.forceUpdate();
+    // TODO: 部分更新
+    // if (this.scene.dirtySet.size) {
+    //   console.log('更新')
+    //   this.scene.update();
+    // }
   }
 
   /**

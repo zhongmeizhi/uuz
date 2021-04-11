@@ -7,7 +7,7 @@ class Line extends Geometry {
 
   render() {
     const geometry = new Path2D();
-    this.paint(
+    this._paint(
       ctx,
       () => {
         geometry.rect(

@@ -12,12 +12,12 @@ export default () => {
             style={kLine.style}
             events={{
               mouseenter(geometry) {
-                this.mk = kLine.style.background || "black";
+                geometry.mk = kLine.style.background || "black";
                 kLine.style.background = "#ffff00";
               },
               mouseleave(geometry) {
-                kLine.style.background = this.mk;
-                this.mk = null;
+                kLine.style.background = geometry.mk;
+                geometry.mk = null;
               },
             }}
           />

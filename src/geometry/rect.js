@@ -7,7 +7,7 @@ class Rect extends Geometry {
 
   render() {
     const geometry = new Path2D();
-    this.paint(
+    this._paint(
       () => {
         geometry.rect(
           this.core.x,
