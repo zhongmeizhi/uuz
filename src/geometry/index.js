@@ -1,4 +1,5 @@
 import styleMap from "./styleMap.js";
+import { isArr, isFn } from "@/utils/base.js";
 
 class Geometry {
   constructor(core = {}, style = {}, events = {}) {
@@ -8,6 +9,7 @@ class Geometry {
     this.scene = null;
     this.path = null;
     this.dirty = false;
+    this.isEnter = false;
     // this.oldData = {}
   }
 
@@ -20,11 +22,11 @@ class Geometry {
         target[prop] = value;
         if (!this.dirty) {
           this.scene.dirtySet.add(this);
+          this.dirty = true;
         }
-        this.dirty = true;
         return true;
-      }
-    })
+      },
+    });
   }
 
   // TODO: 需要性能优化
@@ -41,10 +43,44 @@ class Geometry {
    * ps: 抗锯齿和 isPointInPath 需要校验点击位置
    * @param  {MouseEvent} event
    */
-  _clickHandler(event) {
-    this.events.click(this, event);
+  _isPointInPath(event) {
+    const dpr = this.scene.renderer.dpr;
+    return this.scene.renderer.ctx.isPointInPath(
+      this.path,
+      event.offsetX * dpr,
+      event.offsetY * dpr
+    );
   }
-  
+
+  /**
+   * @param  {String} eventName
+   * @param  {MouseEvent} event
+   */
+  _transformEvent(eventName, event) {
+    const isPointInPath = this._isPointInPath(event);
+    if (eventName === "click") {
+      if (isPointInPath) return "click";
+    } else if (eventName === "mousemove") {
+      if (!this.isEnter && isPointInPath) {
+        this.isEnter = true;
+        return "mouseenter";
+      } else if (this.isEnter && !isPointInPath) {
+        this.isEnter = false;
+        return "mouseleave";
+      }
+    }
+    return false;
+  }
+
+  /**
+   * @param  {String} eventName
+   * @param  {MouseEvent} event
+   */
+  eventHandler(eventName, event) {
+    const realName = this._transformEvent(eventName, event);
+    isFn(this.events[realName]) && this.events[realName](this, event);
+  }
+
   _paint(render) {
     this.dirty = false;
     const ctx = this.scene.renderer.ctx;

@@ -1,6 +1,7 @@
-// export const isArr = Array.isArray;
 // export const isStr = (v) => typeof v === 'string';
 // export const isObject = (val) => val !== null && typeof val === 'object';
+
+export const isArr = Array.isArray;
 
 export function isFn(fn) {
   return typeof fn === 'function';

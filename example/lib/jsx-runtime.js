@@ -298,23 +298,14 @@
 	      height: this.height
 	    });
 	  }
-	  /**
-	   * @param  {Geometry} geometry
-	   * @param  {MouseEvent} event
-	   */
-
-
-	  _isPointInPath(geometry, event) {
-	    return this.renderer.ctx.isPointInPath(geometry.path, event.offsetX * this.renderer.dpr, event.offsetY * this.renderer.dpr);
-	  }
 
 	  initEvents() {
-	    this.renderer.element.addEventListener("click", event => {
-	      const broadPhaseResult = this.mesh.queryMouse(event.offsetX, event.offsetY);
-	      broadPhaseResult.forEach(geometry => {
-	        if (geometry.events && typeof geometry.events.click === "function" && this._isPointInPath(geometry, event)) {
-	          geometry._clickHandler(event);
-	        }
+	    ["click", "mousemove"].forEach(eventName => {
+	      this.renderer.element.addEventListener(eventName, event => {
+	        const broadPhaseResult = this.mesh.queryMouse(event.offsetX, event.offsetY);
+	        broadPhaseResult.forEach(geometry => {
+	          geometry.eventHandler(eventName, event);
+	        });
 	      });
 	    });
 	  }
