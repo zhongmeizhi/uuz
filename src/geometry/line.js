@@ -7,18 +7,15 @@ class Line extends Geometry {
 
   render() {
     const geometry = new Path2D();
-    this._paint(
-      ctx,
-      () => {
-        geometry.rect(
-          this.core.x,
-          this.core.y,
-          this.core.width,
-          this.core.height
-        )
-        return geometry;
-      }
-    );
+    this._paint(() => {
+      geometry.rect(
+        this.core.x,
+        this.core.y,
+        this.core.width,
+        this.core.height
+      );
+      return geometry;
+    });
   }
 }
 

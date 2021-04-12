@@ -1,5 +1,3 @@
-function diff() {
-
-}
+function diff() {}
 
 export default diff;

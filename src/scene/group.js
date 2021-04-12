@@ -1,5 +1,3 @@
-class Group {
-
-}
+class Group {}
 
 export default Group;

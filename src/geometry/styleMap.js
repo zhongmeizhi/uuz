@@ -6,7 +6,7 @@ const styleMap = {
     ctx.globalAlpha = val;
   },
   boxShadow(ctx, val) {
-    const [color, x, y, blur] = val.split(' ');
+    const [color, x, y, blur] = val.split(" ");
     ctx.shadowColor = color;
     ctx.shadowOffsetX = x;
     ctx.shadowOffsetY = y;
@@ -19,7 +19,7 @@ const styleMap = {
     } else {
       ctx.globalCompositeOperation = "destination-over";
     }
-  }
-}
+  },
+};
 
 export default styleMap;

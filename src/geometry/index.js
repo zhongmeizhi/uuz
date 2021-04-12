@@ -95,7 +95,7 @@ class Geometry {
     }
   }
 
-  _inject(scene) {
+  inject(scene) {
     this.scene = scene;
   }
 }

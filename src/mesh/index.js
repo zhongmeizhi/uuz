@@ -1,8 +1,8 @@
 const defaultMeshConfig = {
-  x:0,
+  x: 0,
   y: 0,
   width: 300,
-  height: 150
+  height: 150,
 };
 
 class Mesh {
@@ -10,7 +10,12 @@ class Mesh {
    * @param  {} {width
    * @param  {} height}=defaultMeshConfig
    */
-  constructor(bounds = defaultMeshConfig, max_objects = 10, max_levels = 4, level = 0) {
+  constructor(
+    bounds = defaultMeshConfig,
+    max_objects = 10,
+    max_levels = 4,
+    level = 0
+  ) {
     this.max_objects = max_objects;
     this.max_levels = max_levels;
 
@@ -85,7 +90,7 @@ class Mesh {
    * Determine which node the object belongs to
    * @param {Rect} pRect      bounds of the area to be checked ({ x, y, width, height })
    * @return {number[]}       an array of indexes of the intersecting subnodes (0-3 = top-right, top-left, bottom-left, bottom-right / ne, nw, sw, se)
-  */
+   */
   _getIndex(pRect) {
     var indexes = [],
       verticalMidpoint = this.bounds.x + this.bounds.width / 2,
@@ -140,7 +145,10 @@ class Mesh {
     this.objects.push(pRect);
 
     //max_objects reached
-    if (this.objects.length > this.max_objects && this.level < this.max_levels) {
+    if (
+      this.objects.length > this.max_objects &&
+      this.level < this.max_levels
+    ) {
       //split if we don't already have subnodes
       if (!this.nodes.length) {
         this._split();
@@ -162,7 +170,7 @@ class Mesh {
   /**
    * @param  {} pRect
    */
-   retrieve(pRect) {
+  retrieve(pRect) {
     var indexes = this._getIndex(pRect),
       returnObjects = this.objects;
 
@@ -188,26 +196,26 @@ class Mesh {
    * @param  {number} mouseY
    * @param  {number} blur
    */
-   queryMouse(mouseX, mouseY, blur = 4) {
+  queryMouse(mouseX, mouseY, blur = 4) {
     return this.retrieve({
       x: mouseX,
       y: mouseY,
       width: blur,
       height: blur,
-    })
+    });
   }
 
   clear() {
     this.objects = [];
-  
+
     for (var i = 0; i < this.nodes.length; i++) {
       if (this.nodes.length) {
         this.nodes[i].clear();
       }
     }
-  
+
     this.nodes = [];
-  };
+  }
 }
 
 export default Mesh;

@@ -33,7 +33,7 @@ class Scene {
    * @param  {Geometry} geometry
    */
   add(geometry) {
-    geometry._inject(this);
+    geometry.inject(this);
     this.mesh.insert(geometry);
     this.dirtySet.add(geometry);
   }
@@ -65,7 +65,7 @@ class Scene {
   /**
    * @param  {Renderer} renderer
    */
-  _inject(renderer) {
+  inject(renderer) {
     this.renderer = renderer;
     this.initEvents();
   }

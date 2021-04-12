@@ -46,8 +46,7 @@
 
 
     render(scene) {
-      scene._inject(this);
-
+      scene.inject(this);
       this.scene = scene;
       this.update();
       return this;
@@ -141,7 +140,7 @@
      * Determine which node the object belongs to
      * @param {Rect} pRect      bounds of the area to be checked ({ x, y, width, height })
      * @return {number[]}       an array of indexes of the intersecting subnodes (0-3 = top-right, top-left, bottom-left, bottom-right / ne, nw, sw, se)
-    */
+     */
 
 
     _getIndex(pRect) {
@@ -302,8 +301,7 @@
 
 
     add(geometry) {
-      geometry._inject(this);
-
+      geometry.inject(this);
       this.mesh.insert(geometry);
       this.dirtySet.add(geometry);
     } // TODO: 开启局部更新
@@ -335,7 +333,7 @@
      */
 
 
-    _inject(renderer) {
+    inject(renderer) {
       this.renderer = renderer;
       this.initEvents();
     }
@@ -352,7 +350,7 @@
     },
 
     boxShadow(ctx, val) {
-      const [color, x, y, blur] = val.split(' ');
+      const [color, x, y, blur] = val.split(" ");
       ctx.shadowColor = color;
       ctx.shadowOffsetX = x;
       ctx.shadowOffsetY = y;
@@ -372,7 +370,7 @@
 
   // export const isStr = (v) => typeof v === 'string';
   function isFn(fn) {
-    return typeof fn === 'function';
+    return typeof fn === "function";
   }
 
   class Geometry {
@@ -477,7 +475,7 @@
       }
     }
 
-    _inject(scene) {
+    inject(scene) {
       this.scene = scene;
     }
 

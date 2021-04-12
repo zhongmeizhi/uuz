@@ -35,7 +35,7 @@ class Renderer {
    * @param  {Scene} scene
    */
   render(scene) {
-    scene._inject(this);
+    scene.inject(this);
     this.scene = scene;
     this.update();
     return this;
@@ -61,7 +61,7 @@ class Renderer {
       }
       this.update();
       window.requestAnimationFrame(run);
-    }
+    };
     window.requestAnimationFrame(run);
   }
 }
