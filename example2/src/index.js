@@ -14,20 +14,29 @@ const arc = new uuz.Arc({
     radius: 30,
   },
   style: {
+    zIndex: 1,
     opacity: 0.6,
-    boxShadow: "red 2 3 3",
+    // boxShadow: "red 2 3 3",
     background: "#79B83D",
   },
   events: {
+    mouseenter(geometry) {
+      geometry.bg = geometry.style.background || "black";
+      geometry.style.background = "#ffff00";
+    },
+    mouseleave(geometry) {
+      geometry.style.background = geometry.bg;
+      geometry.bg = null;
+    },
     click(geometry) {
-      if (geometry.bg) {
-        geometry.style.background = geometry.bg;
+      if (geometry.isMove) {
         geometry.core.x -= 100;
-        geometry.bg = null;
+        geometry.core.radius -= 30;
+        geometry.isMove = false;
       } else {
-        geometry.bg = geometry.style.background;
         geometry.core.x += 100;
-        geometry.style.background = "#ffff00";
+        geometry.core.radius += 30;
+        geometry.isMove = true;
       }
     },
   },
@@ -54,5 +63,7 @@ kLineData.forEach((val) => {
 });
 
 renderer.render(scene).animation((renderer) => {
+  kLineData[0].style.background = "#aabbcc"
+  kLineData[0].style.zIndex = 1;
   kLineData[0].core.x += 1;
 });

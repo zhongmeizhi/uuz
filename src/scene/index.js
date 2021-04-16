@@ -1,23 +1,49 @@
 import Mesh from "@/mesh";
-class Scene {
-  constructor({ style } = {}) {
+import EventDispatcher from "@/utils/eventDispatcher.js";
+import { isArr, isFn } from "@/utils/base.js";
+
+class Scene extends EventDispatcher {
+  /**
+   * @param  {} {core
+   * @param  {} style}={}
+   */
+  constructor({ core, style } = {}) {
+    super();
     // TODO: 添加 Scene 的样式
-    this._initMesh();
     this.dirtySet = new Set();
+    this.newGeometryPool = [];
+    this._init();
   }
 
-  _initMesh() {
+  _init() {
+    this.addListener("mounting", this._mounting);
+    this.addListener("mounted", this._mounted);
+  }
+
+  _mounting(renderer) {
+    const { width, height } = renderer;
+    this.renderer = renderer;
     this.mesh = new Mesh({
       x: 0,
       y: 0,
-      width: this.width,
-      height: this.height,
+      width,
+      height,
     });
   }
 
-  initEvents() {
+  _mounted() {
+    this.newGeometryPool.forEach((geometry) => {
+      geometry.dispatch("mounting", this);
+      geometry.dispatch("mounted", this);
+      this.mesh.insert(geometry);
+      this.dirtySet.add(geometry);
+    });
+    this._initEvents(this.renderer);
+  }
+
+  _initEvents(renderer) {
     ["click", "mousemove"].forEach((eventName) => {
-      this.renderer.element.addEventListener(eventName, (event) => {
+      renderer.element.addEventListener(eventName, (event) => {
         const broadPhaseResult = this.mesh.queryMouse(
           event.offsetX,
           event.offsetY
@@ -33,9 +59,8 @@ class Scene {
    * @param  {Geometry} geometry
    */
   add(geometry) {
-    geometry.inject(this);
-    this.mesh.insert(geometry);
-    this.dirtySet.add(geometry);
+    // geometry.attach(this);
+    this.newGeometryPool.push(geometry);
   }
 
   // TODO: 开启局部更新
@@ -48,27 +73,36 @@ class Scene {
   }
 
   forceUpdate() {
-    this.mesh.objects.forEach((item) => item.render());
+    this._traverseMesh(this.mesh);
+    // (node) => {
+    //   this.add(
+    //     new Rect({
+    //       core: node.bounds,
+    //       style: { border: "1px solid #008000" },
+    //     })
+    //   );
+    // },
+  }
+
+  /**
+   * @param  {Mesh} mesh={}
+   */
+  _traverseMesh(mesh = {}) {
+    if (isArr(mesh.nodes) && mesh.nodes.length) {
+      mesh.nodes.forEach((node) => this._traverseMesh(node));
+    } else if (isArr(mesh.objects)) {
+      mesh.objects.forEach((geometry) => geometry.render());
+    }
   }
 
   // TODO: 根据网格动态裁剪
   clip(item) {
     console.log(item, "item");
-    // this.renderer.ctx.clip();
-    // this.renderer.clear();
-    // this.renderer.ctx.restore();
+    // ctx.clip();
   }
 
   // TODO:
   remove(geometry) {}
-
-  /**
-   * @param  {Renderer} renderer
-   */
-  inject(renderer) {
-    this.renderer = renderer;
-    this.initEvents();
-  }
 }
 
 export default Scene;

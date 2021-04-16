@@ -1,22 +1,43 @@
-import styleMap from "./styleMap.js";
-import { isArr, isFn } from "@/utils/base.js";
+import EventDispatcher from "@/utils/eventDispatcher.js";
+import styleMap from "@/geometry/styleMap.js";
+import { isFn } from "@/utils/base.js";
 
-class Geometry {
+class Geometry extends EventDispatcher {
   constructor(core = {}, style = {}, events = {}) {
-    this.core = this._trace(core);
-    this.style = this._trace(style);
-    this.events = this._trace(events);
+    super();
+    this.core = core;
+    this.style = style;
+    this.events = events;
     this.scene = null;
     this.path = null;
     this.dirty = false;
     this.isEnter = false;
     // this.oldData = {}
+    this._init();
   }
+
+  _init() {
+    this.addListener("mounting", this._mounting);
+    this.addListener("mounted", this._mounted);
+  }
+
+  _mounting(scene) {
+    const { ctx, dpr } = scene.renderer;
+    this.scene = scene;
+    this.ctx = ctx;
+    this.dpr = dpr;
+    this.core = this._setTrace(this.core);
+    this.style = this._setTrace(this.style);
+    this.events = this._setTrace(this.events);
+    this._setStyles();
+  }
+
+  _mounted() {}
 
   /**
    * @param  {Object} item
    */
-  _trace(item) {
+  _setTrace(item) {
     return new Proxy(item, {
       set: (target, prop, value) => {
         target[prop] = value;
@@ -31,10 +52,11 @@ class Geometry {
 
   // TODO: 需要性能优化
   _setStyles() {
+    const ctx = this.ctx;
     for (let k of Object.keys(this.style)) {
       const exec = styleMap[k];
       if (exec) {
-        exec(this.scene.renderer.ctx, this.style[k]);
+        exec(ctx, this.style[k]);
       }
     }
   }
@@ -44,11 +66,10 @@ class Geometry {
    * @param  {MouseEvent} event
    */
   _isPointInPath(event) {
-    const dpr = this.scene.renderer.dpr;
-    return this.scene.renderer.ctx.isPointInPath(
+    return this.ctx.isPointInPath(
       this.path,
-      event.offsetX * dpr,
-      event.offsetY * dpr
+      event.offsetX * this.dpr,
+      event.offsetY * this.dpr
     );
   }
 
@@ -83,20 +104,23 @@ class Geometry {
 
   _paint(render) {
     this.dirty = false;
-    const ctx = this.scene.renderer.ctx;
+    const ctx = this.ctx;
     if (ctx && typeof render === "function") {
+      // if (!this.style.background && !this.style.border) return;
       ctx.save();
       ctx.beginPath();
       this._setStyles();
       this.path = render();
       ctx.fill(this.path);
+      // if (this.style.border) {
+      //   ctx.stroke(this.path)
+      // }
+      // if (this.style.background) {
+      //   ctx.fill(this.path);
+      // }
       ctx.closePath();
       ctx.restore();
     }
-  }
-
-  inject(scene) {
-    this.scene = scene;
   }
 }
 

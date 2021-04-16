@@ -1,46 +1,16 @@
-export default [
-  {
+export default new Array(98).fill({}).map((_, i) => {
+  const random = Math.random();
+  const num = i + 1;
+  return {
     core: {
-      x: 10,
-      y: 10,
+      x: num * 12,
+      y: 100 + Math.floor(50 * random),
       width: 10,
-      height: 30
-    },
-    style: {
-      opacity: 0.3,
-      boxShadow: 'red 2 3 3',
-      background: '#79B83D'
-    }
-  },
-  {
-    core: {
-      x: 22,
-      y: 30,
-      width: 10,
-      height: 50
-    },
-    style: {
-      background: '#C93860'
-    }
-  },
-  {
-    core: {
-      x: 22,
-      y: 50,
-      width: 10,
-      height: 50
+      height: 30 + Math.floor(30 * random)
     },
     style: {
       zIndex: -1,
-      background: '#79B83D'
+      background: random > 0.5 ? '#79B83D' : '#C93860'
     }
-  },
-  {
-    core: {
-      x: 280,
-      y: 35,
-      width: 10,
-      height: 30
-    },
   }
-]
+})

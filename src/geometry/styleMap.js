@@ -20,6 +20,10 @@ const styleMap = {
       ctx.globalCompositeOperation = "destination-over";
     }
   },
+  // border(ctx, val) {
+  //   const [width, solid, color] = val.split(" ");
+  //   ctx.strokeStyle = color;
+  // }
 };
 
 export default styleMap;

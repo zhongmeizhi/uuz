@@ -3,6 +3,11 @@ import Geometry from "@/geometry";
 class Rect extends Geometry {
   constructor({ core, style, events } = {}) {
     super(core, style, events);
+    // FIXME:
+    this.x = core.x;
+    this.y = core.y;
+    this.width = core.width;
+    this.height = core.height;
   }
 
   render() {

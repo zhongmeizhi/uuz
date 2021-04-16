@@ -35,7 +35,8 @@ class Renderer {
    * @param  {Scene} scene
    */
   render(scene) {
-    scene.inject(this);
+    scene.dispatch("mounting", this);
+    scene.dispatch("mounted");
     this.scene = scene;
     this.update();
     return this;

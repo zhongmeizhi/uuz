@@ -40,7 +40,8 @@ class Renderer {
 
 
   render(scene) {
-    scene.inject(this);
+    scene.dispatch("mounting", this);
+    scene.dispatch("mounted");
     this.scene = scene;
     this.update();
     return this;
@@ -74,23 +75,20 @@ class Renderer {
 
 }
 
-const defaultMeshConfig = {
-  x: 0,
-  y: 0,
-  width: 300,
-  height: 150
-};
+// import {errorHandler} from '@/utils/base.js'
 
+/**
+ * @param  {Geometry} geometry
+ * @param  {number} max_objects=10
+ * @param  {number} max_levels=4
+ * @param  {number} level=0
+ */
 class Mesh {
-  /**
-   * @param  {} {width
-   * @param  {} height}=defaultMeshConfig
-   */
-  constructor(bounds = defaultMeshConfig, max_objects = 10, max_levels = 4, level = 0) {
+  constructor(geometry, max_objects = 10, max_levels = 4, level = 0) {
     this.max_objects = max_objects;
     this.max_levels = max_levels;
     this.level = level;
-    this.bounds = bounds;
+    this.bounds = geometry;
     this.objects = [];
     this.nodes = [];
   }
@@ -260,28 +258,113 @@ class Mesh {
 
 }
 
-class Scene {
-  constructor({
-    style
-  } = {}) {
-    // TODO: 添加 Scene 的样式
-    this._initMesh();
+// export const isStr = (v) => typeof v === 'string';
+// export const isObject = (val) => val !== null && typeof val === 'object';
+const isArr = Array.isArray;
+function isFn(fn) {
+  return typeof fn === "function";
+}
+function errorHandler(msg) {
+  throw new Error(msg);
+}
 
-    this.dirtySet = new Set();
+class EventDispatcher {
+  constructor() {
+    this._listeners = {};
+  }
+  /**
+   * @param  {String} name
+   * @param  {Function} fn
+   */
+
+
+  addListener(name, fn) {
+    if (!isFn(fn)) return errorHandler("监听对象不是一个函数");
+
+    if (!this._listeners[name]) {
+      this._listeners[name] = new Set();
+    }
+
+    this._listeners[name].add(fn);
+  }
+  /**
+   * @param  {String name
+   */
+
+
+  dispatch(name, argv) {
+    if (this._listeners[name]) {
+      this._listeners[name].forEach(fn => fn.call(this, argv));
+    }
+  }
+  /**
+   * @param  {String} name
+   * @param  {Function} fn
+   */
+
+
+  removeListener(name, fn) {
+    if (!this._listeners[name]) return;
+
+    if (this._listeners[name] && fn) {
+      this._listeners[name].delete(fn);
+    } else {
+      delete this._listeners[name];
+    }
   }
 
-  _initMesh() {
+}
+
+class Scene extends EventDispatcher {
+  /**
+   * @param  {} {core
+   * @param  {} style}={}
+   */
+  constructor({
+    core,
+    style
+  } = {}) {
+    super(); // TODO: 添加 Scene 的样式
+
+    this.dirtySet = new Set();
+    this.newGeometryPool = [];
+
+    this._init();
+  }
+
+  _init() {
+    this.addListener("mounting", this._mounting);
+    this.addListener("mounted", this._mounted);
+  }
+
+  _mounting(renderer) {
+    const {
+      width,
+      height
+    } = renderer;
+    this.renderer = renderer;
     this.mesh = new Mesh({
       x: 0,
       y: 0,
-      width: this.width,
-      height: this.height
+      width,
+      height
     });
   }
 
-  initEvents() {
+  _mounted() {
+    this.newGeometryPool.forEach(geometry => {
+      geometry.dispatch("mounting", this);
+      geometry.dispatch("mounted", this);
+      this.mesh.insert(geometry);
+      this.dirtySet.add(geometry);
+    });
+
+    this._initEvents(this.renderer);
+  }
+
+  _initEvents(renderer) {
     ["click", "mousemove"].forEach(eventName => {
-      this.renderer.element.addEventListener(eventName, event => {
+      renderer.element.addEventListener(eventName, event => {
         const broadPhaseResult = this.mesh.queryMouse(event.offsetX, event.offsetY);
         broadPhaseResult.forEach(geometry => {
           geometry.eventHandler(eventName, event);
@@ -295,9 +378,8 @@ class Scene {
 
 
   add(geometry) {
-    geometry.inject(this);
-    this.mesh.insert(geometry);
-    this.dirtySet.add(geometry);
+    // geometry.attach(this);
+    this.newGeometryPool.push(geometry);
   } // TODO: 开启局部更新
 
 
@@ -310,27 +392,36 @@ class Scene {
   }
 
   forceUpdate() {
-    this.mesh.objects.forEach(item => item.render());
+    this._traverseMesh(this.mesh); // (node) => {
+    //   this.add(
+    //     new Rect({
+    //       core: node.bounds,
+    //       style: { border: "1px solid #008000" },
+    //     })
+    //   );
+    // },
+
+  }
+  /**
+   * @param  {Mesh} mesh={}
+   */
+
+
+  _traverseMesh(mesh = {}) {
+    if (isArr(mesh.nodes) && mesh.nodes.length) {
+      mesh.nodes.forEach(node => this._traverseMesh(node));
+    } else if (isArr(mesh.objects)) {
+      mesh.objects.forEach(geometry => geometry.render());
+    }
   } // TODO: 根据网格动态裁剪
 
 
   clip(item) {
-    console.log(item, "item"); // this.renderer.ctx.clip();
-    // this.renderer.clear();
-    // this.renderer.ctx.restore();
+    console.log(item, "item"); // ctx.clip();
   } // TODO:
 
 
   remove(geometry) {}
-  /**
-   * @param  {Renderer} renderer
-   */
-
-
-  inject(renderer) {
-    this.renderer = renderer;
-    this.initEvents();
-  }
 
 }
 
@@ -358,31 +449,55 @@ const styleMap = {
     } else {
       ctx.globalCompositeOperation = "destination-over";
     }
-  }
+  } // border(ctx, val) {
+  //   const [width, solid, color] = val.split(" ");
+  //   ctx.strokeStyle = color;
+  // }
+
 
 };
 
-// export const isStr = (v) => typeof v === 'string';
-function isFn(fn) {
-  return typeof fn === "function";
-}
-
-class Geometry {
+class Geometry extends EventDispatcher {
   constructor(core = {}, style = {}, events = {}) {
-    this.core = this._trace(core);
-    this.style = this._trace(style);
-    this.events = this._trace(events);
+    super();
+    this.core = core;
+    this.style = style;
+    this.events = events;
     this.scene = null;
     this.path = null;
     this.dirty = false;
     this.isEnter = false; // this.oldData = {}
+
+    this._init();
   }
+
+  _init() {
+    this.addListener("mounting", this._mounting);
+    this.addListener("mounted", this._mounted);
+  }
+
+  _mounting(scene) {
+    const {
+      ctx,
+      dpr
+    } = scene.renderer;
+    this.scene = scene;
+    this.ctx = ctx;
+    this.dpr = dpr;
+    this.core = this._setTrace(this.core);
+    this.style = this._setTrace(this.style);
+    this.events = this._setTrace(this.events);
+
+    this._setStyles();
+  }
+
+  _mounted() {}
   /**
    * @param  {Object} item
    */
 
 
-  _trace(item) {
+  _setTrace(item) {
     return new Proxy(item, {
       set: (target, prop, value) => {
         target[prop] = value;
@@ -399,11 +514,13 @@ class Geometry {
 
 
   _setStyles() {
+    const ctx = this.ctx;
+
     for (let k of Object.keys(this.style)) {
       const exec = styleMap[k];
 
       if (exec) {
-        exec(this.scene.renderer.ctx, this.style[k]);
+        exec(ctx, this.style[k]);
       }
     }
   }
@@ -414,8 +531,7 @@ class Geometry {
 
 
   _isPointInPath(event) {
-    const dpr = this.scene.renderer.dpr;
-    return this.scene.renderer.ctx.isPointInPath(this.path, event.offsetX * dpr, event.offsetY * dpr);
+    return this.ctx.isPointInPath(this.path, event.offsetX * this.dpr, event.offsetY * this.dpr);
   }
   /**
    * @param  {String} eventName
@@ -454,23 +570,26 @@ class Geometry {
 
   _paint(render) {
     this.dirty = false;
-    const ctx = this.scene.renderer.ctx;
+    const ctx = this.ctx;
 
     if (ctx && typeof render === "function") {
+      // if (!this.style.background && !this.style.border) return;
       ctx.save();
       ctx.beginPath();
 
       this._setStyles();
 
       this.path = render();
-      ctx.fill(this.path);
+      ctx.fill(this.path); // if (this.style.border) {
+      //   ctx.stroke(this.path)
+      // }
+      // if (this.style.background) {
+      //   ctx.fill(this.path);
+      // }
+
       ctx.closePath();
       ctx.restore();
     }
-  }
-
-  inject(scene) {
-    this.scene = scene;
   }
 
 }
@@ -481,7 +600,12 @@ class Rect extends Geometry {
     style,
     events
   } = {}) {
-    super(core, style, events);
+    super(core, style, events); // FIXME:
+
+    this.x = core.x;
+    this.y = core.y;
+    this.width = core.width;
+    this.height = core.height;
   }
 
   render() {
@@ -501,7 +625,13 @@ class Arc extends Geometry {
     style,
     events
   } = {}) {
-    super(core, style, events);
+    super(core, style, events); // FIXME:
+
+    this.x = core.x;
+    this.y = core.y;
+    const diameter = core.radius * 2;
+    this.width = diameter;
+    this.height = diameter;
   }
 
   render() {

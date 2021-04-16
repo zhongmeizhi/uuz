@@ -1,17 +1,13 @@
-const defaultMeshConfig = {
-  x: 0,
-  y: 0,
-  width: 300,
-  height: 150,
-};
-
-class Mesh {
+  // import {errorHandler} from '@/utils/base.js'
+  
   /**
-   * @param  {} {width
-   * @param  {} height}=defaultMeshConfig
-   */
+   * @param  {Geometry} geometry
+   * @param  {number} max_objects=10
+   * @param  {number} max_levels=4
+   * @param  {number} level=0
+   */class Mesh {
   constructor(
-    bounds = defaultMeshConfig,
+    geometry,
     max_objects = 10,
     max_levels = 4,
     level = 0
@@ -20,7 +16,7 @@ class Mesh {
     this.max_levels = max_levels;
 
     this.level = level;
-    this.bounds = bounds;
+    this.bounds = geometry;
 
     this.objects = [];
     this.nodes = [];
