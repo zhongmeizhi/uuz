@@ -578,7 +578,7 @@
       this.dirty = false;
       const ctx = this.ctx;
 
-      if (ctx && typeof render === "function") {
+      if (ctx && isFn(render)) {
         // if (!this.style.background && !this.style.border) return;
         ctx.save();
         ctx.beginPath();
