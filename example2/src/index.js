@@ -63,7 +63,14 @@ kLineData.forEach((val) => {
 });
 
 renderer.render(scene).animation((renderer) => {
-  kLineData[0].style.background = "#aabbcc"
-  kLineData[0].style.zIndex = 1;
-  kLineData[0].core.x += 1;
+  renderer.scene.mesh
+  kLineData.forEach(({ core }) => {
+    core.x += core.vx;
+    core.y += core.vy;
+    const { width, height } = renderer;
+    if (core.x > width) core.x = 0;
+    if (core.x < 0) core.x = width;
+    if (core.y > height) core.y = 0;
+    if (core.y < 0) core.y = height;
+  });
 });
