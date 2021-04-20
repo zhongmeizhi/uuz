@@ -11,13 +11,13 @@ export default () => {
             core={kLine.core}
             style={kLine.style}
             events={{
-              mouseenter(geometry) {
-                geometry.mk = kLine.style.background || "black";
+              mouseenter(shape) {
+                shape.mk = kLine.style.background || "black";
                 kLine.style.background = "#ffff00";
               },
-              mouseleave(geometry) {
-                kLine.style.background = geometry.mk;
-                geometry.mk = null;
+              mouseleave(shape) {
+                kLine.style.background = shape.mk;
+                shape.mk = null;
               },
             }}
           />
@@ -35,15 +35,15 @@ export default () => {
           background: "#79B83D",
         }}
         events={{
-          click(geometry) {
-            if (geometry.bg) {
-              geometry.style.background = geometry.bg;
-              geometry.core.x -= 100;
-              geometry.bg = null;
+          click(shape) {
+            if (shape.bg) {
+              shape.style.background = shape.bg;
+              shape.core.x -= 100;
+              shape.bg = null;
             } else {
-              geometry.bg = geometry.style.background;
-              geometry.core.x += 100;
-              geometry.style.background = "#ffff00";
+              shape.bg = shape.style.background;
+              shape.core.x += 100;
+              shape.style.background = "#ffff00";
             }
           },
         }}

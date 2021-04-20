@@ -1,7 +1,7 @@
 import Renderer from "./renderer/index";
 import Scene from "./scene/index";
-import Rect from "./geometry/rect";
-import Arc from "./geometry/arc";
+import Rect from "./shape/rect";
+import Arc from "./shape/arc";
 import Group from "./scene/group";
 
 const uuz = {

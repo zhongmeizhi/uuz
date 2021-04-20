@@ -1,13 +1,13 @@
-  // import {errorHandler} from '@/utils/base.js'
+  import { isArr, isFn, errorHandler } from "@/utils/base.js";
   
   /**
-   * @param  {Geometry} geometry
+   * @param  {Shape} shape
    * @param  {number} max_objects=10
    * @param  {number} max_levels=4
    * @param  {number} level=0
    */class Mesh {
   constructor(
-    geometry,
+    shape,
     max_objects = 10,
     max_levels = 4,
     level = 0
@@ -16,7 +16,7 @@
     this.max_levels = max_levels;
 
     this.level = level;
-    this.bounds = geometry;
+    this.bounds = shape;
 
     this.objects = [];
     this.nodes = [];
@@ -199,6 +199,22 @@
       width: blur,
       height: blur,
     });
+  }
+
+  /**
+   * @param  {Function} callback
+   */
+  traverse(callback) {
+    if (!isFn(callback)) return errorHandler('traverse 参数必须是 function');
+    this._traverseObject(this, callback);
+  }
+
+  _traverseObject(mesh, callback) {
+    if (isArr(mesh.nodes) && mesh.nodes.length) {
+      mesh.nodes.forEach((node) => this._traverseObject(node, callback));
+    } else if (isArr(mesh.objects)) {
+      mesh.objects.forEach((item) => callback(item));
+    }
   }
 
   clear() {

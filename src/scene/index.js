@@ -1,6 +1,6 @@
 import Mesh from "@/mesh";
 import EventDispatcher from "@/utils/eventDispatcher.js";
-import { isArr, isFn } from "@/utils/base.js";
+import { isArr } from "@/utils/base.js";
 
 class Scene extends EventDispatcher {
   /**
@@ -11,56 +11,21 @@ class Scene extends EventDispatcher {
     super();
     // TODO: 添加 Scene 的样式
     this.dirtySet = new Set();
-    this.newGeometryPool = [];
-    this._init();
-  }
-
-  _init() {
-    this.addListener("mounting", this._mounting);
-    this.addListener("mounted", this._mounted);
-  }
-
-  _mounting(renderer) {
-    const { width, height } = renderer;
-    this.renderer = renderer;
-    this.mesh = new Mesh({
-      x: 0,
-      y: 0,
-      width,
-      height,
-    });
-  }
-
-  _mounted() {
-    this.newGeometryPool.forEach((geometry) => {
-      geometry.dispatch("mounting", this);
-      geometry.dispatch("mounted", this);
-      this.mesh.insert(geometry);
-      this.dirtySet.add(geometry);
-    });
-    this._initEvents(this.renderer);
-  }
-
-  _initEvents(renderer) {
-    ["click", "mousemove"].forEach((eventName) => {
-      renderer.element.addEventListener(eventName, (event) => {
-        const broadPhaseResult = this.mesh.queryMouse(
-          event.offsetX,
-          event.offsetY
-        );
-        broadPhaseResult.forEach((geometry) => {
-          geometry.eventHandler(eventName, event);
-        });
-      });
-    });
+    this.shapePools = new Set();
   }
 
   /**
-   * @param  {Geometry} geometry
+   * @param  {Shape} shape
    */
-  add(geometry) {
-    // geometry.attach(this);
-    this.newGeometryPool.push(geometry);
+  add(shape) {
+    this.shapePools.add(shape);
+  }
+
+  init(renderer) {
+    const { width, height, element } = renderer;
+    this._initMesh(width, height);
+    this._initShape(renderer);
+    this._initEvents(element);
   }
 
   // TODO: 开启局部更新
@@ -73,26 +38,7 @@ class Scene extends EventDispatcher {
   }
 
   forceUpdate() {
-    this._traverseMesh(this.mesh);
-    // (node) => {
-    //   this.add(
-    //     new Rect({
-    //       core: node.bounds,
-    //       style: { border: "1px solid #008000" },
-    //     })
-    //   );
-    // },
-  }
-
-  /**
-   * @param  {Mesh} mesh={}
-   */
-  _traverseMesh(mesh = {}) {
-    if (isArr(mesh.nodes) && mesh.nodes.length) {
-      mesh.nodes.forEach((node) => this._traverseMesh(node));
-    } else if (isArr(mesh.objects)) {
-      mesh.objects.forEach((geometry) => geometry.render());
-    }
+    this.mesh.traverse((shape) => shape.render());
   }
 
   // TODO: 根据网格动态裁剪
@@ -102,7 +48,51 @@ class Scene extends EventDispatcher {
   }
 
   // TODO:
-  remove(geometry) {}
+  remove(shape) {}
+
+  /**
+   * @param  {number} width
+   * @param  {number} height
+   */
+  _initMesh(width, height) {
+    this.mesh = new Mesh({
+      x: 0,
+      y: 0,
+      width,
+      height,
+    });
+  }
+
+  /**
+   * @param  {Renderer} renderer
+   */
+  _initShape(renderer) {
+    this.shapePools.forEach((shape) => {
+      this.mesh.insert(shape);
+      this.dirtySet.add(shape);
+      shape.addListener("update", () => {
+        this.dirtySet.add(shape);
+      });
+      shape.init(renderer);
+    });
+  }
+
+  /**
+   * @param  {HtmlElement} element
+   */
+  _initEvents(element) {
+    ["click", "mousemove"].forEach((eventName) => {
+      element.addEventListener(eventName, (event) => {
+        const broadPhaseResult = this.mesh.queryMouse(
+          event.offsetX,
+          event.offsetY
+        );
+        broadPhaseResult.forEach((shape) => {
+          shape.eventHandler(eventName, event);
+        });
+      });
+    });
+  }
 }
 
 export default Scene;

@@ -1,38 +1,54 @@
 import EventDispatcher from "@/utils/eventDispatcher.js";
-import styleMap from "@/geometry/styleMap.js";
-import { isFn } from "@/utils/base.js";
+import styleMap from "@/shape/styleMap.js";
+import { isFn, errorHandler } from "@/utils/base.js";
 
-class Geometry extends EventDispatcher {
+class Shape extends EventDispatcher {
   constructor(core = {}, style = {}, events = {}) {
     super();
-    this.core = core;
-    this.style = style;
-    this.events = events;
-    this.scene = null;
-    this.path = null;
+    this.core = this._setTrace(core);
+    this.style = this._setTrace(style);
+    this.events = this._setTrace(events);
+    this.path = new Path2D();;
     this.dirty = false;
     this.isEnter = false;
     // this.oldData = {}
-    this._init();
   }
 
-  _init() {
-    this.addListener("mounting", this._mounting);
-    this.addListener("mounted", this._mounted);
-  }
-
-  _mounting(scene) {
-    const { ctx, dpr } = scene.renderer;
-    this.scene = scene;
+  /**
+   * @param  {Renderer} renderer
+   */
+  init(renderer) {
+    const { ctx, dpr } = renderer;
     this.ctx = ctx;
     this.dpr = dpr;
-    this.core = this._setTrace(this.core);
-    this.style = this._setTrace(this.style);
-    this.events = this._setTrace(this.events);
     this._setStyles();
+    this.render();
   }
 
-  _mounted() {}
+  render() {
+    this.dirty = false;
+    const ctx = this.ctx;
+    ctx.save();
+    ctx.beginPath();
+    this._setStyles();
+    this.path = this.drawPath();
+    ctx.fill(this.path);
+    ctx.closePath();
+    ctx.restore();
+  }
+
+  drawPath() {
+    errorHandler('render 需要被重写')
+  }
+
+  /**
+   * @param  {String} eventName
+   * @param  {MouseEvent} event
+   */
+  eventHandler(eventName, event) {
+    const realName = this._transformEvent(eventName, event);
+    isFn(this.events[realName]) && this.events[realName](this, event);
+  }
 
   /**
    * @param  {Object} item
@@ -42,7 +58,8 @@ class Geometry extends EventDispatcher {
       set: (target, prop, value) => {
         target[prop] = value;
         if (!this.dirty) {
-          this.scene.dirtySet.add(this);
+          // this.scene.dirtySet.add(this);
+          this.dispatch('update', this);
           this.dirty = true;
         }
         return true;
@@ -92,36 +109,6 @@ class Geometry extends EventDispatcher {
     }
     return false;
   }
-
-  /**
-   * @param  {String} eventName
-   * @param  {MouseEvent} event
-   */
-  eventHandler(eventName, event) {
-    const realName = this._transformEvent(eventName, event);
-    isFn(this.events[realName]) && this.events[realName](this, event);
-  }
-
-  _paint(render) {
-    this.dirty = false;
-    const ctx = this.ctx;
-    if (ctx && isFn(render)) {
-      // if (!this.style.background && !this.style.border) return;
-      ctx.save();
-      ctx.beginPath();
-      this._setStyles();
-      this.path = render();
-      ctx.fill(this.path);
-      // if (this.style.border) {
-      //   ctx.stroke(this.path)
-      // }
-      // if (this.style.background) {
-      //   ctx.fill(this.path);
-      // }
-      ctx.closePath();
-      ctx.restore();
-    }
-  }
 }
 
-export default Geometry;
+export default Shape;

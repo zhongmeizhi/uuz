@@ -20,23 +20,23 @@ const arc = new uuz.Arc({
     background: "#79B83D",
   },
   events: {
-    mouseenter(geometry) {
-      geometry.bg = geometry.style.background || "black";
-      geometry.style.background = "#ffff00";
+    mouseenter(shape) {
+      shape.bg = shape.style.background || "black";
+      shape.style.background = "#ffff00";
     },
-    mouseleave(geometry) {
-      geometry.style.background = geometry.bg;
-      geometry.bg = null;
+    mouseleave(shape) {
+      shape.style.background = shape.bg;
+      shape.bg = null;
     },
-    click(geometry) {
-      if (geometry.isMove) {
-        geometry.core.x -= 100;
-        geometry.core.radius -= 30;
-        geometry.isMove = false;
+    click(shape) {
+      if (shape.isMove) {
+        shape.core.x -= 100;
+        shape.core.radius -= 30;
+        shape.isMove = false;
       } else {
-        geometry.core.x += 100;
-        geometry.core.radius += 30;
-        geometry.isMove = true;
+        shape.core.x += 100;
+        shape.core.radius += 30;
+        shape.isMove = true;
       }
     },
   },
@@ -49,28 +49,29 @@ kLineData.forEach((val) => {
     new uuz.Rect({
       ...val,
       events: {
-        mouseenter(geometry) {
-          geometry.mk = geometry.style.background || "black";
-          geometry.style.background = "#ffff00";
+        mouseenter(shape) {
+          shape.mk = shape.style.background || "black";
+          shape.style.background = "#ffff00";
         },
-        mouseleave(geometry) {
-          geometry.style.background = geometry.mk;
-          geometry.mk = null;
+        mouseleave(shape) {
+          shape.style.background = shape.mk;
+          shape.mk = null;
         },
       },
     })
   );
 });
 
-renderer.render(scene).animation((renderer) => {
-  renderer.scene.mesh
-  kLineData.forEach(({ core }) => {
-    core.x += core.vx;
-    core.y += core.vy;
-    const { width, height } = renderer;
-    if (core.x > width) core.x = 0;
-    if (core.x < 0) core.x = width;
-    if (core.y > height) core.y = 0;
-    if (core.y < 0) core.y = height;
-  });
+renderer.render(scene);
+renderer.animation((renderer) => {
+  // renderer.scene.mesh
+  // kLineData.forEach(({ core }) => {
+  //   core.x += core.vx;
+  //   core.y += core.vy;
+  //   const { width, height } = renderer;
+  //   if (core.x > width) core.x = 0;
+  //   if (core.x < 0) core.x = width;
+  //   if (core.y > height) core.y = 0;
+  //   if (core.y < 0) core.y = height;
+  // });
 });

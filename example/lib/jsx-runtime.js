@@ -30,6 +30,7 @@
 
       this.ctx = ele.getContext("2d");
       this.element = ele;
+      this.sceneSet = new Set();
 
       this._antiAliasing(ele);
     }
@@ -59,20 +60,27 @@
 
 
     render(scene) {
-      scene.dispatch("mounting", this);
-      scene.dispatch("mounted");
-      this.scene = scene;
-      this.update();
-      return this;
+      this.sceneSet.add(scene);
+      this.draw();
+    }
+
+    draw() {
+      this.sceneSet.forEach(scene => scene.init(this));
     }
 
     update() {
+      // TODO: 部分更新
+      this.sceneSet.forEach(scene => {
+        if (scene.dirtySet.size) {
+          console.log("更新");
+          scene.update();
+        }
+      });
+    }
+
+    forceUpdate() {
       this.clear();
-      this.scene.forceUpdate(); // TODO: 部分更新
-      // if (this.scene.dirtySet.size) {
-      //   console.log('更新')
-      //   this.scene.update();
-      // }
+      this.sceneSet.forEach(scene => scene.forceUpdate());
     }
     /**
      * @param  {Function} callback
@@ -85,7 +93,7 @@
           callback.call(null, this);
         }
 
-        this.update();
+        this.forceUpdate();
         window.requestAnimationFrame(run);
       };
 
@@ -94,20 +102,29 @@
 
   }
 
-  // import {errorHandler} from '@/utils/base.js'
+  // export const isStr = (v) => typeof v === 'string';
+  // export const isObject = (val) => val !== null && typeof val === 'object';
+  const isArr = Array.isArray;
+  function isFn(fn) {
+    return typeof fn === "function";
+  }
+  function errorHandler(msg) {
+    throw new Error(msg);
+  }
 
   /**
-   * @param  {Geometry} geometry
+   * @param  {Shape} shape
    * @param  {number} max_objects=10
    * @param  {number} max_levels=4
    * @param  {number} level=0
    */
+
   class Mesh {
-    constructor(geometry, max_objects = 10, max_levels = 4, level = 0) {
+    constructor(shape, max_objects = 10, max_levels = 4, level = 0) {
       this.max_objects = max_objects;
       this.max_levels = max_levels;
       this.level = level;
-      this.bounds = geometry;
+      this.bounds = shape;
       this.objects = [];
       this.nodes = [];
     }
@@ -262,6 +279,24 @@
         height: blur
       });
     }
+    /**
+     * @param  {Function} callback
+     */
+
+
+    traverse(callback) {
+      if (!isFn(callback)) return errorHandler('traverse 参数必须是 function');
+
+      this._traverseObject(this, callback);
+    }
+
+    _traverseObject(mesh, callback) {
+      if (isArr(mesh.nodes) && mesh.nodes.length) {
+        mesh.nodes.forEach(node => this._traverseObject(node, callback));
+      } else if (isArr(mesh.objects)) {
+        mesh.objects.forEach(item => callback(item));
+      }
+    }
 
     clear() {
       this.objects = [];
@@ -275,16 +310,6 @@
       this.nodes = [];
     }
 
-  }
-
-  // export const isStr = (v) => typeof v === 'string';
-  // export const isObject = (val) => val !== null && typeof val === 'object';
-  const isArr = Array.isArray;
-  function isFn(fn) {
-    return typeof fn === "function";
-  }
-  function errorHandler(msg) {
-    throw new Error(msg);
   }
 
   class EventDispatcher {
@@ -346,59 +371,29 @@
       super(); // TODO: 添加 Scene 的样式
 
       this.dirtySet = new Set();
-      this.newGeometryPool = [];
-
-      this._init();
-    }
-
-    _init() {
-      this.addListener("mounting", this._mounting);
-      this.addListener("mounted", this._mounted);
-    }
-
-    _mounting(renderer) {
-      const {
-        width,
-        height
-      } = renderer;
-      this.renderer = renderer;
-      this.mesh = new Mesh({
-        x: 0,
-        y: 0,
-        width,
-        height
-      });
-    }
-
-    _mounted() {
-      this.newGeometryPool.forEach(geometry => {
-        geometry.dispatch("mounting", this);
-        geometry.dispatch("mounted", this);
-        this.mesh.insert(geometry);
-        this.dirtySet.add(geometry);
-      });
-
-      this._initEvents(this.renderer);
-    }
-
-    _initEvents(renderer) {
-      ["click", "mousemove"].forEach(eventName => {
-        renderer.element.addEventListener(eventName, event => {
-          const broadPhaseResult = this.mesh.queryMouse(event.offsetX, event.offsetY);
-          broadPhaseResult.forEach(geometry => {
-            geometry.eventHandler(eventName, event);
-          });
-        });
-      });
+      this.shapePools = new Set();
     }
     /**
-     * @param  {Geometry} geometry
+     * @param  {Shape} shape
      */
 
 
-    add(geometry) {
-      // geometry.attach(this);
-      this.newGeometryPool.push(geometry);
+    add(shape) {
+      this.shapePools.add(shape);
+    }
+
+    init(renderer) {
+      const {
+        width,
+        height,
+        element
+      } = renderer;
+
+      this._initMesh(width, height);
+
+      this._initShape(renderer);
+
+      this._initEvents(element);
     } // TODO: 开启局部更新
 
 
@@ -411,27 +406,7 @@
     }
 
     forceUpdate() {
-      this._traverseMesh(this.mesh); // (node) => {
-      //   this.add(
-      //     new Rect({
-      //       core: node.bounds,
-      //       style: { border: "1px solid #008000" },
-      //     })
-      //   );
-      // },
-
-    }
-    /**
-     * @param  {Mesh} mesh={}
-     */
-
-
-    _traverseMesh(mesh = {}) {
-      if (isArr(mesh.nodes) && mesh.nodes.length) {
-        mesh.nodes.forEach(node => this._traverseMesh(node));
-      } else if (isArr(mesh.objects)) {
-        mesh.objects.forEach(geometry => geometry.render());
-      }
+      this.mesh.traverse(shape => shape.render());
     } // TODO: 根据网格动态裁剪
 
 
@@ -440,7 +415,51 @@
     } // TODO:
 
 
-    remove(geometry) {}
+    remove(shape) {}
+    /**
+     * @param  {number} width
+     * @param  {number} height
+     */
+
+
+    _initMesh(width, height) {
+      this.mesh = new Mesh({
+        x: 0,
+        y: 0,
+        width,
+        height
+      });
+    }
+    /**
+     * @param  {Renderer} renderer
+     */
+
+
+    _initShape(renderer) {
+      this.shapePools.forEach(shape => {
+        this.mesh.insert(shape);
+        this.dirtySet.add(shape);
+        shape.addListener("update", () => {
+          this.dirtySet.add(shape);
+        });
+        shape.init(renderer);
+      });
+    }
+    /**
+     * @param  {HtmlElement} element
+     */
+
+
+    _initEvents(element) {
+      ["click", "mousemove"].forEach(eventName => {
+        element.addEventListener(eventName, event => {
+          const broadPhaseResult = this.mesh.queryMouse(event.offsetX, event.offsetY);
+          broadPhaseResult.forEach(shape => {
+            shape.eventHandler(eventName, event);
+          });
+        });
+      });
+    }
 
   }
 

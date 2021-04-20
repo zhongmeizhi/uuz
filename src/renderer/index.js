@@ -9,6 +9,7 @@ class Renderer {
     }
     this.ctx = ele.getContext("2d");
     this.element = ele;
+    this.sceneSet = new Set();
     this._antiAliasing(ele);
   }
 
@@ -35,21 +36,27 @@ class Renderer {
    * @param  {Scene} scene
    */
   render(scene) {
-    scene.dispatch("mounting", this);
-    scene.dispatch("mounted");
-    this.scene = scene;
-    this.update();
-    return this;
+    this.sceneSet.add(scene);
+    this.draw();
+  }
+
+  draw() {
+    this.sceneSet.forEach((scene) => scene.init(this));
   }
 
   update() {
-    this.clear();
-    this.scene.forceUpdate();
     // TODO: 部分更新
-    // if (this.scene.dirtySet.size) {
-    //   console.log('更新')
-    //   this.scene.update();
-    // }
+    this.sceneSet.forEach((scene) => {
+      if (scene.dirtySet.size) {
+        console.log("更新");
+        scene.update();
+      }
+    });
+  }
+
+  forceUpdate() {
+    this.clear();
+    this.sceneSet.forEach((scene) => scene.forceUpdate());
   }
 
   /**
@@ -60,7 +67,7 @@ class Renderer {
       if (typeof callback === "function") {
         callback.call(null, this);
       }
-      this.update();
+      this.forceUpdate();
       window.requestAnimationFrame(run);
     };
     window.requestAnimationFrame(run);
