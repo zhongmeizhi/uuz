@@ -64,14 +64,13 @@ kLineData.forEach((val) => {
 
 renderer.render(scene);
 renderer.animation((renderer) => {
-  // renderer.scene.mesh
-  // kLineData.forEach(({ core }) => {
-  //   core.x += core.vx;
-  //   core.y += core.vy;
-  //   const { width, height } = renderer;
-  //   if (core.x > width) core.x = 0;
-  //   if (core.x < 0) core.x = width;
-  //   if (core.y > height) core.y = 0;
-  //   if (core.y < 0) core.y = height;
-  // });
+  kLineData.forEach(({ core }) => {
+    core.x += core.vx;
+    core.y += core.vy;
+    const { width, height } = renderer;
+    if (core.x > width) core.x = 0;
+    if (core.x < 0) core.x = width;
+    if (core.y > height) core.y = 0;
+    if (core.y < 0) core.y = height;
+  });
 });

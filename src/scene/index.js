@@ -38,7 +38,7 @@ class Scene extends EventDispatcher {
   }
 
   forceUpdate() {
-    this.mesh.traverse((shape) => shape.render());
+    this.shapePools.forEach((shape) => shape.render());
   }
 
   // TODO: 根据网格动态裁剪
