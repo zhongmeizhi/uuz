@@ -81,6 +81,7 @@ class Scene {
         });
       }
       shape.addListener("update", () => {
+        this.mesh.update(shape);
         this.dirtySet.add(shape);
       });
       shape.addListener("remove", (shape) => {

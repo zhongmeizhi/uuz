@@ -108,6 +108,14 @@ class Mesh {
     this.nodes = [];
   }
 
+  /**
+   * @param  {} shape
+   */
+  // TODO:
+  update(shape) {
+    const { x, y, width, height } = this._getBoundAttr(shape);
+  }
+
   _getBoundAttr(bound) {
     let attr = bound.core || bound;
     if (attr.radius) {

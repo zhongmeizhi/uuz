@@ -184,6 +184,20 @@ class Mesh {
 
     this.nodes = [];
   }
+  /**
+   * @param  {} shape
+   */
+  // TODO:
+
+
+  update(shape) {
+    const {
+      x,
+      y,
+      width,
+      height
+    } = this._getBoundAttr(shape);
+  }
 
   _getBoundAttr(bound) {
     let attr = bound.core || bound;
@@ -388,6 +402,7 @@ class Scene {
       }
 
       shape.addListener("update", () => {
+        this.mesh.update(shape);
         this.dirtySet.add(shape);
       });
       shape.addListener("remove", shape => {
