@@ -1,17 +1,16 @@
 import Mesh from "@/mesh";
-import EventDispatcher from "@/utils/eventDispatcher.js";
-import { isArr } from "@/utils/base.js";
+import { isFn } from "@/utils/base.js";
 
-class Scene extends EventDispatcher {
+class Scene {
   /**
    * @param  {} {core
    * @param  {} style}={}
    */
   constructor({ core, style } = {}) {
-    super();
     // TODO: 添加 Scene 的样式
     this.dirtySet = new Set();
     this.shapePools = new Set();
+    this.animationSet = new Set();
   }
 
   /**
@@ -24,7 +23,7 @@ class Scene extends EventDispatcher {
   init(renderer) {
     const { width, height, element } = renderer;
     this._initMesh(width, height);
-    this._initShape(renderer);
+    this._appendShape(renderer);
     this._initEvents(element);
   }
 
@@ -37,13 +36,16 @@ class Scene extends EventDispatcher {
     this.dirtySet.clear();
   }
 
+  animation() {
+    this.animationSet.forEach((anm) => anm());
+  }
+
   forceUpdate() {
     this.shapePools.forEach((shape) => shape.render());
   }
 
   // TODO: 根据网格动态裁剪
   clip(item) {
-    console.log(item, "item");
     // ctx.clip();
   }
 
@@ -66,14 +68,25 @@ class Scene extends EventDispatcher {
   /**
    * @param  {Renderer} renderer
    */
-  _initShape(renderer) {
+  _appendShape(renderer) {
     this.shapePools.forEach((shape) => {
-      this.mesh.insert(shape);
       this.dirtySet.add(shape);
+      shape.init(renderer);
+      if (shape.events && Object.keys(shape.events).length) {
+        this.mesh.insert(shape);
+      }
+      if (isFn(shape.animation)) {
+        this.animationSet.add(() => {
+          shape.animation.call(shape, shape);
+        });
+      }
       shape.addListener("update", () => {
         this.dirtySet.add(shape);
       });
-      shape.init(renderer);
+      shape.addListener("remove", (shape) => {
+        this.shapePools.delete(shape);
+        this.mesh.remove(shape);
+      });
     });
   }
 

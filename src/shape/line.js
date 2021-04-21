@@ -1,8 +1,8 @@
 import Shape from "@/shape";
 
 class Line extends Shape {
-  constructor({ core, style } = {}) {
-    super(core, style);
+  constructor(args) {
+    super(args);
   }
 
   drawPath() {

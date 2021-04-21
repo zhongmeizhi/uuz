@@ -1,14 +1,15 @@
 import EventDispatcher from "@/utils/eventDispatcher.js";
 import styleMap from "@/shape/styleMap.js";
-import { isFn, errorHandler } from "@/utils/base.js";
+import { isFn, isObject, errorHandler } from "@/utils/base.js";
 
 class Shape extends EventDispatcher {
-  constructor(core = {}, style = {}, events = {}) {
+  constructor({ core = {}, style = {}, events, animation }) {
     super();
     this.core = this._setTrace(core);
     this.style = this._setTrace(style);
-    this.events = this._setTrace(events);
-    this.path = new Path2D();;
+    this.events = events;
+    this.animation = animation;
+    this.path = new Path2D();
     this.dirty = false;
     this.isEnter = false;
     // this.oldData = {}
@@ -21,7 +22,6 @@ class Shape extends EventDispatcher {
     const { ctx, dpr } = renderer;
     this.ctx = ctx;
     this.dpr = dpr;
-    this._setStyles();
     this.render();
   }
 
@@ -38,7 +38,7 @@ class Shape extends EventDispatcher {
   }
 
   drawPath() {
-    errorHandler('render 需要被重写')
+    errorHandler("render 需要被重写");
   }
 
   /**
@@ -50,6 +50,10 @@ class Shape extends EventDispatcher {
     isFn(this.events[realName]) && this.events[realName](this, event);
   }
 
+  remove() {
+    this.dispatch("remove", this);
+  }
+
   /**
    * @param  {Object} item
    */
@@ -58,8 +62,7 @@ class Shape extends EventDispatcher {
       set: (target, prop, value) => {
         target[prop] = value;
         if (!this.dirty) {
-          // this.scene.dirtySet.add(this);
-          this.dispatch('update', this);
+          this.dispatch("update", this);
           this.dirty = true;
         }
         return true;

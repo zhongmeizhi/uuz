@@ -34,6 +34,36 @@
 
       this._antiAliasing(ele);
     }
+
+    clear() {
+      this.ctx.clearRect(0, 0, this.width, this.height);
+    }
+    /**
+     * @param  {Scene} scene
+     */
+
+
+    render(scene) {
+      this.sceneSet.add(scene);
+
+      this._draw();
+
+      this._initAnimation();
+    }
+
+    update() {
+      // TODO: 部分更新
+      this.sceneSet.forEach(scene => {
+        if (scene.dirtySet.size) {
+          scene.update();
+        }
+      });
+    }
+
+    forceUpdate() {
+      this.clear();
+      this.sceneSet.forEach(scene => scene.forceUpdate());
+    }
     /**
      * @param  {HTMLElement} ele
      */
@@ -51,48 +81,13 @@
       this.ctx.save();
     }
 
-    clear() {
-      this.ctx.clearRect(0, 0, this.width, this.height);
-    }
-    /**
-     * @param  {Scene} scene
-     */
-
-
-    render(scene) {
-      this.sceneSet.add(scene);
-      this.draw();
+    _draw() {
+      this.sceneSet.forEach(scene => scene.init.call(scene, this));
     }
 
-    draw() {
-      this.sceneSet.forEach(scene => scene.init(this));
-    }
-
-    update() {
-      // TODO: 部分更新
-      this.sceneSet.forEach(scene => {
-        if (scene.dirtySet.size) {
-          console.log("更新");
-          scene.update();
-        }
-      });
-    }
-
-    forceUpdate() {
-      this.clear();
-      this.sceneSet.forEach(scene => scene.forceUpdate());
-    }
-    /**
-     * @param  {Function} callback
-     */
-
-
-    animation(callback) {
+    _initAnimation() {
       const run = () => {
-        if (typeof callback === "function") {
-          callback.call(null, this);
-        }
-
+        this.sceneSet.forEach(scene => scene.animation());
         this.forceUpdate();
         window.requestAnimationFrame(run);
       };
@@ -106,9 +101,6 @@
   function isFn(fn) {
     return typeof fn === "function";
   }
-  function errorHandler(msg) {
-    throw new Error(msg);
-  }
 
   /**
    * @param  {Shape} shape
@@ -118,7 +110,7 @@
    */
 
   class Mesh {
-    constructor(pRect, max_objects = 10, max_levels = 4, level = 0) {
+    constructor(pRect, max_objects = 12, max_levels = 4, level = 0) {
       this.max_objects = max_objects;
       this.max_levels = max_levels;
       this.level = level;
@@ -151,7 +143,7 @@
       if (this.objects.length > this.max_objects && this.level < this.max_levels) {
         //split if we don't already have subnodes
         if (!this.nodes.length) {
-          this._split();
+          this._splitMesh();
         } //add all objects to their corresponding subnode
 
 
@@ -182,11 +174,11 @@
           returnObjects = returnObjects.concat(this.nodes[indexes[i]].retrieve(shape));
         }
       } //remove duplicates
+      // returnObjects = returnObjects.filter(function (item, index) {
+      //   return returnObjects.indexOf(item) >= index;
+      // });
 
 
-      returnObjects = returnObjects.filter(function (item, index) {
-        return returnObjects.indexOf(item) >= index;
-      });
       return returnObjects;
     }
     /**
@@ -229,14 +221,16 @@
       return attr;
     }
 
-    _split() {
+    _splitMesh() {
       let nextLevel = this.level + 1;
+
       const {
         x,
         y,
         width,
         height
-      } = this.bounds;
+      } = this._getBoundAttr(this.bounds);
+
       let subWidth = width / 2;
       let subHeight = height / 2; //top right node
 
@@ -315,54 +309,7 @@
 
   }
 
-  class EventDispatcher {
-    constructor() {
-      this._listeners = {};
-    }
-    /**
-     * @param  {String} name
-     * @param  {Function} fn
-     */
-
-
-    addListener(name, fn) {
-      if (!isFn(fn)) return errorHandler("监听对象不是一个函数");
-
-      if (!this._listeners[name]) {
-        this._listeners[name] = new Set();
-      }
-
-      this._listeners[name].add(fn);
-    }
-    /**
-     * @param  {String name
-     */
-
-
-    dispatch(name, argv) {
-      if (this._listeners[name]) {
-        this._listeners[name].forEach(fn => fn.call(this, argv));
-      }
-    }
-    /**
-     * @param  {String} name
-     * @param  {Function} fn
-     */
-
-
-    removeListener(name, fn) {
-      if (!this._listeners[name]) return;
-
-      if (this._listeners[name] && fn) {
-        this._listeners[name].delete(fn);
-      } else {
-        delete this._listeners[name];
-      }
-    }
-
-  }
-
-  class Scene extends EventDispatcher {
+  class Scene {
     /**
      * @param  {} {core
      * @param  {} style}={}
@@ -371,10 +318,10 @@
       core,
       style
     } = {}) {
-      super(); // TODO: 添加 Scene 的样式
-
+      // TODO: 添加 Scene 的样式
       this.dirtySet = new Set();
       this.shapePools = new Set();
+      this.animationSet = new Set();
     }
     /**
      * @param  {Shape} shape
@@ -394,7 +341,7 @@
 
       this._initMesh(width, height);
 
-      this._initShape(renderer);
+      this._appendShape(renderer);
 
       this._initEvents(element);
     } // TODO: 开启局部更新
@@ -408,13 +355,16 @@
       this.dirtySet.clear();
     }
 
+    animation() {
+      this.animationSet.forEach(anm => anm());
+    }
+
     forceUpdate() {
       this.shapePools.forEach(shape => shape.render());
     } // TODO: 根据网格动态裁剪
 
 
-    clip(item) {
-      console.log(item, "item"); // ctx.clip();
+    clip(item) {// ctx.clip();
     } // TODO:
 
 
@@ -438,14 +388,28 @@
      */
 
 
-    _initShape(renderer) {
+    _appendShape(renderer) {
       this.shapePools.forEach(shape => {
-        this.mesh.insert(shape);
         this.dirtySet.add(shape);
+        shape.init(renderer);
+
+        if (shape.events && Object.keys(shape.events).length) {
+          this.mesh.insert(shape);
+        }
+
+        if (isFn(shape.animation)) {
+          this.animationSet.add(() => {
+            shape.animation.call(shape, shape);
+          });
+        }
+
         shape.addListener("update", () => {
           this.dirtySet.add(shape);
         });
-        shape.init(renderer);
+        shape.addListener("remove", shape => {
+          this.shapePools.delete(shape);
+          this.mesh.remove(shape);
+        });
       });
     }
     /**

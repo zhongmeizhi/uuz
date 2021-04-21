@@ -1,8 +1,8 @@
 import Shape from "@/shape";
 
 class Rect extends Shape {
-  constructor({ core, style, events } = {}) {
-    super(core, style, events);
+  constructor(args) {
+    super(args);
   }
 
   drawPath() {

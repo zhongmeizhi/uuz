@@ -20,14 +20,6 @@ const arc = new uuz.Arc({
     background: "#79B83D",
   },
   events: {
-    mouseenter(shape) {
-      shape.bg = shape.style.background || "black";
-      shape.style.background = "#ffff00";
-    },
-    mouseleave(shape) {
-      shape.style.background = shape.bg;
-      shape.bg = null;
-    },
     click(shape) {
       if (shape.isMove) {
         shape.core.x -= 100;
@@ -44,7 +36,11 @@ const arc = new uuz.Arc({
 
 scene.add(arc);
 
-kLineData.forEach((val) => {
+kLineData.staticData.forEach((val) => {
+  scene.add(new uuz.Arc({...val}));
+});
+
+kLineData.dynamicData.forEach((val) => {
   scene.add(
     new uuz.Rect({
       ...val,
@@ -58,19 +54,17 @@ kLineData.forEach((val) => {
           shape.mk = null;
         },
       },
+      animation({ core }) {
+        core.x += core.vx;
+        core.y += core.vy;
+        const { width, height } = renderer;
+        if (core.x > width) core.x = 0;
+        if (core.x < 0) core.x = width;
+        if (core.y > height) core.y = 0;
+        if (core.y < 0) core.y = height;
+      },
     })
   );
 });
 
 renderer.render(scene);
-renderer.animation((renderer) => {
-  kLineData.forEach(({ core }) => {
-    core.x += core.vx;
-    core.y += core.vy;
-    const { width, height } = renderer;
-    if (core.x > width) core.x = 0;
-    if (core.x < 0) core.x = width;
-    if (core.y > height) core.y = 0;
-    if (core.y < 0) core.y = height;
-  });
-});

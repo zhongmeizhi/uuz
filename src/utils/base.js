@@ -1,5 +1,8 @@
 // export const isStr = (v) => typeof v === 'string';
-// export const isObject = (val) => val !== null && typeof val === 'object';
+
+export function isObject(val) {
+  return val !== null && typeof val === "object";
+}
 
 export const isArr = Array.isArray;
 

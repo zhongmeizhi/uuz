@@ -7,7 +7,7 @@ import { isArr, isFn, errorHandler } from "@/utils/base.js";
  * @param  {number} level=0
  */
 class Mesh {
-  constructor(pRect, max_objects = 10, max_levels = 4, level = 0) {
+  constructor(pRect, max_objects = 12, max_levels = 4, level = 0) {
     this.max_objects = max_objects;
     this.max_levels = max_levels;
 
@@ -44,7 +44,7 @@ class Mesh {
     ) {
       //split if we don't already have subnodes
       if (!this.nodes.length) {
-        this._split();
+        this._splitMesh();
       }
 
       //add all objects to their corresponding subnode
@@ -77,9 +77,9 @@ class Mesh {
     }
 
     //remove duplicates
-    returnObjects = returnObjects.filter(function (item, index) {
-      return returnObjects.indexOf(item) >= index;
-    });
+    // returnObjects = returnObjects.filter(function (item, index) {
+    //   return returnObjects.indexOf(item) >= index;
+    // });
 
     return returnObjects;
   }
@@ -97,7 +97,6 @@ class Mesh {
       height: blur,
     });
   }
-
 
   clear() {
     this.objects = [];
@@ -121,9 +120,9 @@ class Mesh {
     return attr;
   }
 
-  _split() {
+  _splitMesh() {
     let nextLevel = this.level + 1;
-    const { x, y, width, height } = this.bounds;
+    const { x, y, width, height } = this._getBoundAttr(this.bounds);
     let subWidth = width / 2;
     let subHeight = height / 2;
 

@@ -1,8 +1,8 @@
 import Shape from "@/shape";
 
 class Arc extends Shape {
-  constructor({ core, style, events } = {}) {
-    super(core, style, events);
+  constructor(args) {
+    super(args);
   }
 
   drawPath() {

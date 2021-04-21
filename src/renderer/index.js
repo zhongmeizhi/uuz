@@ -13,6 +13,33 @@ class Renderer {
     this._antiAliasing(ele);
   }
 
+  clear() {
+    this.ctx.clearRect(0, 0, this.width, this.height);
+  }
+
+  /**
+   * @param  {Scene} scene
+   */
+  render(scene) {
+    this.sceneSet.add(scene);
+    this._draw();
+    this._initAnimation();
+  }
+
+  update() {
+    // TODO: 部分更新
+    this.sceneSet.forEach((scene) => {
+      if (scene.dirtySet.size) {
+        scene.update();
+      }
+    });
+  }
+
+  forceUpdate() {
+    this.clear();
+    this.sceneSet.forEach((scene) => scene.forceUpdate());
+  }
+
   /**
    * @param  {HTMLElement} ele
    */
@@ -28,45 +55,13 @@ class Renderer {
     this.ctx.save();
   }
 
-  clear() {
-    this.ctx.clearRect(0, 0, this.width, this.height);
+  _draw() {
+    this.sceneSet.forEach((scene) => scene.init.call(scene, this));
   }
 
-  /**
-   * @param  {Scene} scene
-   */
-  render(scene) {
-    this.sceneSet.add(scene);
-    this.draw();
-  }
-
-  draw() {
-    this.sceneSet.forEach((scene) => scene.init(this));
-  }
-
-  update() {
-    // TODO: 部分更新
-    this.sceneSet.forEach((scene) => {
-      if (scene.dirtySet.size) {
-        console.log("更新");
-        scene.update();
-      }
-    });
-  }
-
-  forceUpdate() {
-    this.clear();
-    this.sceneSet.forEach((scene) => scene.forceUpdate());
-  }
-
-  /**
-   * @param  {Function} callback
-   */
-  animation(callback) {
+  _initAnimation() {
     const run = () => {
-      if (typeof callback === "function") {
-        callback.call(null, this);
-      }
+      this.sceneSet.forEach((scene) => scene.animation());
       this.forceUpdate();
       window.requestAnimationFrame(run);
     };
