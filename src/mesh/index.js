@@ -1,5 +1,3 @@
-import { isArr, isFn, errorHandler } from "@/utils/base.js";
-
 /**
  * @param  {Shape} shape
  * @param  {number} max_objects=10
@@ -7,7 +5,7 @@ import { isArr, isFn, errorHandler } from "@/utils/base.js";
  * @param  {number} level=0
  */
 class Mesh {
-  constructor(pRect, max_objects = 12, max_levels = 4, level = 0) {
+  constructor(pRect, max_objects = 10, max_levels = 4, level = 0) {
     this.max_objects = max_objects;
     this.max_levels = max_levels;
 
@@ -187,8 +185,8 @@ class Mesh {
   _getIndex(shape) {
     const { x, y, width, height } = this._getBoundAttr(shape);
     let indexes = [],
-      verticalMidpoint = x + width / 2,
-      horizontalMidpoint = y + height / 2;
+      verticalMidpoint = this.bounds.x + this.bounds.width / 2,
+      horizontalMidpoint = this.bounds.y + this.bounds.height / 2;
 
     let startIsNorth = y < horizontalMidpoint,
       startIsWest = x < verticalMidpoint,

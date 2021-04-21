@@ -46,6 +46,7 @@ class Renderer {
     this.sceneSet.forEach(scene => scene.forceUpdate());
   }
   /**
+   * 抗锯齿
    * @param  {HTMLElement} ele
    */
 
@@ -78,23 +79,14 @@ class Renderer {
 
 }
 
-// export const isStr = (v) => typeof v === 'string';
-function isFn(fn) {
-  return typeof fn === "function";
-}
-function errorHandler(msg) {
-  throw new Error(msg);
-}
-
 /**
  * @param  {Shape} shape
  * @param  {number} max_objects=10
  * @param  {number} max_levels=4
  * @param  {number} level=0
  */
-
 class Mesh {
-  constructor(pRect, max_objects = 12, max_levels = 4, level = 0) {
+  constructor(pRect, max_objects = 10, max_levels = 4, level = 0) {
     this.max_objects = max_objects;
     this.max_levels = max_levels;
     this.level = level;
@@ -262,8 +254,8 @@ class Mesh {
     } = this._getBoundAttr(shape);
 
     let indexes = [],
-        verticalMidpoint = x + width / 2,
-        horizontalMidpoint = y + height / 2;
+        verticalMidpoint = this.bounds.x + this.bounds.width / 2,
+        horizontalMidpoint = this.bounds.y + this.bounds.height / 2;
     let startIsNorth = y < horizontalMidpoint,
         startIsWest = x < verticalMidpoint,
         endIsEast = x + width > verticalMidpoint,
@@ -291,6 +283,14 @@ class Mesh {
     return indexes;
   }
 
+}
+
+// export const isStr = (v) => typeof v === 'string';
+function isFn(fn) {
+  return typeof fn === "function";
+}
+function errorHandler(msg) {
+  throw new Error(msg);
 }
 
 class Scene {

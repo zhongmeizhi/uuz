@@ -1,5 +1,5 @@
 import uuz from "../lib/uuz.js";
-import kLineData from "../src/data.js";
+import kLineData from "../src/mock-data.js";
 
 const renderer = new uuz.Renderer("#canvas");
 const scene = new uuz.Scene();
@@ -13,7 +13,7 @@ scene.add(
     },
     style: {
       zIndex: 1,
-      opacity: 0.6,
+      opacity: 0.8,
       boxShadow: "red 2 3 3",
       background: "#79B83D",
     },

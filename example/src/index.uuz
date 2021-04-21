@@ -1,6 +1,6 @@
 import uuz from "uuz/jsx-runtime";
 import { Arc, Rect } from "uuz/uuz.umd.js";
-import kLineData from "./data";
+import kLineData from "./mock-data";
 
 export default () => {
   return (

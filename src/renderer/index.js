@@ -41,6 +41,7 @@ class Renderer {
   }
 
   /**
+   * 抗锯齿
    * @param  {HTMLElement} ele
    */
   _antiAliasing(ele) {
