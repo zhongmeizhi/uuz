@@ -76,10 +76,10 @@ class Mesh {
       }
     }
 
-    //remove duplicates
-    // returnObjects = returnObjects.filter(function (item, index) {
-    //   return returnObjects.indexOf(item) >= index;
-    // });
+    // remove duplicates
+    returnObjects = returnObjects.filter(function (item, index) {
+      return returnObjects.indexOf(item) >= index;
+    });
 
     return returnObjects;
   }

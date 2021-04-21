@@ -2,43 +2,38 @@ import uuz from "../lib/uuz.js";
 import kLineData from "../src/data.js";
 
 const renderer = new uuz.Renderer("#canvas");
+const scene = new uuz.Scene();
 
-const scene = new uuz.Scene({
-  style: {},
-});
-
-const arc = new uuz.Arc({
-  core: {
-    x: 100,
-    y: 75,
-    radius: 30,
-  },
-  style: {
-    zIndex: 1,
-    opacity: 0.6,
-    // boxShadow: "red 2 3 3",
-    background: "#79B83D",
-  },
-  events: {
-    click(shape) {
-      if (shape.isMove) {
-        shape.core.x -= 100;
-        shape.core.radius -= 30;
-        shape.isMove = false;
-      } else {
-        shape.core.x += 100;
-        shape.core.radius += 30;
-        shape.isMove = true;
-      }
+scene.add(
+  new uuz.Arc({
+    core: {
+      x: 100,
+      y: 75,
+      radius: 30,
     },
-  },
-});
+    style: {
+      zIndex: 1,
+      opacity: 0.6,
+      boxShadow: "red 2 3 3",
+      background: "#79B83D",
+    },
+    events: {
+      click(shape) {
+        if (shape.isMove) {
+          shape.core.x -= 100;
+          shape.core.radius -= 30;
+          shape.isMove = false;
+        } else {
+          shape.core.x += 100;
+          shape.core.radius += 30;
+          shape.isMove = true;
+        }
+      },
+    },
+  })
+);
 
-scene.add(arc);
-
-kLineData.staticData.forEach((val) => {
-  scene.add(new uuz.Arc({...val}));
-});
+kLineData.staticData.forEach((val) => scene.add(new uuz.Arc({ ...val })));
 
 kLineData.dynamicData.forEach((val) => {
   scene.add(

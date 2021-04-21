@@ -173,12 +173,12 @@
         for (let i = 0; i < indexes.length; i++) {
           returnObjects = returnObjects.concat(this.nodes[indexes[i]].retrieve(shape));
         }
-      } //remove duplicates
-      // returnObjects = returnObjects.filter(function (item, index) {
-      //   return returnObjects.indexOf(item) >= index;
-      // });
+      } // remove duplicates
 
 
+      returnObjects = returnObjects.filter(function (item, index) {
+        return returnObjects.indexOf(item) >= index;
+      });
       return returnObjects;
     }
     /**
