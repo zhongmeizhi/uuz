@@ -114,6 +114,7 @@ class Mesh {
     } //otherwise, store object here
 
 
+    shape.parentMesh = this.objects;
     this.objects.push(shape); //max_objects reached
 
     if (this.objects.length > this.max_objects && this.level < this.max_levels) {
@@ -197,16 +198,16 @@ class Mesh {
       width,
       height
     } = this._getBoundAttr(shape);
+
+    if (shape.parentMesh) {
+      const idx = shape.parentMesh.findIndex(item => item === shape);
+      shape.parentMesh.splice(idx, 1);
+      delete shape.parentMesh;
+    }
   }
 
   _getBoundAttr(bound) {
     let attr = bound.core || bound;
-
-    if (attr.radius) {
-      const diameter = attr.radius * 2;
-      attr.width = diameter;
-      attr.height = diameter;
-    }
 
     return attr;
   }

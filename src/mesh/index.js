@@ -33,6 +33,7 @@ class Mesh {
     }
 
     //otherwise, store object here
+    shape.parentMesh = this.objects;
     this.objects.push(shape);
 
     //max_objects reached
@@ -114,14 +115,21 @@ class Mesh {
   // TODO:
   update(shape) {
     const { x, y, width, height } = this._getBoundAttr(shape);
+    if (shape.parentMesh) {
+      const idx = shape.parentMesh.findIndex((item) => item === shape);
+      shape.parentMesh.splice(idx, 1);
+      delete shape.parentMesh;
+    }
+
   }
 
   _getBoundAttr(bound) {
     let attr = bound.core || bound;
-    if (attr.radius) {
-      const diameter = attr.radius * 2;
-      attr.width = diameter;
-      attr.height = diameter;
+    let result = { ...attr };
+    if (result.radius) {
+      const diameter = result.radius * 2;
+      result.width = diameter;
+      result.height = diameter;
     }
     return attr;
   }
