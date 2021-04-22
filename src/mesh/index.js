@@ -33,7 +33,7 @@ class Mesh {
     }
 
     //otherwise, store object here
-    shape.parentMesh = this.objects;
+    shape.parentBound = this.objects;
     this.objects.push(shape);
 
     //max_objects reached
@@ -112,15 +112,22 @@ class Mesh {
   /**
    * @param  {} shape
    */
-  // TODO:
   update(shape) {
-    const { x, y, width, height } = this._getBoundAttr(shape);
-    if (shape.parentMesh) {
-      const idx = shape.parentMesh.findIndex((item) => item === shape);
-      shape.parentMesh.splice(idx, 1);
-      delete shape.parentMesh;
+    if (shape.parentBound) {
+      const idx = shape.parentBound.findIndex((item) => item === shape);
+      shape.parentBound.splice(idx, 1);
+      delete shape.parentBound;
+      const root = this.findRoot();
+      root.insert(shape);
     }
+  }
 
+  findRoot() {
+    let mesh = this;
+    while(mesh.parentMesh) {
+      mesh = mesh.parentMesh;
+    }
+    return mesh;
   }
 
   _getBoundAttr(bound) {
@@ -140,57 +147,35 @@ class Mesh {
     let subWidth = width / 2;
     let subHeight = height / 2;
 
-    //top right node
-    this.nodes[0] = new Mesh(
+    const axis = [
       {
         x: x + subWidth,
         y: y,
-        width: subWidth,
-        height: subHeight,
       },
-      this.max_objects,
-      this.max_levels,
-      nextLevel
-    );
-
-    //top left node
-    this.nodes[1] = new Mesh(
       {
         x: x,
         y: y,
-        width: subWidth,
-        height: subHeight,
       },
-      this.max_objects,
-      this.max_levels,
-      nextLevel
-    );
-
-    //bottom left node
-    this.nodes[2] = new Mesh(
       {
         x: x,
         y: y + subHeight,
-        width: subWidth,
-        height: subHeight,
       },
-      this.max_objects,
-      this.max_levels,
-      nextLevel
-    );
-
-    //bottom right node
-    this.nodes[3] = new Mesh(
       {
         x: x + subWidth,
         y: y + subHeight,
-        width: subWidth,
-        height: subHeight,
       },
-      this.max_objects,
-      this.max_levels,
-      nextLevel
-    );
+    ];
+
+    axis.forEach(({ x, y }) => {
+      const mesh = new Mesh(
+        { x, y, width: subWidth, height: subHeight },
+        this.max_objects,
+        this.max_levels,
+        nextLevel
+      );
+      mesh.parentMesh = this;
+      this.nodes.push(mesh);
+    });
   }
 
   /**
@@ -214,7 +199,6 @@ class Mesh {
       indexes.push(0);
     }
 
-    //top-left quad
     if (startIsWest && startIsNorth) {
       indexes.push(1);
     }
