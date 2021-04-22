@@ -1,6 +1,12 @@
-let staticData = (function createObjects() {
+function randMinMax(min, max, round) {
+  var val = min + Math.random() * (max - min);
+  if (round) val = Math.round(val);
+  return val;
+}
+
+let staticData = (function() {
   let staticData = [];
-  for (var i = 0; i < 20; i = i + 1) {
+  for (var i = 0; i < 100; i = i + 1) {
     staticData.push({
       core: {
         x: randMinMax(0, 1200),
@@ -10,6 +16,7 @@ let staticData = (function createObjects() {
       style: {
         zIndex: -1,
         opacity: randMinMax(0.1, 0.6),
+        boxShadow: "#d4f9b0 0 0 16",
         background: Math.random() > 0.5 ? "#79B83D" : "#C93860",
       },
     });
@@ -17,13 +24,7 @@ let staticData = (function createObjects() {
   return staticData;
 })();
 
-function randMinMax(min, max, round) {
-  var val = min + Math.random() * (max - min);
-  if (round) val = Math.round(val);
-  return val;
-}
-
-let dynamicData = (function createObjects() {
+let dynamicData = (function() {
   let dynamicData = [];
   for (var i = 0; i < 200; i = i + 1) {
     dynamicData.push({

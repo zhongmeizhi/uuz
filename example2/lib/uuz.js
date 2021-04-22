@@ -101,7 +101,7 @@ class Mesh {
 
   insert(shape) {
     let i = 0,
-        indexes; //if we have subnodes, call insert on matching subnodes
+        indexes;
 
     if (this.nodes.length) {
       indexes = this._getIndex(shape);
@@ -111,18 +111,15 @@ class Mesh {
       }
 
       return;
-    } //otherwise, store object here
-
+    }
 
     shape.parentBound = this.objects;
-    this.objects.push(shape); //max_objects reached
+    this.objects.push(shape);
 
     if (this.objects.length > this.max_objects && this.level < this.max_levels) {
-      //split if we don't already have subnodes
       if (!this.nodes.length) {
         this._splitMesh();
-      } //add all objects to their corresponding subnode
-
+      }
 
       for (i = 0; i < this.objects.length; i++) {
         indexes = this._getIndex(this.objects[i]);
@@ -130,8 +127,7 @@ class Mesh {
         for (let k = 0; k < indexes.length; k++) {
           this.nodes[indexes[k]].insert(this.objects[i]);
         }
-      } //clean up this node
-
+      }
 
       this.objects = [];
     }
@@ -143,14 +139,13 @@ class Mesh {
 
   retrieve(shape) {
     let indexes = this._getIndex(shape),
-        returnObjects = this.objects; //if we have subnodes, retrieve their objects
-
+        returnObjects = this.objects;
 
     if (this.nodes.length) {
       for (let i = 0; i < indexes.length; i++) {
         returnObjects = returnObjects.concat(this.nodes[indexes[i]].retrieve(shape));
       }
-    } // remove duplicates
+    } // 筛选，感觉算法可以优化
 
 
     returnObjects = returnObjects.filter(function (item, index) {
@@ -212,8 +207,16 @@ class Mesh {
 
   _getBoundAttr(bound) {
     let attr = bound.core || bound;
+    let result = { ...attr
+    };
 
-    return attr;
+    if (result.radius) {
+      const diameter = result.radius * 2;
+      result.width = diameter;
+      result.height = diameter;
+    }
+
+    return result;
   }
 
   _splitMesh() {
@@ -256,9 +259,8 @@ class Mesh {
     });
   }
   /**
-   * Determine which node the object belongs to
    * @param {Shape} shape
-   * @return {number[]}       an array of indexes of the intersecting subnodes (0-3 = top-right, top-left, bottom-left, bottom-right / ne, nw, sw, se)
+   * @return {number[]} 
    */
 
 
@@ -276,7 +278,7 @@ class Mesh {
     let startIsNorth = y < horizontalMidpoint,
         startIsWest = x < verticalMidpoint,
         endIsEast = x + width > verticalMidpoint,
-        endIsSouth = y + height > horizontalMidpoint; //top-right quad
+        endIsSouth = y + height > horizontalMidpoint;
 
     if (startIsNorth && endIsEast) {
       indexes.push(0);
@@ -284,13 +286,11 @@ class Mesh {
 
     if (startIsWest && startIsNorth) {
       indexes.push(1);
-    } //bottom-left quad
-
+    }
 
     if (startIsWest && endIsSouth) {
       indexes.push(2);
-    } //bottom-right quad
-
+    }
 
     if (endIsEast && endIsSouth) {
       indexes.push(3);

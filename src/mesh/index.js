@@ -22,7 +22,6 @@ class Mesh {
     let i = 0,
       indexes;
 
-    //if we have subnodes, call insert on matching subnodes
     if (this.nodes.length) {
       indexes = this._getIndex(shape);
 
@@ -32,21 +31,17 @@ class Mesh {
       return;
     }
 
-    //otherwise, store object here
     shape.parentBound = this.objects;
     this.objects.push(shape);
 
-    //max_objects reached
     if (
       this.objects.length > this.max_objects &&
       this.level < this.max_levels
     ) {
-      //split if we don't already have subnodes
       if (!this.nodes.length) {
         this._splitMesh();
       }
 
-      //add all objects to their corresponding subnode
       for (i = 0; i < this.objects.length; i++) {
         indexes = this._getIndex(this.objects[i]);
         for (let k = 0; k < indexes.length; k++) {
@@ -54,7 +49,6 @@ class Mesh {
         }
       }
 
-      //clean up this node
       this.objects = [];
     }
   }
@@ -66,7 +60,6 @@ class Mesh {
     let indexes = this._getIndex(shape),
       returnObjects = this.objects;
 
-    //if we have subnodes, retrieve their objects
     if (this.nodes.length) {
       for (let i = 0; i < indexes.length; i++) {
         returnObjects = returnObjects.concat(
@@ -75,7 +68,7 @@ class Mesh {
       }
     }
 
-    // remove duplicates
+    // 筛选，感觉算法可以优化
     returnObjects = returnObjects.filter(function (item, index) {
       return returnObjects.indexOf(item) >= index;
     });
@@ -138,7 +131,7 @@ class Mesh {
       result.width = diameter;
       result.height = diameter;
     }
-    return attr;
+    return result;
   }
 
   _splitMesh() {
@@ -179,9 +172,8 @@ class Mesh {
   }
 
   /**
-   * Determine which node the object belongs to
    * @param {Shape} shape
-   * @return {number[]}       an array of indexes of the intersecting subnodes (0-3 = top-right, top-left, bottom-left, bottom-right / ne, nw, sw, se)
+   * @return {number[]} 
    */
   _getIndex(shape) {
     const { x, y, width, height } = this._getBoundAttr(shape);
@@ -194,7 +186,6 @@ class Mesh {
       endIsEast = x + width > verticalMidpoint,
       endIsSouth = y + height > horizontalMidpoint;
 
-    //top-right quad
     if (startIsNorth && endIsEast) {
       indexes.push(0);
     }
@@ -203,12 +194,10 @@ class Mesh {
       indexes.push(1);
     }
 
-    //bottom-left quad
     if (startIsWest && endIsSouth) {
       indexes.push(2);
     }
 
-    //bottom-right quad
     if (endIsEast && endIsSouth) {
       indexes.push(3);
     }

@@ -4,36 +4,26 @@ import kLineData from "../src/mock-data.js";
 const renderer = new uuz.Renderer("#canvas");
 const scene = new uuz.Scene();
 
-scene.add(
-  new uuz.Arc({
-    core: {
-      x: 100,
-      y: 75,
-      radius: 30,
-    },
-    style: {
-      zIndex: 1,
-      opacity: 0.8,
-      boxShadow: "red 2 3 3",
-      background: "#79B83D",
-    },
-    events: {
-      click(shape) {
-        if (shape.isMove) {
-          shape.core.x -= 100;
-          shape.core.radius -= 30;
-          shape.isMove = false;
-        } else {
-          shape.core.x += 100;
-          shape.core.radius += 30;
-          shape.isMove = true;
-        }
+kLineData.staticData.forEach((val) =>
+  scene.add(
+    new uuz.Arc({
+      ...val,
+      events: {
+        click(shape) {
+          if (shape.isMove) {
+            shape.core.x -= 100;
+            shape.core.radius -= 30;
+            shape.isMove = false;
+          } else {
+            shape.core.x += 100;
+            shape.core.radius += 30;
+            shape.isMove = true;
+          }
+        },
       },
-    },
-  })
+    })
+  )
 );
-
-kLineData.staticData.forEach((val) => scene.add(new uuz.Arc({ ...val })));
 
 kLineData.dynamicData.forEach((val) => {
   scene.add(
