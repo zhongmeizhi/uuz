@@ -39,7 +39,6 @@
     }
 
     update() {
-      // TODO: 部分更新
       this.sceneSet.forEach(scene => {
         if (scene.dirtySet.size) {
           scene.update();
@@ -371,10 +370,7 @@
 
 
     clip(item) {// ctx.clip();
-    } // TODO:
-
-
-    remove(shape) {}
+    }
     /**
      * @param  {number} width
      * @param  {number} height
@@ -545,7 +541,8 @@
       this.ctx = ctx;
       this.dpr = dpr;
       this.render();
-    }
+    } // TODO: 载入缓冲
+
 
     render() {
       this.dirty = false;
@@ -568,6 +565,7 @@
      * @param  {String} eventName
      * @param  {MouseEvent} event
      */
+    // TODO: 优化事件穿透
 
 
     eventHandler(eventName, event) {
@@ -615,6 +613,7 @@
      * ps: 抗锯齿和 isPointInPath 需要校验点击位置
      * @param  {MouseEvent} event
      */
+    // TODO: 优化路径校验
 
 
     _isPointInPath(event) {

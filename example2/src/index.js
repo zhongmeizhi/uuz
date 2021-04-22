@@ -9,6 +9,16 @@ kLineData.staticData.forEach((val) =>
     new uuz.Arc({
       ...val,
       events: {
+        mouseenter(shape) {
+          shape.z = shape.style.zIndex;
+          shape.o = shape.style.opacity;
+          shape.style.zIndex = 1;
+          shape.style.opacity = 1;
+        },
+        mouseleave(shape) {
+          shape.style.zIndex = shape.z;
+          shape.style.opacity = shape.o;
+        },
         click(shape) {
           if (shape.isMove) {
             shape.core.x -= 100;

@@ -52,7 +52,6 @@
     }
 
     update() {
-      // TODO: 部分更新
       this.sceneSet.forEach(scene => {
         if (scene.dirtySet.size) {
           scene.update();
@@ -381,10 +380,7 @@
 
 
     clip(item) {// ctx.clip();
-    } // TODO:
-
-
-    remove(shape) {}
+    }
     /**
      * @param  {number} width
      * @param  {number} height

@@ -25,6 +25,7 @@ class Shape extends EventDispatcher {
     this.render();
   }
 
+  // TODO: 载入缓冲
   render() {
     this.dirty = false;
     const ctx = this.ctx;
@@ -45,6 +46,7 @@ class Shape extends EventDispatcher {
    * @param  {String} eventName
    * @param  {MouseEvent} event
    */
+  // TODO: 优化事件穿透
   eventHandler(eventName, event) {
     const realName = this._transformEvent(eventName, event);
     isFn(this.events[realName]) && this.events[realName](this, event);
@@ -85,6 +87,7 @@ class Shape extends EventDispatcher {
    * ps: 抗锯齿和 isPointInPath 需要校验点击位置
    * @param  {MouseEvent} event
    */
+  // TODO: 优化路径校验
   _isPointInPath(event) {
     return this.ctx.isPointInPath(
       this.path,

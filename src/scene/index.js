@@ -49,9 +49,6 @@ class Scene {
     // ctx.clip();
   }
 
-  // TODO:
-  remove(shape) {}
-
   /**
    * @param  {number} width
    * @param  {number} height
