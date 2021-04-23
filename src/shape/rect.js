@@ -5,15 +5,34 @@ class Rect extends Shape {
     super(args);
   }
 
+  _createRectPath(x, y, width, height, radius) {
+    this.path.push({
+      type: "moveTo",
+      args: [x + radius, y],
+    });
+    this.path.push({
+      type: "arcTo",
+      args: [x + width, y, x + width, y + radius, radius],
+    });
+    this.path.push({
+      type: "arcTo",
+      args: [x + width, y + height, x + width - radius, y + height, radius],
+    });
+    this.path.push({
+      type: "arcTo",
+      args: [x, y + height, x, y + height - radius, radius],
+    });
+    this.path.push({
+      type: "arcTo",
+      args: [x, y, x + radius, y, radius],
+    });
+  }
+
   drawPath() {
-    const shape = new Path2D();
-    shape.rect(
-      this.core.x,
-      this.core.y,
-      this.core.width,
-      this.core.height
-    );
-    return shape;
+    this.path = [];
+    const { x, y, width, height } = this.core;
+    const radius = this.style.borderRadius || 0;
+    this._createRectPath(x, y, width, height, radius);
   }
 }
 

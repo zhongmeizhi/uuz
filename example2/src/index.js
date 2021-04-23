@@ -49,7 +49,7 @@ kLineData.dynamicData.forEach((val) => {
           shape.mk = null;
         },
       },
-      animation({ core }) {
+      animate({ core }) {
         core.x += core.vx;
         core.y += core.vy;
         const { width, height } = renderer;

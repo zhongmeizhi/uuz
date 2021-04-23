@@ -3,13 +3,14 @@ import styleMap from "@/shape/styleMap.js";
 import { isFn, isObject, errorHandler } from "@/utils/base.js";
 
 class Shape extends EventDispatcher {
-  constructor({ core = {}, style = {}, events, animation }) {
+  constructor({ core = {}, style = {}, events, animate }) {
     super();
     this.core = this._setTrace(core);
     this.style = this._setTrace(style);
     this.events = events;
-    this.animation = animation;
-    this.path = new Path2D();
+    this.animate = animate;
+    // this.path = new Path2D();
+    this.path = [];
     this.dirty = false;
     this.isEnter = false;
     // this.oldData = {}
@@ -19,23 +20,18 @@ class Shape extends EventDispatcher {
    * @param  {Renderer} renderer
    */
   init(renderer) {
-    const { ctx, dpr } = renderer;
-    this.ctx = ctx;
+    const { dpr } = renderer;
     this.dpr = dpr;
-    this.render();
   }
 
-  // TODO: 载入缓冲
-  render() {
-    this.dirty = false;
-    const ctx = this.ctx;
-    ctx.save();
-    ctx.beginPath();
-    this._setStyles();
-    this.path = this.drawPath();
-    ctx.fill(this.path);
-    ctx.closePath();
-    ctx.restore();
+  // TODO: 需要性能优化
+  setStyles(ctx) {
+    for (let k of Object.keys(this.style)) {
+      const exec = styleMap[k];
+      if (exec) {
+        exec(ctx, this.style[k]);
+      }
+    }
   }
 
   drawPath() {
@@ -64,23 +60,12 @@ class Shape extends EventDispatcher {
       set: (target, prop, value) => {
         target[prop] = value;
         if (!this.dirty) {
-          this.dispatch("update", this);
           this.dirty = true;
+          this.dispatch("update", this);
         }
         return true;
       },
     });
-  }
-
-  // TODO: 需要性能优化
-  _setStyles() {
-    const ctx = this.ctx;
-    for (let k of Object.keys(this.style)) {
-      const exec = styleMap[k];
-      if (exec) {
-        exec(ctx, this.style[k]);
-      }
-    }
   }
 
   /**
@@ -89,11 +74,12 @@ class Shape extends EventDispatcher {
    */
   // TODO: 优化路径校验
   _isPointInPath(event) {
-    return this.ctx.isPointInPath(
-      this.path,
-      event.offsetX * this.dpr,
-      event.offsetY * this.dpr
-    );
+    return true;
+    // return this.ctx.isPointInPath(
+    //   this.path,
+    //   event.offsetX * this.dpr,
+    //   event.offsetY * this.dpr
+    // );
   }
 
   /**

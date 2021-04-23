@@ -28,12 +28,13 @@
     /**
      * @param  {Scene} scene
      */
+    // TODO: 多个场景
 
 
     render(scene) {
       this.sceneSet.add(scene);
-
-      this._draw();
+      this.sceneSet.forEach(scene => scene.init.call(scene, this));
+      this.forceUpdate();
 
       this._initAnimation();
     }
@@ -48,7 +49,27 @@
 
     forceUpdate() {
       this.clear();
-      this.sceneSet.forEach(scene => scene.forceUpdate());
+      this.sceneSet.forEach(scene => {
+        scene.dirtySet.forEach(item => {
+          item.drawPath();
+          item.dirty = false;
+        });
+        scene.dirtySet.clear();
+        scene.shapePools.forEach(shape => {
+          this.ctx.save();
+          this.ctx.beginPath();
+          shape.setStyles(this.ctx);
+          shape.path.forEach(({
+            type,
+            args
+          }) => {
+            this.ctx[type](...args);
+          });
+          this.ctx.stroke();
+          this.ctx.fill();
+          this.ctx.restore();
+        });
+      });
     }
     /**
      * 抗锯齿
@@ -68,13 +89,9 @@
       this.ctx.save();
     }
 
-    _draw() {
-      this.sceneSet.forEach(scene => scene.init.call(scene, this));
-    }
-
     _initAnimation() {
       const run = () => {
-        this.sceneSet.forEach(scene => scene.animation());
+        this.sceneSet.forEach(scene => scene.animate());
         this.forceUpdate();
         window.requestAnimationFrame(run);
       };
@@ -326,7 +343,7 @@
       // TODO: 添加 Scene 的样式
       this.dirtySet = new Set();
       this.shapePools = new Set();
-      this.animationSet = new Set();
+      this.animateSet = new Set();
     }
     /**
      * @param  {Shape} shape
@@ -335,14 +352,17 @@
 
     add(shape) {
       this.shapePools.add(shape);
+      this.dirtySet.add(shape);
     }
 
     init(renderer) {
       const {
         width,
         height,
-        element
+        element,
+        ctx
       } = renderer;
+      this.ctx = ctx;
 
       this._initMesh(width, height);
 
@@ -360,12 +380,8 @@
       this.dirtySet.clear();
     }
 
-    animation() {
-      this.animationSet.forEach(anm => anm());
-    }
-
-    forceUpdate() {
-      this.shapePools.forEach(shape => shape.render());
+    animate() {
+      this.animateSet.forEach(anm => anm());
     } // TODO: 根据网格动态裁剪
 
 
@@ -392,16 +408,15 @@
 
     _appendShape(renderer) {
       this.shapePools.forEach(shape => {
-        this.dirtySet.add(shape);
         shape.init(renderer);
 
         if (shape.events && Object.keys(shape.events).length) {
           this.mesh.insert(shape);
         }
 
-        if (isFn(shape.animation)) {
-          this.animationSet.add(() => {
-            shape.animation.call(shape, shape);
+        if (isFn(shape.animate)) {
+          this.animateSet.add(() => {
+            shape.animate.call(shape, shape);
           });
         }
 
@@ -504,11 +519,14 @@
       } else {
         ctx.globalCompositeOperation = "destination-over";
       }
-    } // border(ctx, val) {
-    //   const [width, solid, color] = val.split(" ");
-    //   ctx.strokeStyle = color;
-    // }
+    },
 
+    // borderRadius
+    border(ctx, val) {
+      const [width, solid, color] = val.split(" ");
+      ctx.lineWidth = width;
+      ctx.strokeStyle = color;
+    }
 
   };
 
@@ -517,14 +535,15 @@
       core = {},
       style = {},
       events,
-      animation
+      animate
     }) {
       super();
       this.core = this._setTrace(core);
       this.style = this._setTrace(style);
       this.events = events;
-      this.animation = animation;
-      this.path = new Path2D();
+      this.animate = animate; // this.path = new Path2D();
+
+      this.path = [];
       this.dirty = false;
       this.isEnter = false; // this.oldData = {}
     }
@@ -535,27 +554,20 @@
 
     init(renderer) {
       const {
-        ctx,
         dpr
       } = renderer;
-      this.ctx = ctx;
       this.dpr = dpr;
-      this.render();
-    } // TODO: 载入缓冲
+    } // TODO: 需要性能优化
 
 
-    render() {
-      this.dirty = false;
-      const ctx = this.ctx;
-      ctx.save();
-      ctx.beginPath();
+    setStyles(ctx) {
+      for (let k of Object.keys(this.style)) {
+        const exec = styleMap[k];
 
-      this._setStyles();
-
-      this.path = this.drawPath();
-      ctx.fill(this.path);
-      ctx.closePath();
-      ctx.restore();
+        if (exec) {
+          exec(ctx, this.style[k]);
+        }
+      }
     }
 
     drawPath() {
@@ -588,26 +600,13 @@
           target[prop] = value;
 
           if (!this.dirty) {
-            this.dispatch("update", this);
             this.dirty = true;
+            this.dispatch("update", this);
           }
 
           return true;
         }
       });
-    } // TODO: 需要性能优化
-
-
-    _setStyles() {
-      const ctx = this.ctx;
-
-      for (let k of Object.keys(this.style)) {
-        const exec = styleMap[k];
-
-        if (exec) {
-          exec(ctx, this.style[k]);
-        }
-      }
     }
     /**
      * ps: 抗锯齿和 isPointInPath 需要校验点击位置
@@ -617,7 +616,11 @@
 
 
     _isPointInPath(event) {
-      return this.ctx.isPointInPath(this.path, event.offsetX * this.dpr, event.offsetY * this.dpr);
+      return true; // return this.ctx.isPointInPath(
+      //   this.path,
+      //   event.offsetX * this.dpr,
+      //   event.offsetY * this.dpr
+      // );
     }
     /**
      * @param  {String} eventName
@@ -650,23 +653,121 @@
       super(args);
     }
 
+    _createRectPath(x, y, width, height, radius) {
+      this.path.push({
+        type: "moveTo",
+        args: [x + radius, y]
+      });
+      this.path.push({
+        type: "arcTo",
+        args: [x + width, y, x + width, y + radius, radius]
+      });
+      this.path.push({
+        type: "arcTo",
+        args: [x + width, y + height, x + width - radius, y + height, radius]
+      });
+      this.path.push({
+        type: "arcTo",
+        args: [x, y + height, x, y + height - radius, radius]
+      });
+      this.path.push({
+        type: "arcTo",
+        args: [x, y, x + radius, y, radius]
+      });
+    }
+
     drawPath() {
-      const shape = new Path2D();
-      shape.rect(this.core.x, this.core.y, this.core.width, this.core.height);
-      return shape;
+      this.path = [];
+      const {
+        x,
+        y,
+        width,
+        height
+      } = this.core;
+      const radius = this.style.borderRadius || 0;
+
+      this._createRectPath(x, y, width, height, radius);
     }
 
   }
 
-  class Arc extends Shape {
+  class Rect$1 extends Shape {
+    constructor(args) {
+      super(args);
+    }
+
+    _createRectPath(x, y, width, height, radius) {
+      this.path.push({
+        type: "moveTo",
+        args: [x + radius, y]
+      });
+      this.path.push({
+        type: "arcTo",
+        args: [x + width, y, x + width, y + radius, radius]
+      });
+      this.path.push({
+        type: "arcTo",
+        args: [x + width, y + height, x + width - radius, y + height, radius]
+      });
+      this.path.push({
+        type: "arcTo",
+        args: [x, y + height, x, y + height - radius, radius]
+      });
+      this.path.push({
+        type: "arcTo",
+        args: [x, y, x + radius, y, radius]
+      });
+    }
+
+    drawPath() {
+      this.path = [];
+      const {
+        x,
+        y,
+        width,
+        height
+      } = this.core;
+      const radius = this.style.borderRadius || 0;
+
+      this._createRectPath(x, y, width, height, radius);
+    }
+
+  }
+
+  class Arc extends Rect$1 {
     constructor(args) {
       super(args);
     }
 
     drawPath() {
-      const shape = new Path2D();
-      shape.arc(this.core.x, this.core.y, this.core.radius, this.core.startAngle || 0, this.core.endAngle || 2 * Math.PI, !!this.core.counterclockwise);
-      return shape;
+      this.path = [];
+      const {
+        x,
+        y,
+        radius
+      } = this.core;
+      const width = radius * 2;
+      const height = width;
+      this.path.push({
+        type: 'moveTo',
+        args: [x + radius, y]
+      });
+      this.path.push({
+        type: 'arcTo',
+        args: [x + width, y, x + width, y + radius, radius]
+      });
+      this.path.push({
+        type: 'arcTo',
+        args: [x + width, y + height, x + width - radius, y + height, radius]
+      });
+      this.path.push({
+        type: 'arcTo',
+        args: [x, y + height, x, y + height - radius, radius]
+      });
+      this.path.push({
+        type: 'arcTo',
+        args: [x, y, x + radius, y, radius]
+      });
     }
 
   }

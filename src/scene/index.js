@@ -10,7 +10,7 @@ class Scene {
     // TODO: 添加 Scene 的样式
     this.dirtySet = new Set();
     this.shapePools = new Set();
-    this.animationSet = new Set();
+    this.animateSet = new Set();
   }
 
   /**
@@ -18,10 +18,12 @@ class Scene {
    */
   add(shape) {
     this.shapePools.add(shape);
+    this.dirtySet.add(shape);
   }
 
   init(renderer) {
-    const { width, height, element } = renderer;
+    const { width, height, element, ctx } = renderer;
+    this.ctx = ctx;
     this._initMesh(width, height);
     this._appendShape(renderer);
     this._initEvents(element);
@@ -36,12 +38,8 @@ class Scene {
     this.dirtySet.clear();
   }
 
-  animation() {
-    this.animationSet.forEach((anm) => anm());
-  }
-
-  forceUpdate() {
-    this.shapePools.forEach((shape) => shape.render());
+  animate() {
+    this.animateSet.forEach((anm) => anm());
   }
 
   // TODO: 根据网格动态裁剪
@@ -67,14 +65,13 @@ class Scene {
    */
   _appendShape(renderer) {
     this.shapePools.forEach((shape) => {
-      this.dirtySet.add(shape);
       shape.init(renderer);
       if (shape.events && Object.keys(shape.events).length) {
         this.mesh.insert(shape);
       }
-      if (isFn(shape.animation)) {
-        this.animationSet.add(() => {
-          shape.animation.call(shape, shape);
+      if (isFn(shape.animate)) {
+        this.animateSet.add(() => {
+          shape.animate.call(shape, shape);
         });
       }
       shape.addListener("update", () => {

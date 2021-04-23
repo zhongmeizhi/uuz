@@ -20,9 +20,11 @@ class Renderer {
   /**
    * @param  {Scene} scene
    */
+  // TODO: 多个场景
   render(scene) {
     this.sceneSet.add(scene);
-    this._draw();
+    this.sceneSet.forEach((scene) => scene.init.call(scene, this));
+    this.forceUpdate();
     this._initAnimation();
   }
 
@@ -36,7 +38,24 @@ class Renderer {
 
   forceUpdate() {
     this.clear();
-    this.sceneSet.forEach((scene) => scene.forceUpdate());
+    this.sceneSet.forEach((scene) => {
+      scene.dirtySet.forEach((item) => {
+        item.drawPath();
+        item.dirty = false;
+      });
+      scene.dirtySet.clear();
+      scene.shapePools.forEach((shape) => {
+        this.ctx.save();
+        this.ctx.beginPath(); 
+        shape.setStyles(this.ctx);
+        shape.path.forEach(({ type, args }) => {
+          this.ctx[type](...args);
+        });
+        this.ctx.stroke();
+        this.ctx.fill();
+        this.ctx.restore();
+      });
+    });
   }
 
   /**
@@ -55,13 +74,9 @@ class Renderer {
     this.ctx.save();
   }
 
-  _draw() {
-    this.sceneSet.forEach((scene) => scene.init.call(scene, this));
-  }
-
   _initAnimation() {
     const run = () => {
-      this.sceneSet.forEach((scene) => scene.animation());
+      this.sceneSet.forEach((scene) => scene.animate());
       this.forceUpdate();
       window.requestAnimationFrame(run);
     };

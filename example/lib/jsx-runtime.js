@@ -41,12 +41,13 @@
     /**
      * @param  {Scene} scene
      */
+    // TODO: 多个场景
 
 
     render(scene) {
       this.sceneSet.add(scene);
-
-      this._draw();
+      this.sceneSet.forEach(scene => scene.init.call(scene, this));
+      this.forceUpdate();
 
       this._initAnimation();
     }
@@ -61,7 +62,27 @@
 
     forceUpdate() {
       this.clear();
-      this.sceneSet.forEach(scene => scene.forceUpdate());
+      this.sceneSet.forEach(scene => {
+        scene.dirtySet.forEach(item => {
+          item.drawPath();
+          item.dirty = false;
+        });
+        scene.dirtySet.clear();
+        scene.shapePools.forEach(shape => {
+          this.ctx.save();
+          this.ctx.beginPath();
+          shape.setStyles(this.ctx);
+          shape.path.forEach(({
+            type,
+            args
+          }) => {
+            this.ctx[type](...args);
+          });
+          this.ctx.stroke();
+          this.ctx.fill();
+          this.ctx.restore();
+        });
+      });
     }
     /**
      * 抗锯齿
@@ -81,13 +102,9 @@
       this.ctx.save();
     }
 
-    _draw() {
-      this.sceneSet.forEach(scene => scene.init.call(scene, this));
-    }
-
     _initAnimation() {
       const run = () => {
-        this.sceneSet.forEach(scene => scene.animation());
+        this.sceneSet.forEach(scene => scene.animate());
         this.forceUpdate();
         window.requestAnimationFrame(run);
       };
@@ -336,7 +353,7 @@
       // TODO: 添加 Scene 的样式
       this.dirtySet = new Set();
       this.shapePools = new Set();
-      this.animationSet = new Set();
+      this.animateSet = new Set();
     }
     /**
      * @param  {Shape} shape
@@ -345,14 +362,17 @@
 
     add(shape) {
       this.shapePools.add(shape);
+      this.dirtySet.add(shape);
     }
 
     init(renderer) {
       const {
         width,
         height,
-        element
+        element,
+        ctx
       } = renderer;
+      this.ctx = ctx;
 
       this._initMesh(width, height);
 
@@ -370,12 +390,8 @@
       this.dirtySet.clear();
     }
 
-    animation() {
-      this.animationSet.forEach(anm => anm());
-    }
-
-    forceUpdate() {
-      this.shapePools.forEach(shape => shape.render());
+    animate() {
+      this.animateSet.forEach(anm => anm());
     } // TODO: 根据网格动态裁剪
 
 
@@ -402,16 +418,15 @@
 
     _appendShape(renderer) {
       this.shapePools.forEach(shape => {
-        this.dirtySet.add(shape);
         shape.init(renderer);
 
         if (shape.events && Object.keys(shape.events).length) {
           this.mesh.insert(shape);
         }
 
-        if (isFn(shape.animation)) {
-          this.animationSet.add(() => {
-            shape.animation.call(shape, shape);
+        if (isFn(shape.animate)) {
+          this.animateSet.add(() => {
+            shape.animate.call(shape, shape);
           });
         }
 
