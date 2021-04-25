@@ -29,11 +29,10 @@ class Scene {
     this._initEvents(element);
   }
 
-  // TODO: 开启局部更新
   update() {
     this.dirtySet.forEach((item) => {
-      this.clip(item);
-      item.render();
+      item.createPath();
+      item.dirty = false;
     });
     this.dirtySet.clear();
   }

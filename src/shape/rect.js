@@ -5,7 +5,7 @@ class Rect extends Shape {
     super(args);
   }
 
-  _createRectPath(x, y, width, height, radius) {
+  _pushRectPath(x, y, width, height, radius) {
     this.path.push({
       type: "moveTo",
       args: [x + radius, y],
@@ -28,11 +28,11 @@ class Rect extends Shape {
     });
   }
 
-  drawPath() {
+  createPath() {
     this.path = [];
     const { x, y, width, height } = this.core;
     const radius = this.style.borderRadius || 0;
-    this._createRectPath(x, y, width, height, radius);
+    this._pushRectPath(x, y, width, height, radius);
   }
 }
 

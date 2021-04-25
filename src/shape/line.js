@@ -5,7 +5,7 @@ class Line extends Shape {
     super(args);
   }
 
-  drawPath() {
+  createPath() {
     const shape = new Path2D();
     shape.rect(
       this.core.x,

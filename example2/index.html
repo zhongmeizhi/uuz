@@ -16,11 +16,22 @@
     }
     canvas {
       border: 1px solid #ffffff0d;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    #canvasContainer {
+      position: relative;
+      width: 1200px;
+      height: 600px;
     }
   </style>
 </head>
 <body>
-  <canvas id="canvas" width="1200" height="600"></canvas>
+  <div id="canvasContainer">
+    <canvas id="canvas" width="1200" height="600"></canvas>
+    <canvas id="canvas2" width="1200" height="600"></canvas>
+  </div>
 
   <script src="./src/index.js" type="module"></script>
 </body>

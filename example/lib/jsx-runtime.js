@@ -19,20 +19,30 @@
 
   class Renderer {
     /**
-     * @param  {string} eleSelector
+     * @param  {string} target
+     * @param  {boolean} dynamic
+     * @param  {boolean} hd
      */
-    constructor(eleSelector) {
-      const ele = document.querySelector(eleSelector);
+    constructor({
+      target,
+      dynamic = true,
+      hd = true
+    }) {
+      const ele = document.querySelector(target);
 
       if (!ele) {
         throw new Error("不能找到匹配的dom元素");
       }
 
-      this.ctx = ele.getContext("2d");
       this.element = ele;
-      this.sceneSet = new Set();
-
-      this._antiAliasing(ele);
+      this.ctx = ele.getContext("2d");
+      this.width = ele.width;
+      this.height = ele.height;
+      this.dpr = 1;
+      this.dynamic = dynamic;
+      this.hd = hd;
+      this.scene = null;
+      hd && this._initHd(ele);
     }
 
     clear() {
@@ -41,48 +51,47 @@
     /**
      * @param  {Scene} scene
      */
-    // TODO: 多个场景
 
 
     render(scene) {
-      this.sceneSet.add(scene);
-      this.sceneSet.forEach(scene => scene.init.call(scene, this));
+      this.scene = scene;
+      scene.init.call(scene, this);
       this.forceUpdate();
-
-      this._initAnimation();
+      this.dynamic && this.initAnimation();
     }
 
     update() {
-      this.sceneSet.forEach(scene => {
-        if (scene.dirtySet.size) {
-          scene.update();
-        }
-      });
+      if (this.scene.dirtySet.size) {
+        this.scene.update();
+      }
     }
 
     forceUpdate() {
       this.clear();
-      this.sceneSet.forEach(scene => {
-        scene.dirtySet.forEach(item => {
-          item.drawPath();
-          item.dirty = false;
-        });
-        scene.dirtySet.clear();
-        scene.shapePools.forEach(shape => {
-          this.ctx.save();
-          this.ctx.beginPath();
-          shape.setStyles(this.ctx);
-          shape.path.forEach(({
-            type,
-            args
-          }) => {
-            this.ctx[type](...args);
-          });
-          this.ctx.stroke();
-          this.ctx.fill();
-          this.ctx.restore();
-        });
+      const scene = this.scene;
+      scene.update();
+      scene.shapePools.forEach(shape => {
+        this.ctx.save();
+        this.ctx.beginPath();
+
+        this._drawStyle(shape.style);
+
+        this._drawPath(shape.path);
+
+        this.ctx.stroke();
+        this.ctx.fill();
+        this.ctx.restore();
       });
+    }
+
+    initAnimation() {
+      const run = () => {
+        this.scene.animate();
+        this.forceUpdate();
+        window.requestAnimationFrame(run);
+      };
+
+      window.requestAnimationFrame(run);
     }
     /**
      * 抗锯齿
@@ -90,10 +99,8 @@
      */
 
 
-    _antiAliasing(ele) {
-      this.dpr = window.devicePixelRatio || 1;
-      this.width = ele.width;
-      this.height = ele.height;
+    _initHd(ele) {
+      this.dpr = window.devicePixelRatio;
       ele.style.width = this.width + "px";
       ele.style.height = this.height + "px";
       ele.width = this.width * this.dpr;
@@ -102,14 +109,54 @@
       this.ctx.save();
     }
 
-    _initAnimation() {
-      const run = () => {
-        this.sceneSet.forEach(scene => scene.animate());
-        this.forceUpdate();
-        window.requestAnimationFrame(run);
-      };
+    _drawStyle(style) {
+      const ctx = this.ctx;
 
-      window.requestAnimationFrame(run);
+      for (let k of Object.keys(style)) {
+        const val = style[k];
+
+        switch (k) {
+          case "background":
+            ctx.fillStyle = val;
+            break;
+
+          case "opacity":
+            ctx.globalAlpha = val;
+            break;
+
+          case "boxShadow":
+            const [shadowColor, x, y, blur] = val.split(" ");
+            ctx.shadowColor = shadowColor;
+            ctx.shadowOffsetX = x;
+            ctx.shadowOffsetY = y;
+            ctx.shadowBlur = blur;
+            break;
+
+          case "zIndex":
+            if (val > 0) {
+              ctx.globalCompositeOperation = "source-over";
+            } else {
+              ctx.globalCompositeOperation = "destination-over";
+            }
+
+            break;
+
+          case "border":
+            const [width, solid, color] = val.split(" ");
+            ctx.lineWidth = width;
+            ctx.strokeStyle = color;
+            break;
+        }
+      }
+    }
+
+    _drawPath(path) {
+      path.forEach(({
+        type,
+        args
+      }) => {
+        this.ctx[type](...args);
+      });
     }
 
   }
@@ -379,13 +426,12 @@
       this._appendShape(renderer);
 
       this._initEvents(element);
-    } // TODO: 开启局部更新
-
+    }
 
     update() {
       this.dirtySet.forEach(item => {
-        this.clip(item);
-        item.render();
+        item.createPath();
+        item.dirty = false;
       });
       this.dirtySet.clear();
     }

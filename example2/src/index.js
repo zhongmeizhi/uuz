@@ -1,7 +1,11 @@
 import uuz from "../lib/uuz.js";
 import kLineData from "../src/mock-data.js";
 
-const renderer = new uuz.Renderer("#canvas");
+const renderer = new uuz.Renderer({
+  target: "#canvas",
+  dynamic: false,
+  hd: false,
+});
 const scene = new uuz.Scene();
 
 kLineData.staticData.forEach((val) =>
@@ -35,8 +39,15 @@ kLineData.staticData.forEach((val) =>
   )
 );
 
+renderer.render(scene);
+
+const renderer2 = new uuz.Renderer({
+  target: "#canvas2",
+});
+const scene2 = new uuz.Scene();
+
 kLineData.dynamicData.forEach((val) => {
-  scene.add(
+  scene2.add(
     new uuz.Rect({
       ...val,
       events: {
@@ -62,4 +73,4 @@ kLineData.dynamicData.forEach((val) => {
   );
 });
 
-renderer.render(scene);
+renderer2.render(scene2);

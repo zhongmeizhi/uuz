@@ -1,6 +1,5 @@
 import EventDispatcher from "@/utils/eventDispatcher.js";
-import styleMap from "@/shape/styleMap.js";
-import { isFn, isObject, errorHandler } from "@/utils/base.js";
+import { isFn, errorHandler } from "@/utils/base.js";
 
 class Shape extends EventDispatcher {
   constructor({ core = {}, style = {}, events, animate }) {
@@ -24,17 +23,7 @@ class Shape extends EventDispatcher {
     this.dpr = dpr;
   }
 
-  // TODO: 需要性能优化
-  setStyles(ctx) {
-    for (let k of Object.keys(this.style)) {
-      const exec = styleMap[k];
-      if (exec) {
-        exec(ctx, this.style[k]);
-      }
-    }
-  }
-
-  drawPath() {
+  createPath() {
     errorHandler("render 需要被重写");
   }
 
