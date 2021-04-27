@@ -50,8 +50,13 @@ class Renderer {
       this.ctx.beginPath();
       this._drawStyle(shape.style);
       this._drawPath(shape.path);
-      this.ctx.stroke();
-      this.ctx.fill();
+      this.ctx.closePath();
+      if (shape.strokeAble) {
+        this.ctx.stroke();
+      }
+      if (shape.fillAble) {
+        this.ctx.fill();
+      }
       this.ctx.restore();
     });
   }

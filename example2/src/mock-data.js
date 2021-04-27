@@ -12,13 +12,15 @@ let staticData = (function() {
         x: randMinMax(0, 1200),
         y: randMinMax(0, 600),
         radius: randMinMax(10, 20),
+        start: randMinMax(0, 1) * Math.PI,
+        end: randMinMax(1, 2) * Math.PI,
       },
       style: {
         zIndex: -1,
         opacity: randMinMax(0.1, 0.6),
-        // boxShadow: "#d4f9b0 0 0 16",
+        boxShadow: "#d4f9b0 0 0 16",
         background: Math.random() > 0.5 ? "#79B83D" : "#C93860",
-        border: `10 solid #fff`,
+        border: `5 solid #fff`,
       },
     });
   }
@@ -41,7 +43,7 @@ let dynamicData = (function() {
         zIndex: 1,
         background: Math.random() > 0.5 ? "#79B83D" : "#C93860",
         border: `2 solid #fff`,
-        borderRadius: 4,
+        borderRadius: [0, 5, 10, 5],
       },
     });
   }

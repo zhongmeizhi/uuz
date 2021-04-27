@@ -78,8 +78,16 @@
 
         this._drawPath(shape.path);
 
-        this.ctx.stroke();
-        this.ctx.fill();
+        this.ctx.closePath();
+
+        if (shape.strokeAble) {
+          this.ctx.stroke();
+        }
+
+        if (shape.fillAble) {
+          this.ctx.fill();
+        }
+
         this.ctx.restore();
       });
     }
@@ -383,7 +391,6 @@
 
   }
 
-  // export const isStr = (v) => typeof v === 'string';
   function isFn(fn) {
     return typeof fn === "function";
   }
@@ -430,6 +437,7 @@
 
     update() {
       this.dirtySet.forEach(item => {
+        item.adjustDrawStrategy();
         item.createPath();
         item.dirty = false;
       });

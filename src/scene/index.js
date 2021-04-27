@@ -31,6 +31,7 @@ class Scene {
 
   update() {
     this.dirtySet.forEach((item) => {
+      item.adjustDrawStrategy();
       item.createPath();
       item.dirty = false;
     });

@@ -1,4 +1,10 @@
-// export const isStr = (v) => typeof v === 'string';
+export function isStr(v) {
+  return typeof v === "string";
+}
+
+export function isNumber(v) {
+  return typeof v === "number";
+}
 
 export function isObject(val) {
   return val !== null && typeof val === "object";

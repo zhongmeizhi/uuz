@@ -13,6 +13,8 @@ class Shape extends EventDispatcher {
     this.dirty = false;
     this.isEnter = false;
     // this.oldData = {}
+    this.fillAble = false;
+    this.strokeAble = false;
   }
 
   /**
@@ -21,6 +23,16 @@ class Shape extends EventDispatcher {
   init(renderer) {
     const { dpr } = renderer;
     this.dpr = dpr;
+  }
+
+  adjustDrawStrategy() {
+    const { background, border } = this.style;
+    if (background) {
+      this.fillAble = true;
+    }
+    if (border) {
+      this.strokeAble = true;
+    }
   }
 
   createPath() {
