@@ -6,6 +6,20 @@ class Rect extends Shape {
     super(args);
   }
 
+  createPath() {
+    this.path = [];
+    const { x, y, width, height } = this.core;
+    const radius = this.style.borderRadius || 0;
+    if (!radius) {
+      this.path.push({
+        type: "rect",
+        args: [x, y, width, height],
+      });
+    } else {
+      this._buildPath(x, y, width, height, radius);
+    }
+  }
+
   _buildPath(x, y, width, height, r) {
     var r1;
     var r2;
@@ -118,13 +132,6 @@ class Rect extends Shape {
     //   type: "arc",
     //   args: [x + r1, y + r1, r1, Math.PI, Math.PI * 1.5],
     // });
-  }
-
-  createPath() {
-    this.path = [];
-    const { x, y, width, height } = this.core;
-    const radius = this.style.borderRadius || 0;
-    this._buildPath(x, y, width, height, radius);
   }
 }
 

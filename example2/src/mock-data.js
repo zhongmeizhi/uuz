@@ -4,7 +4,7 @@ function randMinMax(min, max, round) {
   return val;
 }
 
-let staticData = (function() {
+let staticData = (function () {
   let staticData = [];
   for (var i = 0; i < 10; i = i + 1) {
     staticData.push({
@@ -18,16 +18,16 @@ let staticData = (function() {
       style: {
         zIndex: -1,
         opacity: randMinMax(0.1, 0.6),
-        boxShadow: "#d4f9b0 0 0 16",
+        boxShadow: Math.random() > 0.5 ? "#d4f9b0 0 0 16" : "none",
         background: Math.random() > 0.5 ? "#79B83D" : "#C93860",
-        border: `5 solid #fff`,
+        border: Math.random() > 0.5 ? `5 solid #fff` : "none",
       },
     });
   }
   return staticData;
 })();
 
-let dynamicData = (function() {
+let dynamicData = (function () {
   let dynamicData = [];
   for (var i = 0; i < 100; i = i + 1) {
     dynamicData.push({
@@ -41,9 +41,10 @@ let dynamicData = (function() {
       },
       style: {
         zIndex: 1,
+        opacity: randMinMax(0.6, 1),
         background: Math.random() > 0.5 ? "#79B83D" : "#C93860",
-        border: `2 solid #fff`,
-        borderRadius: [0, 5, 10, 5],
+        border: Math.random() > 0.5 ? `2 solid #fff` : "none",
+        borderRadius: Math.random() > 0.5 ? [0, 5, randMinMax(0, 5), randMinMax(0, 10)] : "none",
       },
     });
   }

@@ -123,6 +123,10 @@
       for (let k of Object.keys(style)) {
         const val = style[k];
 
+        if (val === 'none') {
+          continue;
+        }
+
         switch (k) {
           case "background":
             ctx.fillStyle = val;
@@ -134,10 +138,14 @@
 
           case "boxShadow":
             const [shadowColor, x, y, blur] = val.split(" ");
-            ctx.shadowColor = shadowColor;
-            ctx.shadowOffsetX = x;
-            ctx.shadowOffsetY = y;
-            ctx.shadowBlur = blur;
+
+            if (shadowColor && x && y && blur) {
+              ctx.shadowColor = shadowColor;
+              ctx.shadowOffsetX = x;
+              ctx.shadowOffsetY = y;
+              ctx.shadowBlur = blur;
+            }
+
             break;
 
           case "zIndex":
@@ -151,8 +159,12 @@
 
           case "border":
             const [width, solid, color] = val.split(" ");
-            ctx.lineWidth = width;
-            ctx.strokeStyle = color;
+
+            if (width && solid && color) {
+              ctx.lineWidth = width;
+              ctx.strokeStyle = color;
+            }
+
             break;
         }
       }

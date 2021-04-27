@@ -88,6 +88,9 @@ class Renderer {
     const ctx = this.ctx;
     for (let k of Object.keys(style)) {
       const val = style[k];
+      if (val === 'none') {
+        continue;
+      }
       switch (k) {
         case "background":
           ctx.fillStyle = val;
@@ -97,10 +100,12 @@ class Renderer {
           break;
         case "boxShadow":
           const [shadowColor, x, y, blur] = val.split(" ");
-          ctx.shadowColor = shadowColor;
-          ctx.shadowOffsetX = x;
-          ctx.shadowOffsetY = y;
-          ctx.shadowBlur = blur;
+          if (shadowColor && x && y && blur) {
+            ctx.shadowColor = shadowColor;
+            ctx.shadowOffsetX = x;
+            ctx.shadowOffsetY = y;
+            ctx.shadowBlur = blur;
+          }
           break;
         case "zIndex":
           if (val > 0) {
@@ -111,8 +116,10 @@ class Renderer {
           break;
         case "border":
           const [width, solid, color] = val.split(" ");
-          ctx.lineWidth = width;
-          ctx.strokeStyle = color;
+          if (width && solid && color) {
+            ctx.lineWidth = width;
+            ctx.strokeStyle = color;
+          }
           break;
         default:
           break;

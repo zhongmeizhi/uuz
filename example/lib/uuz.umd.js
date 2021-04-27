@@ -110,6 +110,10 @@
       for (let k of Object.keys(style)) {
         const val = style[k];
 
+        if (val === 'none') {
+          continue;
+        }
+
         switch (k) {
           case "background":
             ctx.fillStyle = val;
@@ -121,10 +125,14 @@
 
           case "boxShadow":
             const [shadowColor, x, y, blur] = val.split(" ");
-            ctx.shadowColor = shadowColor;
-            ctx.shadowOffsetX = x;
-            ctx.shadowOffsetY = y;
-            ctx.shadowBlur = blur;
+
+            if (shadowColor && x && y && blur) {
+              ctx.shadowColor = shadowColor;
+              ctx.shadowOffsetX = x;
+              ctx.shadowOffsetY = y;
+              ctx.shadowBlur = blur;
+            }
+
             break;
 
           case "zIndex":
@@ -138,8 +146,12 @@
 
           case "border":
             const [width, solid, color] = val.split(" ");
-            ctx.lineWidth = width;
-            ctx.strokeStyle = color;
+
+            if (width && solid && color) {
+              ctx.lineWidth = width;
+              ctx.strokeStyle = color;
+            }
+
             break;
         }
       }
@@ -591,11 +603,11 @@
         border
       } = this.style;
 
-      if (background) {
+      if (background && background !== 'none') {
         this.fillAble = true;
       }
 
-      if (border) {
+      if (border && border !== 'none') {
         this.strokeAble = true;
       }
     }
@@ -681,6 +693,26 @@
   class Rect extends Shape {
     constructor(args) {
       super(args);
+    }
+
+    createPath() {
+      this.path = [];
+      const {
+        x,
+        y,
+        width,
+        height
+      } = this.core;
+      const radius = this.style.borderRadius || 0;
+
+      if (!radius) {
+        this.path.push({
+          type: "rect",
+          args: [x, y, width, height]
+        });
+      } else {
+        this._buildPath(x, y, width, height, radius);
+      }
     }
 
     _buildPath(x, y, width, height, r) {
@@ -803,19 +835,6 @@
       //   type: "arc",
       //   args: [x + r1, y + r1, r1, Math.PI, Math.PI * 1.5],
       // });
-    }
-
-    createPath() {
-      this.path = [];
-      const {
-        x,
-        y,
-        width,
-        height
-      } = this.core;
-      const radius = this.style.borderRadius || 0;
-
-      this._buildPath(x, y, width, height, radius);
     }
 
   }

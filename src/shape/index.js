@@ -27,10 +27,10 @@ class Shape extends EventDispatcher {
 
   adjustDrawStrategy() {
     const { background, border } = this.style;
-    if (background) {
+    if (background && background !== 'none') {
       this.fillAble = true;
     }
-    if (border) {
+    if (border && border !== 'none') {
       this.strokeAble = true;
     }
   }
