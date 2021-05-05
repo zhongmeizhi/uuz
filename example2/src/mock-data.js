@@ -6,7 +6,7 @@ function randMinMax(min, max, round) {
 
 let staticData = (function () {
   let staticData = [];
-  for (var i = 0; i < 10; i = i + 1) {
+  for (var i = 0; i < 30; i = i + 1) {
     staticData.push({
       core: {
         x: randMinMax(0, 1200),

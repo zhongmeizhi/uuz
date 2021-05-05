@@ -8,29 +8,19 @@ class Shape extends EventDispatcher {
     this.style = this._setTrace(style);
     this.events = events;
     this.animate = animate;
-    // this.path = new Path2D();
     this.path = [];
     this.dirty = false;
-    this.isEnter = false;
     // this.oldData = {}
     this.fillAble = false;
     this.strokeAble = false;
   }
 
-  /**
-   * @param  {Renderer} renderer
-   */
-  init(renderer) {
-    const { dpr } = renderer;
-    this.dpr = dpr;
-  }
-
   adjustDrawStrategy() {
     const { background, border } = this.style;
-    if (background && background !== 'none') {
+    if (background && background !== "none") {
       this.fillAble = true;
     }
-    if (border && border !== 'none') {
+    if (border && border !== "none") {
       this.strokeAble = true;
     }
   }
@@ -39,14 +29,16 @@ class Shape extends EventDispatcher {
     errorHandler("render 需要被重写");
   }
 
+  isPointInPath() {
+    errorHandler("isPointInPath 需要被重写");
+  }
+
   /**
    * @param  {String} eventName
    * @param  {MouseEvent} event
    */
-  // TODO: 优化事件穿透
   eventHandler(eventName, event) {
-    const realName = this._transformEvent(eventName, event);
-    isFn(this.events[realName]) && this.events[realName](this, event);
+    isFn(this.events[eventName]) && this.events[eventName](this, event);
   }
 
   remove() {
@@ -67,40 +59,6 @@ class Shape extends EventDispatcher {
         return true;
       },
     });
-  }
-
-  /**
-   * ps: 抗锯齿和 isPointInPath 需要校验点击位置
-   * @param  {MouseEvent} event
-   */
-  // TODO: 优化路径校验
-  _isPointInPath(event) {
-    return true;
-    // return this.ctx.isPointInPath(
-    //   this.path,
-    //   event.offsetX * this.dpr,
-    //   event.offsetY * this.dpr
-    // );
-  }
-
-  /**
-   * @param  {String} eventName
-   * @param  {MouseEvent} event
-   */
-  _transformEvent(eventName, event) {
-    const isPointInPath = this._isPointInPath(event);
-    if (eventName === "click") {
-      if (isPointInPath) return "click";
-    } else if (eventName === "mousemove") {
-      if (!this.isEnter && isPointInPath) {
-        this.isEnter = true;
-        return "mouseenter";
-      } else if (this.isEnter && !isPointInPath) {
-        this.isEnter = false;
-        return "mouseleave";
-      }
-    }
-    return false;
   }
 }
 

@@ -20,19 +20,30 @@ class Rect extends Shape {
     }
   }
 
-  _buildPath(x, y, width, height, r) {
+  /**
+   * @param  {MouseEvent} event
+   */
+   isPointInPath(event) {
+    const { offsetX, offsetY } = event;
+    const { x, y, width, height } = this.core;
+    // TODO: fillAble 和 strokeAble
+    if (
+      offsetX > x &&
+      offsetX < x + width &&
+      offsetY > y &&
+      offsetY < y + height
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  _transformRadius(r, width, height) {
     var r1;
     var r2;
     var r3;
     var r4;
-    if (width < 0) {
-      x = x + width;
-      width = -width;
-    }
-    if (height < 0) {
-      y = y + height;
-      height = -height;
-    }
+    // 支持形式的 radius 入参
     if (isNumber(r)) {
       r1 = r2 = r3 = r4 = r;
     } else if (isArr(r)) {
@@ -54,6 +65,7 @@ class Rect extends Shape {
     } else {
       r1 = r2 = r3 = r4 = 0;
     }
+    // 边界值矫正
     var total;
     if (r1 + r2 > width) {
       total = r1 + r2;
@@ -75,6 +87,19 @@ class Rect extends Shape {
       r1 *= height / total;
       r4 *= height / total;
     }
+    return [r1, r2, r3, r4];
+  }
+
+  _buildPath(x, y, width, height, r) {
+    if (width < 0) {
+      x = x + width;
+      width = -width;
+    }
+    if (height < 0) {
+      y = y + height;
+      height = -height;
+    }
+    const [r1, r2, r3, r4] = this._transformRadius(r, width, height);
     this.path.push({
       type: "moveTo",
       args: [x + r1, y],

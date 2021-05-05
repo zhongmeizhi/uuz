@@ -49,7 +49,8 @@
 
     update() {
       if (this.scene.dirtySet.size) {
-        this.scene.update();
+        this.scene.update(); // TODO: 局部更新
+        // ctx.clip();
       }
     }
 
@@ -412,6 +413,8 @@
     } = {}) {
       // TODO: 添加 Scene 的样式
       this.dirtySet = new Set();
+      this.hoverSet = new Set();
+      this.activeSet = new Set();
       this.shapePools = new Set();
       this.animateSet = new Set();
     }
@@ -436,7 +439,7 @@
 
       this._initMesh(width, height);
 
-      this._appendShape(renderer);
+      this._appendShape();
 
       this._initEvents(element);
     }
@@ -452,10 +455,6 @@
 
     animate() {
       this.animateSet.forEach(anm => anm());
-    } // TODO: 根据网格动态裁剪
-
-
-    clip(item) {// ctx.clip();
     }
     /**
      * @param  {number} width
@@ -471,15 +470,9 @@
         height
       });
     }
-    /**
-     * @param  {Renderer} renderer
-     */
 
-
-    _appendShape(renderer) {
+    _appendShape() {
       this.shapePools.forEach(shape => {
-        shape.init(renderer);
-
         if (shape.events && Object.keys(shape.events).length) {
           this.mesh.insert(shape);
         }
@@ -503,16 +496,39 @@
     /**
      * @param  {HtmlElement} element
      */
+    // TODO: 优化事件穿透
 
 
     _initEvents(element) {
-      ["click", "mousemove"].forEach(eventName => {
-        element.addEventListener(eventName, event => {
-          const broadPhaseResult = this.mesh.queryMouse(event.offsetX, event.offsetY);
-          broadPhaseResult.forEach(shape => {
-            shape.eventHandler(eventName, event);
-          });
+      element.addEventListener("click", event => {
+        const broadPhaseResult = this.mesh.queryMouse(event.offsetX, event.offsetY);
+        broadPhaseResult.forEach(shape => {
+          shape.eventHandler("click", event);
         });
+      });
+      element.addEventListener("mousemove", event => {
+        const broadPhaseResult = this.mesh.queryMouse(event.offsetX, event.offsetY);
+        broadPhaseResult.forEach(shape => {
+          const isPointInPath = shape.isPointInPath(event);
+
+          if (isPointInPath) {
+            this.activeSet.add(shape);
+            shape.eventHandler("mousemove", event);
+          }
+
+          if (!this.hoverSet.has(shape) && isPointInPath) {
+            this.hoverSet.add(shape);
+            shape.eventHandler("mouseenter", event);
+          }
+        }); // 处理可能存在的mesh边界问题，找到mouseleave的shape
+
+        this.hoverSet.forEach(shape => {
+          if (!this.activeSet.has(shape)) {
+            this.hoverSet.delete(shape);
+            shape.eventHandler("mouseleave", event);
+          }
+        });
+        this.activeSet = new Set();
       });
     }
 
@@ -576,25 +592,12 @@
       this.core = this._setTrace(core);
       this.style = this._setTrace(style);
       this.events = events;
-      this.animate = animate; // this.path = new Path2D();
-
+      this.animate = animate;
       this.path = [];
-      this.dirty = false;
-      this.isEnter = false; // this.oldData = {}
+      this.dirty = false; // this.oldData = {}
 
       this.fillAble = false;
       this.strokeAble = false;
-    }
-    /**
-     * @param  {Renderer} renderer
-     */
-
-
-    init(renderer) {
-      const {
-        dpr
-      } = renderer;
-      this.dpr = dpr;
     }
 
     adjustDrawStrategy() {
@@ -603,11 +606,11 @@
         border
       } = this.style;
 
-      if (background && background !== 'none') {
+      if (background && background !== "none") {
         this.fillAble = true;
       }
 
-      if (border && border !== 'none') {
+      if (border && border !== "none") {
         this.strokeAble = true;
       }
     }
@@ -615,17 +618,18 @@
     createPath() {
       errorHandler("render 需要被重写");
     }
+
+    isPointInPath() {
+      errorHandler("isPointInPath 需要被重写");
+    }
     /**
      * @param  {String} eventName
      * @param  {MouseEvent} event
      */
-    // TODO: 优化事件穿透
 
 
     eventHandler(eventName, event) {
-      const realName = this._transformEvent(eventName, event);
-
-      isFn(this.events[realName]) && this.events[realName](this, event);
+      isFn(this.events[eventName]) && this.events[eventName](this, event);
     }
 
     remove() {
@@ -649,43 +653,6 @@
           return true;
         }
       });
-    }
-    /**
-     * ps: 抗锯齿和 isPointInPath 需要校验点击位置
-     * @param  {MouseEvent} event
-     */
-    // TODO: 优化路径校验
-
-
-    _isPointInPath(event) {
-      return true; // return this.ctx.isPointInPath(
-      //   this.path,
-      //   event.offsetX * this.dpr,
-      //   event.offsetY * this.dpr
-      // );
-    }
-    /**
-     * @param  {String} eventName
-     * @param  {MouseEvent} event
-     */
-
-
-    _transformEvent(eventName, event) {
-      const isPointInPath = this._isPointInPath(event);
-
-      if (eventName === "click") {
-        if (isPointInPath) return "click";
-      } else if (eventName === "mousemove") {
-        if (!this.isEnter && isPointInPath) {
-          this.isEnter = true;
-          return "mouseenter";
-        } else if (this.isEnter && !isPointInPath) {
-          this.isEnter = false;
-          return "mouseleave";
-        }
-      }
-
-      return false;
     }
 
   }
@@ -714,22 +681,35 @@
         this._buildPath(x, y, width, height, radius);
       }
     }
+    /**
+     * @param  {MouseEvent} event
+     */
 
-    _buildPath(x, y, width, height, r) {
+
+    isPointInPath(event) {
+      const {
+        offsetX,
+        offsetY
+      } = event;
+      const {
+        x,
+        y,
+        width,
+        height
+      } = this.core; // TODO: fillAble 和 strokeAble
+
+      if (offsetX > x && offsetX < x + width && offsetY > y && offsetY < y + height) {
+        return true;
+      }
+
+      return false;
+    }
+
+    _transformRadius(r, width, height) {
       var r1;
       var r2;
       var r3;
-      var r4;
-
-      if (width < 0) {
-        x = x + width;
-        width = -width;
-      }
-
-      if (height < 0) {
-        y = y + height;
-        height = -height;
-      }
+      var r4; // 支持形式的 radius 入参
 
       if (isNumber(r)) {
         r1 = r2 = r3 = r4 = r;
@@ -751,7 +731,8 @@
         }
       } else {
         r1 = r2 = r3 = r4 = 0;
-      }
+      } // 边界值矫正
+
 
       var total;
 
@@ -778,6 +759,22 @@
         r1 *= height / total;
         r4 *= height / total;
       }
+
+      return [r1, r2, r3, r4];
+    }
+
+    _buildPath(x, y, width, height, r) {
+      if (width < 0) {
+        x = x + width;
+        width = -width;
+      }
+
+      if (height < 0) {
+        y = y + height;
+        height = -height;
+      }
+
+      const [r1, r2, r3, r4] = this._transformRadius(r, width, height);
 
       this.path.push({
         type: "moveTo",
@@ -864,6 +861,31 @@
         type: "arc",
         args: [x, y, radius, start || 0, realEnd, true]
       });
+    }
+    /**
+     * @param  {MouseEvent} event
+     */
+
+
+    isPointInPath(event) {
+      const {
+        offsetX,
+        offsetY
+      } = event;
+      const {
+        x,
+        y,
+        radius
+      } = this.core; // TODO: fillAble 和 strokeAble
+
+      const disX = offsetX - x;
+      const disY = offsetY - y;
+
+      if (disX * disX + disY * disY <= radius * radius) {
+        return true;
+      }
+
+      return false;
     }
 
   }

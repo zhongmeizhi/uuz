@@ -3,8 +3,8 @@ import kLineData from "../src/mock-data.js";
 
 const renderer = new uuz.Renderer({
   target: "#canvas",
-  dynamic: false,
-  hd: false,
+  // dynamic: false,
+  // hd: false,
 });
 const scene = new uuz.Scene();
 
@@ -13,16 +13,6 @@ kLineData.staticData.forEach((val) =>
     new uuz.Arc({
       ...val,
       events: {
-        mouseenter(shape) {
-          shape.z = shape.style.zIndex;
-          shape.o = shape.style.opacity;
-          shape.style.zIndex = 1;
-          shape.style.opacity = 1;
-        },
-        mouseleave(shape) {
-          shape.style.zIndex = shape.z;
-          shape.style.opacity = shape.o;
-        },
         click(shape) {
           if (shape.isMove) {
             shape.core.x -= 100;
@@ -39,15 +29,8 @@ kLineData.staticData.forEach((val) =>
   )
 );
 
-renderer.render(scene);
-
-const renderer2 = new uuz.Renderer({
-  target: "#canvas2",
-});
-const scene2 = new uuz.Scene();
-
 kLineData.dynamicData.forEach((val) => {
-  scene2.add(
+  scene.add(
     new uuz.Rect({
       ...val,
       events: {
@@ -73,4 +56,4 @@ kLineData.dynamicData.forEach((val) => {
   );
 });
 
-renderer2.render(scene2);
+renderer.render(scene);

@@ -38,6 +38,8 @@ class Renderer {
   update() {
     if (this.scene.dirtySet.size) {
       this.scene.update();
+      // TODO: 局部更新
+      // ctx.clip();
     }
   }
 
