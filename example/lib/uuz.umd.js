@@ -42,14 +42,15 @@
 
     render(scene) {
       this.scene = scene;
-      scene.init.call(scene, this);
+      scene.init(this);
       this.forceUpdate();
       this.dynamic && this.initAnimation();
     }
 
     update() {
       if (this.scene.dirtySet.size) {
-        this.scene.update(); // TODO: 局部更新
+        const scene = this.scene;
+        scene.update(); // TODO: 局部更新
         // ctx.clip();
       }
     }
@@ -250,10 +251,13 @@
      */
 
 
-    queryMouse(mouseX, mouseY, blur = 4) {
+    queryMouse({
+      offsetX,
+      offsetY
+    }, blur = 4) {
       return this.retrieve({
-        x: mouseX,
-        y: mouseY,
+        x: offsetX,
+        y: offsetY,
         width: blur,
         height: blur
       });
@@ -350,7 +354,7 @@
     }
     /**
      * @param {Shape} shape
-     * @return {number[]} 
+     * @return {number[]}
      */
 
 
@@ -414,7 +418,7 @@
       // TODO: 添加 Scene 的样式
       this.dirtySet = new Set();
       this.hoverSet = new Set();
-      this.activeSet = new Set();
+      this.enterSet = new Set();
       this.shapePools = new Set();
       this.animateSet = new Set();
     }
@@ -496,23 +500,21 @@
     /**
      * @param  {HtmlElement} element
      */
-    // TODO: 优化事件穿透
 
 
     _initEvents(element) {
       element.addEventListener("click", event => {
-        const broadPhaseResult = this.mesh.queryMouse(event.offsetX, event.offsetY);
-        broadPhaseResult.forEach(shape => {
-          shape.eventHandler("click", event);
+        this.mesh.queryMouse(event).forEach(shape => {
+          const isPointInPath = shape.isPointInPath(event);
+          isPointInPath && shape.eventHandler("click", event);
         });
       });
       element.addEventListener("mousemove", event => {
-        const broadPhaseResult = this.mesh.queryMouse(event.offsetX, event.offsetY);
-        broadPhaseResult.forEach(shape => {
+        this.mesh.queryMouse(event).forEach(shape => {
           const isPointInPath = shape.isPointInPath(event);
 
           if (isPointInPath) {
-            this.activeSet.add(shape);
+            this.enterSet.add(shape);
             shape.eventHandler("mousemove", event);
           }
 
@@ -523,12 +525,12 @@
         }); // 处理可能存在的mesh边界问题，找到mouseleave的shape
 
         this.hoverSet.forEach(shape => {
-          if (!this.activeSet.has(shape)) {
+          if (!this.enterSet.has(shape)) {
             this.hoverSet.delete(shape);
             shape.eventHandler("mouseleave", event);
           }
         });
-        this.activeSet = new Set();
+        this.enterSet = new Set();
       });
     }
 

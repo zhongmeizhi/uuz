@@ -11,7 +11,7 @@ let staticData = (function () {
       core: {
         x: randMinMax(0, 1200),
         y: randMinMax(0, 600),
-        radius: randMinMax(10, 20),
+        radius: randMinMax(20, 40),
         start: randMinMax(0, 1) * Math.PI,
         end: randMinMax(1, 2) * Math.PI,
       },
@@ -29,13 +29,13 @@ let staticData = (function () {
 
 let dynamicData = (function () {
   let dynamicData = [];
-  for (var i = 0; i < 100; i = i + 1) {
+  for (var i = 0; i < 30; i = i + 1) {
     dynamicData.push({
       core: {
         x: randMinMax(0, 1200),
         y: randMinMax(0, 600),
-        width: randMinMax(10, 20),
-        height: randMinMax(10, 20),
+        width: randMinMax(20, 40),
+        height: randMinMax(20, 40),
         vx: randMinMax(-0.5, 0.5),
         vy: randMinMax(-0.5, 0.5),
       },

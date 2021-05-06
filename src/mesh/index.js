@@ -81,10 +81,10 @@ class Mesh {
    * @param  {number} mouseY
    * @param  {number} blur
    */
-  queryMouse(mouseX, mouseY, blur = 4) {
+  queryMouse({ offsetX, offsetY }, blur = 4) {
     return this.retrieve({
-      x: mouseX,
-      y: mouseY,
+      x: offsetX,
+      y: offsetY,
       width: blur,
       height: blur,
     });
@@ -117,7 +117,7 @@ class Mesh {
 
   findRoot() {
     let mesh = this;
-    while(mesh.parentMesh) {
+    while (mesh.parentMesh) {
       mesh = mesh.parentMesh;
     }
     return mesh;
@@ -173,7 +173,7 @@ class Mesh {
 
   /**
    * @param {Shape} shape
-   * @return {number[]} 
+   * @return {number[]}
    */
   _getIndex(shape) {
     const { x, y, width, height } = this._getBoundAttr(shape);

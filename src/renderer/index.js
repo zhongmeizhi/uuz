@@ -30,14 +30,15 @@ class Renderer {
    */
   render(scene) {
     this.scene = scene;
-    scene.init.call(scene, this);
+    scene.init(this);
     this.forceUpdate();
     this.dynamic && this.initAnimation();
   }
 
   update() {
     if (this.scene.dirtySet.size) {
-      this.scene.update();
+      const scene = this.scene;
+      scene.update();
       // TODO: 局部更新
       // ctx.clip();
     }
