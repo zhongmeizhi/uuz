@@ -1,5 +1,6 @@
-class Renderer {
+import Animation from "@/renderer/animation.js";
 
+class Renderer {
   /**
    * @param  {string} target
    * @param  {boolean} dynamic
@@ -15,9 +16,9 @@ class Renderer {
     this.width = ele.width;
     this.height = ele.height;
     this.dpr = 1;
-    this.dynamic = dynamic;
     this.hd = hd;
     this.scene = null;
+    this.animate = new Animation(this._run.bind(this));
     hd && this._initHd(ele);
   }
 
@@ -31,8 +32,7 @@ class Renderer {
   render(scene) {
     this.scene = scene;
     scene.init(this);
-    this.forceUpdate();
-    this.dynamic && this.initAnimation();
+    this.animate.start();
   }
 
   update() {
@@ -64,13 +64,9 @@ class Renderer {
     });
   }
 
-  initAnimation() {
-    const run = () => {
-      this.scene.animate();
-      this.forceUpdate();
-      window.requestAnimationFrame(run);
-    };
-    window.requestAnimationFrame(run);
+  _run() {
+    this.scene.animate();
+    this.forceUpdate();
   }
 
   /**
@@ -91,7 +87,7 @@ class Renderer {
     const ctx = this.ctx;
     for (let k of Object.keys(style)) {
       const val = style[k];
-      if (val === 'none') {
+      if (val === "none") {
         continue;
       }
       switch (k) {

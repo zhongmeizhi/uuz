@@ -17,6 +17,40 @@
     return props.children;
   }
 
+  class Animation {
+    constructor(run) {
+      this.run = run;
+      this._running = false;
+      this.requestAnimationFrame = this._getRaf();
+    }
+
+    start() {
+      this._running = true;
+
+      this._runAnimation();
+    }
+
+    stop() {
+      this._running = false;
+    }
+
+    _runAnimation() {
+      const loops = () => {
+        this.run();
+        this._running && this.requestAnimationFrame(loops);
+      };
+
+      this.requestAnimationFrame(loops);
+    }
+
+    _getRaf() {
+      return typeof window !== "undefined" && (window.requestAnimationFrame && window.requestAnimationFrame.bind(window) || window.msRequestAnimationFrame && window.msRequestAnimationFrame.bind(window) || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame) || function (func) {
+        return setTimeout(func, 16);
+      };
+    }
+
+  }
+
   class Renderer {
     /**
      * @param  {string} target
@@ -39,9 +73,9 @@
       this.width = ele.width;
       this.height = ele.height;
       this.dpr = 1;
-      this.dynamic = dynamic;
       this.hd = hd;
       this.scene = null;
+      this.animate = new Animation(this._run.bind(this));
       hd && this._initHd(ele);
     }
 
@@ -56,8 +90,7 @@
     render(scene) {
       this.scene = scene;
       scene.init(this);
-      this.forceUpdate();
-      this.dynamic && this.initAnimation();
+      this.animate.start();
     }
 
     update() {
@@ -94,14 +127,9 @@
       });
     }
 
-    initAnimation() {
-      const run = () => {
-        this.scene.animate();
-        this.forceUpdate();
-        window.requestAnimationFrame(run);
-      };
-
-      window.requestAnimationFrame(run);
+    _run() {
+      this.scene.animate();
+      this.forceUpdate();
     }
     /**
      * 抗锯齿
@@ -125,7 +153,7 @@
       for (let k of Object.keys(style)) {
         const val = style[k];
 
-        if (val === 'none') {
+        if (val === "none") {
           continue;
         }
 

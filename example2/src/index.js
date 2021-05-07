@@ -25,10 +25,12 @@ kLineData.staticData.forEach((val) =>
         },
         click(shape) {
           if (shape.isMove) {
+            renderer.animate.start();
             shape.core.x -= 100;
             shape.core.radius -= 30;
             shape.isMove = false;
           } else {
+            renderer.animate.stop();
             shape.core.x += 100;
             shape.core.radius += 30;
             shape.isMove = true;

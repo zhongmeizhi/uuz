@@ -51,7 +51,7 @@ class Shape extends EventDispatcher {
   _setTrace(item) {
     return new Proxy(item, {
       set: (target, prop, value) => {
-        target[prop] = value;
+        Reflect.set(target, prop, value);
         if (!this.dirty) {
           this.dirty = true;
           this.dispatch("update", this);
