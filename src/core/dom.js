@@ -4,7 +4,11 @@ function hostCreateElement(type) {
 }
 
 function hostSetElementText(el, text) {
-  el.innerText = text;
+  if (el.nodeType === Node.TEXT_NODE) {
+    el.data = text;
+  } else {
+    el.innerText = text;
+  }
 }
 
 function hostPatchProp(el, key, preValue, nextValue) {
@@ -32,9 +36,9 @@ function hostPatchProp(el, key, preValue, nextValue) {
   }
 }
 
-function hostInsert(child, parent, anchor=null) {
+function hostInsert(child, parent, anchor = null) {
   if (anchor) {
-    parent.insertBefore(child,anchor);
+    parent.insertBefore(child, anchor);
   } else {
     parent.appendChild(child);
   }
@@ -52,5 +56,5 @@ export {
   hostSetElementText,
   hostPatchProp,
   hostInsert,
-  hostRemove
-}
+  hostRemove,
+};

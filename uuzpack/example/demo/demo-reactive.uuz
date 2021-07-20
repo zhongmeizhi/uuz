@@ -1,6 +1,7 @@
 <template>
-  <div class="abc" @click="addCount">
+  <div class="abc" @click="addCount" >
     {{count.num}}
+    <div>123sss</div>
   </div>
 </template>
 
@@ -9,7 +10,7 @@ import { reactive } from '../uuz.esm.js';
 
 export default {
   setup() {
-    let count = reactive({ num: 10 })
+    let count = reactive({ num: 10,age:18 })
 
     const addCount = () => {
       count.num += 10;
