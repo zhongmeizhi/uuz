@@ -1,23 +1,17 @@
 import { ShapeFlags } from "../utils/base.js";
 import { queueJob } from "./scheduler";
-import { createVNode } from './h';
+import { createVNode } from "./h";
 import { effect } from "./reactive";
-import  {
+import {
   hostCreateElement,
   hostSetElementText,
   hostPatchProp,
   hostInsert,
-} from './dom.js';
+} from "./dom.js";
 
-import {
-  patchProps,
-  patchChildren
-} from './diff.js'
+import { patchProps, patchChildren } from "./diff.js";
 
-import {
-  beforeMount,
-  mounted
-} from './lifecycle.js';
+import { beforeMount, mounted } from "./lifecycle.js";
 
 const render = (vnode, container) => {
   patch(null, vnode, container);
@@ -31,6 +25,8 @@ function patch(oldVnode, vnode, container = null) {
       break;
     default:
       if (shapeFlag & ShapeFlags.ELEMENT) {
+        processElement(oldVnode, vnode, container);
+      } else if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
         processElement(oldVnode, vnode, container);
       } else if (shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
         processComponent(oldVnode, vnode, container);
@@ -61,15 +57,20 @@ function mountElement(vnode, container) {
   const { shapeFlag, props } = vnode;
   // 1. 先创建 element
   // 基于可扩展的渲染 api
-  const el = (vnode.el = hostCreateElement(vnode.type));
+  let el;
+  if (typeof vnode.type === "symbol" && vnode.type.description === "Text") {
+    el = document.createTextNode(vnode.children);
+    vnode.el = el;
+  } else {
+    el = vnode.el = hostCreateElement(vnode.type);
 
-  // 支持单子组件和多子组件的创建
-  if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
-    hostSetElementText(el, vnode.children);
-  } else if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
-    mountChildren(vnode.children, el);
+    // 支持单子组件和多子组件的创建
+    if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
+      hostSetElementText(el, vnode.children);
+    } else if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
+      mountChildren(vnode.children, el);
+    }
   }
-
   // 处理 props
   if (props) {
     for (const key in props) {
@@ -77,6 +78,7 @@ function mountElement(vnode, container) {
       hostPatchProp(el, key, null, nextVal);
     }
   }
+
   hostInsert(el, container);
 }
 
@@ -102,9 +104,8 @@ function processComponent(n1, n2, container) {
 }
 
 function mountComponent(initialVNode, container) {
-  const instance = (initialVNode.component = createComponentInstance(
-    initialVNode
-  ));
+  const instance = (initialVNode.component =
+    createComponentInstance(initialVNode));
 
   setupComponent(instance);
   setupRenderEffect(instance, container);
@@ -123,7 +124,6 @@ function createComponentInstance(vnode) {
 }
 
 function setupComponent(instance) {
-
   initProps();
   initSlots();
 
@@ -144,7 +144,6 @@ function setupStatefulComponent(instance) {
   instance.proxy = setupResult;
   instance.render = render;
 }
-
 
 function setupRenderEffect(instance, container) {
   /* 
@@ -178,25 +177,22 @@ function setupRenderEffect(instance, container) {
     {
       scheduler: (effect) => {
         // 把 effect 推到微任务的时候在执行
-        queueJob(effect)
+        queueJob(effect);
       },
     }
   );
 }
 
 const createApp = (rootComponent, rootProps = null) => {
-	const app = {
-		mount(rootDom) {
-			// 此时 rootComponent = {setup, render}
-			const vnode = createVNode(rootComponent, rootProps);
-			app._container = rootDom;
-			render(vnode, rootDom);
-		},
-	};
-	return app;
+  const app = {
+    mount(rootDom) {
+      // 此时 rootComponent = {setup, render}
+      const vnode = createVNode(rootComponent, rootProps);
+      app._container = rootDom;
+      render(vnode, rootDom);
+    },
+  };
+  return app;
 };
 
-export {
-  createApp,
-  render
-}
+export { createApp, render, patch };

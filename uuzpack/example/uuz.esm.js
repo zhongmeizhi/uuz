@@ -1,3 +1,4 @@
+const isArr = Array.isArray;
 const isObject = val => val !== null && typeof val === 'object';
 const Text = Symbol('Text');
 const ShapeFlags = {
@@ -12,8 +13,10 @@ const getShapeFlag = type => {
 
 const blockStack = [];
 let currentBlock = null;
+const EMPTY_ARR = [];
 
 function createVNode(type, props = null, children = null, patchFlag = 0, dynamicProps = null, isBlockNode = false) {
+  // TODO: Block相关
   const vnode = {
     el: null,
     component: null,
@@ -24,7 +27,7 @@ function createVNode(type, props = null, children = null, patchFlag = 0, dynamic
     shapeFlag: getShapeFlag(type)
   };
 
-  if (Array.isArray(children)) {
+  if (isArr(children)) {
     vnode.shapeFlag |= ShapeFlags.ARRAY_CHILDREN;
   } else if (typeof children === "string") {
     vnode.shapeFlag |= ShapeFlags.TEXT_CHILDREN;
@@ -56,7 +59,7 @@ function createBlock(type, props, children, patchFlag, dynamicProps) {
   return vnode;
 }
 
-function createTextVNode(text = ' ', flag = 0) {
+function createTextVNode(text = '', flag = 0) {
   return createVNode(Text, null, text, flag);
 }
 
@@ -230,7 +233,11 @@ function hostCreateElement(type) {
 }
 
 function hostSetElementText(el, text) {
-  el.innerText = text;
+  if (el.nodeType === Node.TEXT_NODE) {
+    el.data = text;
+  } else {
+    el.innerText = text;
+  }
 }
 
 function hostPatchProp(el, key, preValue, nextValue) {
@@ -456,10 +463,10 @@ function mounted() {
 }
 
 const render = (vnode, container) => {
-  patch$1(null, vnode, container);
+  patch(null, vnode, container);
 };
 
-function patch$1(oldVnode, vnode, container = null) {
+function patch(oldVnode, vnode, container = null) {
   const {
     type,
     shapeFlag
@@ -472,6 +479,8 @@ function patch$1(oldVnode, vnode, container = null) {
 
     default:
       if (shapeFlag & ShapeFlags.ELEMENT) {
+        processElement(oldVnode, vnode, container);
+      } else if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
         processElement(oldVnode, vnode, container);
       } else if (shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
         processComponent(oldVnode, vnode, container);
@@ -505,12 +514,19 @@ function mountElement(vnode, container) {
   } = vnode; // 1. 先创建 element
   // 基于可扩展的渲染 api
 
-  const el = vnode.el = hostCreateElement(vnode.type); // 支持单子组件和多子组件的创建
+  let el;
 
-  if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
-    hostSetElementText(el, vnode.children);
-  } else if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
-    mountChildren(vnode.children, el);
+  if (typeof vnode.type === "symbol" && vnode.type.description === "Text") {
+    el = document.createTextNode(vnode.children);
+    vnode.el = el;
+  } else {
+    el = vnode.el = hostCreateElement(vnode.type); // 支持单子组件和多子组件的创建
+
+    if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
+      hostSetElementText(el, vnode.children);
+    } else if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
+      mountChildren(vnode.children, el);
+    }
   } // 处理 props
 
 
@@ -530,7 +546,7 @@ function mountChildren(children, container) {
     // 这里应该需要处理一下 vnodeChild
     // 因为有可能不是 vnode 类型
     console.log("mountChildren:", VNodeChild);
-    patch$1(null, VNodeChild, container);
+    patch(null, VNodeChild, container);
   });
 }
 
@@ -577,7 +593,7 @@ function setupStatefulComponent(instance) {
 function setupRenderEffect(instance, container) {
   /* 
     经过 sfc 后的代码应该是这样的
-      export function render(_ctx, _cache) {
+     export function render(_ctx, _cache) {
       return (_openBlock(), _createBlock("div", {
         class: "abc",
         onClick: _ctx.addCount
@@ -588,7 +604,7 @@ function setupRenderEffect(instance, container) {
     if (!instance.isMounted) {
       const subTree = instance.subTree = instance.render(instance.proxy);
       beforeMount();
-      patch$1(null, subTree, container);
+      patch(null, subTree, container);
       mounted();
       instance.isMounted = true;
     } else {
@@ -596,7 +612,7 @@ function setupRenderEffect(instance, container) {
       const prevTree = instance.subTree;
       instance.subTree = nextTree;
       beforeMount();
-      patch$1(prevTree, nextTree, prevTree.el);
+      patch(prevTree, nextTree, prevTree.el);
       mounted();
     }
   }, {
@@ -620,4 +636,4 @@ const createApp = (rootComponent, rootProps = null) => {
   return app;
 };
 
-export { computed, createApp, createBlock, createTextVNode, createVNode, effect, nextTick, openBlock, queueJob, reactive, ref, render, toDisplayString };
+export { computed, createApp, createBlock, createTextVNode, createVNode, effect, nextTick, openBlock, patch, queueJob, reactive, ref, render, toDisplayString };

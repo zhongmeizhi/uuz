@@ -1,14 +1,15 @@
 import { ShapeFlags } from "../utils/base.js";
-import  {
+import {
   hostSetElementText,
   hostPatchProp,
   hostInsert,
-  hostRemove
-} from './dom.js';
+  hostRemove,
+} from "./dom.js";
+import { patch } from "./renderer";
 
-function isSameVNodeType (n1, n2) {
+function isSameVNodeType(n1, n2) {
   return n1.type === n2.type && n1.key === n2.key;
-};
+}
 
 function patchKeyedChildren(c1, c2, container) {
   let i = 0;
@@ -167,7 +168,4 @@ function patchChildren(oldVnode, vnode, container) {
   }
 }
 
-export {
-  patchProps,
-  patchChildren
-}
+export { patchProps, patchChildren };
